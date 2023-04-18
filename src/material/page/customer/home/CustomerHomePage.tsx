@@ -28,7 +28,7 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-const CustomerLogin = () => {
+const CustomerHomePage = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -107,12 +107,12 @@ const CustomerLogin = () => {
                             </Button>
                             <Grid container>
                                 <Grid item xs>
-                                    <Link href="src/material/page/customer/CustomerLogin#" variant="body2">
+                                    <Link href="src/material/page/customer/login/CustomerLogin#" variant="body2">
                                         Forgot password?
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="src/material/page/customer/CustomerLogin#" variant="body2">
+                                    <Link href="src/material/page/customer/login/CustomerLogin#" variant="body2">
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>
@@ -126,4 +126,4 @@ const CustomerLogin = () => {
     );
 }
 
-export default CustomerLogin;
+export default CustomerHomePage;
