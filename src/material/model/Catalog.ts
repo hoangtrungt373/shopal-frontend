@@ -1,7 +1,9 @@
 import {AbstractModel} from "./AbstractModel";
+import {ProductType} from "./enums/ProductType";
 
 export interface Catalog extends AbstractModel {
-    name: string;
+    productType: ProductType;
+    productTypeDescription: string;
     logoUrl: string;
-    description: string;
+    level: number;
 }

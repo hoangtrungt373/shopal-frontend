@@ -1,14 +1,15 @@
 import {AbstractModel} from "./AbstractModel";
+import {Catalog} from "./Catalog";
 
 
 export interface ProductDetail extends AbstractModel {
     productName: string;
-    price: number;
     sku?: number;
-    productImages: string[];
+    // imageUrls: string[];
     quantityInStock: number;
     descriptionContentUrl?: string;
-    content?: string;
     active: boolean;
+    content?: string;
+    catalogs: Catalog[]
 }
 

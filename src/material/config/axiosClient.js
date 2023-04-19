@@ -12,7 +12,7 @@ axiosClient.interceptors.request.use(async (config) => {
     const customHeaders = {};
 
     const accessToken = TOKEN_TYPE + localStorage.getItem(ACCESS_TOKEN);
-    if (accessToken) {
+    if (accessToken != 'Bearer null') { //TODO fix this line
         customHeaders.Authorization = accessToken;
     }
 
