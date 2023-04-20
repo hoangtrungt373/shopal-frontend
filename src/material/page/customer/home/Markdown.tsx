@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import ReactMarkdown from 'markdown-to-jsx';
+import ReactMarkdown from 'markdown-to-jsx';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
@@ -46,5 +46,5 @@ const options = {
 };
 
 export default function Markdown(props: any) {
-    return <div>ReactMarkdown</div>
+    return <ReactMarkdown options={options} {...props} />;
 }
