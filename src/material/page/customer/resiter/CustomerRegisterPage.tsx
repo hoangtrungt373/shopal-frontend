@@ -12,6 +12,13 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {useTranslation} from "react-i18next";
+import {useHistory} from "react-router-dom";
+import {UserRole} from "../../../model/enums/UserRole";
+import {CustomerRouter} from "../../../config/router";
+import {CustomerRegisterRequest} from "../../../model/form/CustomerRegisterRequest";
+import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
+import {register} from "../../../service/auth.service";
 
 function Copyright(props: any) {
     return (
@@ -28,16 +35,30 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-const CustomerLogin = () => {
+export default function CustomerRegisterPage() {
+
+    const [t] = useTranslation('common');
+    const history = useHistory();
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        let registerRequest: CustomerRegisterRequest = {
             email: data.get('email'),
             password: data.get('password'),
-        });
+            role: UserRole.CUSTOMER
+        }
+        //TODO: validate form
+        register(registerRequest)
+            .then((token: string) => {
+                console.log(token);
+            })
+            .catch((err: ExceptionResponse) => {
+                console.log(err);
+            });
     };
 
+    // TODO: if already login -> redirect
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{height: '100vh'}}>
@@ -50,8 +71,8 @@ const CustomerLogin = () => {
                     sx={{
                         backgroundImage: 'url(https://source.unsplash.com/random)',
                         backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                        backgroundColor: (s) =>
+                            s.palette.mode === 'light' ? s.palette.grey[50] : s.palette.grey[900],
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                     }}
@@ -70,7 +91,7 @@ const CustomerLogin = () => {
                             <LockOutlinedIcon/>
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            {t('customer-register-page.headline')}
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 1}}>
                             <TextField
@@ -93,6 +114,16 @@ const CustomerLogin = () => {
                                 id="password"
                                 autoComplete="current-password"
                             />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="conformPassword"
+                                label="Conform Password"
+                                type="password"
+                                id="conformPassword"
+                                autoComplete="current-password"
+                            />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary"/>}
                                 label="Remember me"
@@ -107,12 +138,12 @@ const CustomerLogin = () => {
                             </Button>
                             <Grid container>
                                 <Grid item xs>
-                                    <Link href="src/material/page/customer/login/CustomerLogin#" variant="body2">
+                                    <Link href="src/material/page/customer/login/CustomerLoginPage#" variant="body2">
                                         Forgot password?
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="src/material/page/customer/login/CustomerLogin#" variant="body2">
+                                    <Link href={CustomerRouter.loginPage} variant="body2">
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>
@@ -125,5 +156,3 @@ const CustomerLogin = () => {
         </ThemeProvider>
     );
 }
-
-export default CustomerLogin;

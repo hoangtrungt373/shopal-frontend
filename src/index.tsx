@@ -3,13 +3,40 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './material/App';
 import reportWebVitals from './reportWebVitals';
+import i18next from "i18next";
+import en from './material/lang/en.json';
+import vn from './material/lang/vn.json';
+import {I18nextProvider} from 'react-i18next';
+
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
+
+export const MultilingualCode = {
+    Language: "lan",
+    English: "en",
+    Vietnamese: "vn"
+}
+
+i18next.init({
+    interpolation: {escapeValue: false},
+    lng: MultilingualCode.Vietnamese,
+    resources: {
+        en: {
+            common: en
+        },
+        vn: {
+            common: vn
+        },
+    },
+});
+
 root.render(
     <React.StrictMode>
-        <App/>
+        <I18nextProvider i18n={i18next}>
+            <App/>
+        </I18nextProvider>
     </React.StrictMode>
 );
 

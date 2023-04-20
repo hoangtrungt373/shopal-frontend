@@ -1,5 +1,6 @@
 export const AssetPath = {
-    errorPageImg: ""
+    errorPageImg: "",
+    productImgUrl: process.env.PUBLIC_URL + "/img/product/",
 }
 
 export const CustomerRouter = {

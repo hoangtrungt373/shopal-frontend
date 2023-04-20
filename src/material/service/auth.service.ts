@@ -1,31 +1,34 @@
-import {AxiosResponse} from "axios";
 import axiosClient from "../config/axiosClient";
-import {ProductDetail} from "../model/ProductDetail";
 import {ExceptionResponse} from "../model/exception/ExceptionResponse";
-import {AuthenticationRequest} from "../model/AuthenticationRequest";
 import {ACCESS_TOKEN} from "../config/constants";
+import {CustomerRegisterRequest} from "../model/form/CustomerRegisterRequest";
+import {AuthenticationRequest} from "../model/form/AuthenticationRequest";
+import {AuthenticationResponse} from "../model/AuthenticationResponse";
+import {AxiosResponse} from "axios";
 
-export const registerApi = async (authenticationRequest: AuthenticationRequest) => {
+export const register = async (customerRegisterRequest: CustomerRegisterRequest) => {
     try {
-        const response = await axiosClient.post(`/api/v1/auth/register`, authenticationRequest);
+        localStorage.setItem(ACCESS_TOKEN, '');
+        const response = await axiosClient.post(`/v1/auth/register`, customerRegisterRequest);
         return response.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data)
     }
 };
-export const loginApi = async (authenticationRequest: AuthenticationRequest) => {
+export const authenticate = async (authenticationRequest: AuthenticationRequest) => {
     try {
-        const response = await axiosClient.post(`/api/v1/auth/authenticate`, authenticationRequest);
-        const token = response.data;
-        localStorage.setItem(ACCESS_TOKEN, token);
-        return token;
+        const result: AxiosResponse = await axiosClient.post<AuthenticationResponse>(`/v1/auth/authenticate`, authenticationRequest);
+        const authenticationResponse = result.data;
+        localStorage.setItem(ACCESS_TOKEN, authenticationResponse.token);
+        console.log(authenticationResponse);
+        return authenticationResponse;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data)
     }
 };
-export const logoutApi = async () => {
+export const logout = async () => {
     try {
-        const response = await axiosClient.get(`/api/v1/auth/logout`);
+        const response = await axiosClient.get(`/v1/auth/logout`);
         localStorage.setItem(ACCESS_TOKEN, '');
         return response.data;
     } catch (err: ExceptionResponse | any) {
