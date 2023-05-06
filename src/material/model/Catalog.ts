@@ -6,4 +6,5 @@ export interface Catalog extends AbstractModel {
     productTypeDescription: string;
     logoUrl: string;
     level: number;
+    childCatalogs: Catalog[]
 }

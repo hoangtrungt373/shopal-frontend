@@ -1,0 +1,48 @@
+.productCartName {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.amountBtn {
+    height: 30px;
+    width: 35px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    cursor: pointer;
+}
+
+.amountInput {
+    height: 30px;
+    width: 40px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    text-align: center;
+}
+
+.disableItem {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
+}
+
+.deleteSvg {
+    color: rgba(0, 0, 0, 0.54);
+    cursor: pointer;
+}
+
+.deleteSvg:hover {
+    color: red;
+}
+
+.css-355xbt-MuiButtonBase-root-MuiCheckbox-root {
+    padding: 0 !important;
+}
+
+.stickySidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 16px;
+}

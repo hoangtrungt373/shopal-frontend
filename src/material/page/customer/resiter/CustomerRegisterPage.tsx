@@ -16,7 +16,7 @@ import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
 import {UserRole} from "../../../model/enums/UserRole";
 import {CustomerRouter} from "../../../config/router";
-import {CustomerRegisterRequest} from "../../../model/form/CustomerRegisterRequest";
+import {CustomerRegisterRequest} from "../../../model/request/CustomerRegisterRequest";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {register} from "../../../service/auth.service";
 

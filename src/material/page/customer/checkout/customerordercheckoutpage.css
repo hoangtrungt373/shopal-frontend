@@ -1,0 +1,17 @@
+
+.divider {
+    height: 25px;
+    position: relative;
+    top: 3px;
+    padding: 0.5rem 0;
+    background: #1BA8FF;
+    border-left: 2px solid #1BA8FF;
+}
+
+.productName {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

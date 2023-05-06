@@ -15,7 +15,7 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
 import {UserRole} from "../../../model/enums/UserRole";
-import {AuthenticationRequest} from '../../../model/form/AuthenticationRequest';
+import {AuthenticationRequest} from '../../../model/request/AuthenticationRequest';
 import {authenticate} from "../../../service/auth.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {CustomerRouter} from "../../../config/router";

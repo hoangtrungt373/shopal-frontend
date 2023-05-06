@@ -1,8 +1,8 @@
 import axiosClient from "../config/axiosClient";
 import {ExceptionResponse} from "../model/exception/ExceptionResponse";
-import {ACCESS_TOKEN} from "../config/constants";
-import {CustomerRegisterRequest} from "../model/form/CustomerRegisterRequest";
-import {AuthenticationRequest} from "../model/form/AuthenticationRequest";
+import {ACCESS_TOKEN, CURRENT_USER_ROLE} from "../config/constants";
+import {CustomerRegisterRequest} from "../model/request/CustomerRegisterRequest";
+import {AuthenticationRequest} from "../model/request/AuthenticationRequest";
 import {AuthenticationResponse} from "../model/AuthenticationResponse";
 import {AxiosResponse} from "axios";
 
@@ -20,7 +20,7 @@ export const authenticate = async (authenticationRequest: AuthenticationRequest)
         const result: AxiosResponse = await axiosClient.post<AuthenticationResponse>(`/v1/auth/authenticate`, authenticationRequest);
         const authenticationResponse = result.data;
         localStorage.setItem(ACCESS_TOKEN, authenticationResponse.token);
-        console.log(authenticationResponse);
+        localStorage.setItem(CURRENT_USER_ROLE, authenticationResponse.userRole);
         return authenticationResponse;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data)

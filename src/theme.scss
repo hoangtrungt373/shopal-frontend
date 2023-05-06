@@ -1,0 +1,108 @@
+$PolarGreenTheme1: #f6ffed;
+$PolarGreenTheme2: #d9f7be;
+$PolarGreenTheme3: #b7eb8f;
+$PolarGreenTheme4: #95de64;
+$PolarGreenTheme5: #73d13d;
+$PolarGreenTheme6: #52c41a;
+$PolarGreenTheme7: #389e0d;
+$PolarGreenTheme8: #237804;
+$PolarGreenTheme9: #135200;
+$PolarGreenTheme10: #092b00;
+
+$NeutralGrayTheme1: #ffffff;
+$NeutralGrayTheme2: #fafafa;
+$NeutralGrayTheme3: #f5f5f5;
+$NeutralGrayTheme4: #f0f0f0;
+$NeutralGrayTheme5: #d9d9d9;
+$NeutralGrayTheme6: #bfbfbf;
+$NeutralGrayTheme7: #8c8c8c;
+$NeutralGrayTheme8: #595959;
+$NeutralGrayTheme9: #434343;
+$NeutralGrayTheme10: #262626;
+$NeutralGrayTheme11: #1f1f1f;
+$NeutralGrayTheme12: #141414;
+$NeutralGrayTheme13: #000000;
+$NeutralGrayTheme14: #221F20;
+
+$VolcanoTheme1: #fff2e8;
+$VolcanoTheme2: #ffd8bf;
+$VolcanoTheme3: #ffbb96;
+$VolcanoTheme4: #ff9c6e;
+$VolcanoTheme5: #ff7a45;
+$VolcanoTheme6: #fa541c;
+$VolcanoTheme7: #d4380d;
+$VolcanoTheme8: #ad2102;
+$VolcanoTheme9: #871400;
+$VolcanoTheme10: #610b00;
+
+$DuskRedTheme6: #f5222d;
+$DuskRedTheme7: #cf1322;
+
+$DayBreakBlueTheme1: #e6f7ff;
+$DayBreakBlueTheme2: #bae7ff;
+$DayBreakBlueTheme3: #91d5ff;
+$DayBreakBlueTheme4: #69c0ff;
+$DayBreakBlueTheme5: #40a9ff;
+$DayBreakBlueTheme6: #1890ff;
+$DayBreakBlueTheme7: #096dd9;
+$DayBreakBlueTheme8: #0050b3;
+$DayBreakBlueTheme9: #003a8c;
+$DayBreakBlueTheme10: #002766;
+
+
+$spacing: 8px;
+
+:root {
+  --polargreen-100: #f6ffed;
+  --polargreen-200: #d9f7be;
+  --polargreen-300: #b7eb8f;
+  --polargreen-400: #95de64;
+  --polargreen-500: #73d13d;
+  --polargreen-600: #52c41a;
+  --polargreen-700: #389e0d;
+  --polargreen-800: #237804;
+  --polargreen-900: #135200;
+  --neutralgray-100: #ffffff;
+  --neutralgray-200: #fafafa;
+  --neutralgray-300: #f5f5f5;
+  --neutralgray-400: #f0f0f0;
+  --neutralgray-500: #d9d9d9;
+  --neutralgray-600: #bfbfbf;
+  --neutralgray-700: #8c8c8c;
+  --neutralgray-800: #595959;
+  --neutralgray-900: #434343;
+  --bluebreak-100: #e6f7ff;
+  --bluebreak-200: #bae7ff;
+  --bluebreak-300: #91d5ff;
+  --bluebreak-400: #69c0ff;
+  --bluebreak-500: #40a9ff;
+  --bluebreak-600: #1890ff;
+  --bluebreak-700: #096dd9;
+  --bluebreak-800: #0050b3;
+  --bluebreak-900: #003a8c;
+  --red-100: #fff1f0;
+  --red-200: #ffccc7;
+  --red-300: #ffa39e;
+  --red-400: #ff7875;
+  --red-500: #ff4d4f;
+  --red-600: #f5222d;
+  --red-700: #cf1322;
+  --red-800: #a8071a;
+  --red-900: #820014;
+}
+
+.d-div {
+  background: white;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.p-page-spinner {
+  height: 50vh;
+  margin: auto 0;
+}
+.p-page-error {
+  height: 50vh;
+  margin: auto 0;
+}
+
