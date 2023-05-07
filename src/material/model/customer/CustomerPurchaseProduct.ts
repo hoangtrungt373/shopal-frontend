@@ -8,4 +8,6 @@ export interface CustomerPurchaseProduct {
     pointExchange: number;
     amount: number;
     totalPointExchange: number;
+    initialCash: number;
+    totalCash: number;
 }

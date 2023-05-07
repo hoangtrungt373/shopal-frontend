@@ -18,10 +18,12 @@ import {
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router-dom";
 import {AssetPath, EnterpriseRouter} from "../../../config/router";
-import {createSeoLink} from "../../../util/url.util";
+import {createSeoLink, formatVndMoney} from "../../../util/url.util";
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";
+import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 
 
 interface Props {
@@ -34,6 +36,13 @@ interface OrderStatusStep {
     label: string,
     value: OrderStatus
 }
+
+const breadCrumbItems: BreadcrumbItem[] = [
+    {
+        title: "Orders",
+        isLasted: true
+    }
+]
 
 const CustomerPurchaseOrderSearch: React.FC<Props> = ({onSearchPurchaseOrder}) => {
 
@@ -117,7 +126,7 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
         {
             field: 'id',
             headerName: 'ID',
-            flex: 0.3
+            flex: 0.1
         },
         {
             field: 'customerFullName',
@@ -132,11 +141,11 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
         {
             field: 'orderTotalItems',
             headerName: 'Items',
-            flex: 0.3
+            flex: 0.1
         },
         {
             field: 'orderTotalPointExchange',
-            headerName: 'Total price',
+            headerName: 'Total point',
             flex: 0.3,
             renderCell(params: GridCellParams) {
 
@@ -152,9 +161,20 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
             }
         },
         {
+            field: 'totalPrice',
+            headerName: 'Total price',
+            flex: 0.3,
+            renderCell(params: GridCellParams) {
+
+                return (
+                    <Typography>{formatVndMoney(params.row.orderTotalCash)}</Typography>
+                );
+            }
+        },
+        {
             field: 'orderStatus',
-            headerName: 'Status',
-            flex: 0.5,
+            headerName: 'Order Status',
+            flex: 0.3,
             renderCell(params: GridCellParams) {
 
                 let orderStatus: OrderStatus = params.row.orderStatus;
@@ -190,7 +210,7 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
                 }
 
                 return (
-                    <Chip label={params.row.orderStatusDescription}
+                    <Chip label={params.row.orderStatusDescription} size={"small"}
                           style={{backgroundColor: chipBgColor, color: chipTextColor}}/>
                 );
             }
@@ -198,8 +218,20 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
         {
             field: 'orderDate',
             headerName: 'Date',
-            flex: 0.3,
-            valueGetter: ({value}) => value && value.slice(0, 10),
+            flex: 0.5,
+            renderCell(params: GridCellParams) {
+
+                let dateParams = params.row.orderDate;
+                let date = dateParams.slice(0, 10);
+                let hour = new Date(dateParams).getHours();
+                let minute = new Date(dateParams).getMinutes();
+
+                let fullDateTime = date + " " + hour + ":" + minute;
+
+                return (
+                    <Typography>{fullDateTime}</Typography>
+                );
+            }
         },
         {
             field: 'actions',
@@ -222,7 +254,6 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
                 rows={enterprisePurchaseOrders}
                 columns={columns}
                 pageSizeOptions={[5]}
-                checkboxSelection
                 disableRowSelectionOnClick
             />
         </Box>
@@ -274,17 +305,18 @@ const EnterprisePurchaseOrderManagementPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box
-                sx={{display: "flex", flexDirection: "column", gap: 2, backgroundColor: "#fff", p: 2, borderRadius: 2}}>
-                <Typography variant={"h6"} fontWeight={"bold"}>Order history</Typography>
-                <CustomerPurchaseOrderSearch
-                    onSearchPurchaseOrder={(criteria: EnterprisePurchaseOrderSearchCriteriaRequest) => handleSearchPurchaseOrder(criteria)}/>
-                {
-                    currentEnterprise && (
-                        <CustomerPurchaseOrderList enterprisePurchaseOrders={enterprisePurchaseOrders}
-                                                   currentEnterprise={currentEnterprise}/>
-                    )
-                }
+            <Box sx={{display: "flex", flexDirection: "column"}}>
+                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Order History"}/>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <CustomerPurchaseOrderSearch
+                        onSearchPurchaseOrder={(criteria: EnterprisePurchaseOrderSearchCriteriaRequest) => handleSearchPurchaseOrder(criteria)}/>
+                    {
+                        currentEnterprise && (
+                            <CustomerPurchaseOrderList enterprisePurchaseOrders={enterprisePurchaseOrders}
+                                                       currentEnterprise={currentEnterprise}/>
+                        )
+                    }
+                </Box>
             </Box>
         )
     } else {

@@ -91,7 +91,7 @@ const EnterpriseAccountingList: React.FC<Props> = ({enterpriseAccountings, onPro
                 }
 
                 return (
-                    <Chip label={params.row.paymentStatusDescription}
+                    <Chip label={params.row.paymentStatusDescription} size={"small"}
                           style={{backgroundColor: chipBgColor, color: chipTextColor}}/>
                 );
             }

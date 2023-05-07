@@ -1,0 +1,12 @@
+.page-breadcrumb .breadcrumb-link:hover {
+    text-decoration: underline;
+}
+
+.page-breadcrumb .breadcrumb-link, .breadcrumb-link-lasted {
+    font-size: 14px;
+    color: #8c8c8c;
+}
+
+.page-breadcrumb .breadcrumb-link-first {
+    color: #1890ff;
+}

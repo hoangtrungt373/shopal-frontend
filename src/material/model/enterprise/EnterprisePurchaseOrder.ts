@@ -14,5 +14,6 @@ export interface EnterprisePurchaseOrder extends AbstractModel {
     orderStatusDescription: string;
     deliveryDate: string;
     orderTotalItems: number;
+    orderTotalCash: number;
     purchaseProducts: CustomerPurchaseProduct[];
 }

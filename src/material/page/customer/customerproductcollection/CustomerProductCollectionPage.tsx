@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import {Catalog} from "../../../model/Catalog";
-import {getAllCatalog} from "../../../service/catalog.service";
+import {getAllMainCatalog} from "../../../service/catalog.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import PageSpinner from "../../common/share/PageSpinner";
 import Typography from "@mui/material/Typography";
@@ -65,7 +65,7 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
                     {catalogs.map((catalog, index) => {
                         return (
                             <Link to={"/"} style={{fontSize: "12px"}}
-                                  key={index} className={"selectLink"}>{catalog.productTypeDescription}</Link>
+                                  key={index} className={"selectLink"}>{catalog.catalogName}</Link>
                         );
                     })}
                 </Box>
@@ -215,7 +215,7 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
         }
 
         let productSearchRequest: ProductSearchCriteriaRequest = productSearchPathToProductSearchCriteriaRequest(newProductSearchPath);
-        getAllCatalog()
+        getAllMainCatalog()
             .then((resCatalogs: Catalog[]) => {
                 setCatalogs(resCatalogs);
 

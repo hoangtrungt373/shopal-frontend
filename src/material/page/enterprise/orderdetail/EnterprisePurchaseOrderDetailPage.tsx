@@ -5,7 +5,7 @@ import {Box, Step, StepConnector, stepConnectorClasses, StepIconProps, StepLabel
 import {Link, useParams} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import {AssetPath} from "../../../config/router";
+import {AssetPath, EnterpriseRouter} from "../../../config/router";
 import PageSpinner from "../../common/share/PageSpinner";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {
@@ -24,6 +24,8 @@ import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";
 import {formatVndMoney} from "../../../util/url.util";
+import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
+import AdminPageHeader from "../../common/admin/AdminPageHeader";
 
 interface RouteParams {
     purchaseOrderId: any;
@@ -58,7 +60,7 @@ const OrderInfoBlock: React.FC<Props> = ({title, info}) => {
                 borderTopRightRadius: "16px",
                 border: '1px solid #e1e2e6'
             }}>
-                <Typography fontWeight={"bold"}>{title}</Typography>
+                <Typography fontWeight={"bold"} color={"#56606e"}>{title}</Typography>
             </Box>
             <Box sx={{
                 p: 2, color: '#757575',
@@ -75,6 +77,7 @@ const OrderInfoBlock: React.FC<Props> = ({title, info}) => {
 
 const ProductSummary: React.FC<Props> = ({enterprisePurchaseOrder, currentEnterprise}) => {
 
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <Box sx={{
@@ -86,31 +89,37 @@ const ProductSummary: React.FC<Props> = ({enterprisePurchaseOrder, currentEnterp
                 borderTopLeftRadius: 2,
                 borderTopRightRadius: 2
             }}>
-                <Typography fontSize={"16px"} fontWeight={"bold"}>PRODUCT SUMMARY</Typography>
+                <Typography fontSize={"16px"} fontWeight={"bold"} color={"#56606e"}>PRODUCT SUMMARY</Typography>
             </Box>
             <Grid container spacing={2} p={1} mt={1} alignItems={"center"}
                   justifyContent={"space-between"}>
                 <Grid item xs={2}>
                     <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
                         <Box sx={{width: "30%"}}>
-                            <Typography align={"left"} fontWeight={"bold"}>#</Typography>
+                            <Typography align={"left"} fontWeight={"bold"} color={"#56606e"}>#</Typography>
                         </Box>
                         <Box sx={{width: "70%"}}>
-                            <Typography fontWeight={"bold"}>IMAGE</Typography>
+                            <Typography fontWeight={"bold"} color={"#56606e"}>Image</Typography>
                         </Box>
                     </Box>
                 </Grid>
                 <Grid item xs={4}>
-                    <Typography fontWeight={"bold"}>PRODUCT</Typography>
+                    <Typography fontWeight={"bold"} color={"#56606e"}>Product</Typography>
+                </Grid>
+                <Grid item xs={1}>
+                    <Typography align={"center"} fontWeight={"bold"} color={"#56606e"}>Point/Unit</Typography>
+                </Grid>
+                <Grid item xs={1}>
+                    <Typography align={"center"} fontWeight={"bold"} color={"#56606e"}>Cash/Unit</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <Typography align={"center"} fontWeight={"bold"}>POINT/UNIT</Typography>
+                    <Typography align={"center"} fontWeight={"bold"} color={"#56606e"}>Quantity</Typography>
                 </Grid>
-                <Grid item xs={2}>
-                    <Typography align={"center"} fontWeight={"bold"}>QUANTITY</Typography>
+                <Grid item xs={1}>
+                    <Typography align={"center"} fontWeight={"bold"} color={"#56606e"}>Subtotal Point</Typography>
                 </Grid>
-                <Grid item xs={2}>
-                    <Typography align={"right"} fontWeight={"bold"}>SUBTOTAL</Typography>
+                <Grid item xs={1}>
+                    <Typography align={"right"} fontWeight={"bold"} color={"#56606e"}>Subtotal Cash</Typography>
                 </Grid>
             </Grid>
             {
@@ -138,7 +147,7 @@ const ProductSummary: React.FC<Props> = ({enterprisePurchaseOrder, currentEnterp
                                     <Link style={{width: "100%"}} to={"/"}
                                           className={"productName"}>{purchaseProduct.productName}</Link>
                                 </Grid>
-                                <Grid item xs={2}>
+                                <Grid item xs={1}>
                                     <Box sx={{
                                         display: "flex",
                                         gap: 0.5,
@@ -151,15 +160,19 @@ const ProductSummary: React.FC<Props> = ({enterprisePurchaseOrder, currentEnterp
                                                 sx={{width: 20, height: 20}}/>
                                     </Box>
                                 </Grid>
+                                <Grid item xs={1}>
+                                    <Typography
+                                        align={"center"}>{formatVndMoney(purchaseProduct.initialCash)}</Typography>
+                                </Grid>
                                 <Grid item xs={2}>
                                     <Typography align={"center"}>{purchaseProduct.amount}</Typography>
                                 </Grid>
-                                <Grid item xs={2}>
+                                <Grid item xs={1}>
                                     <Box sx={{
                                         display: "flex",
                                         gap: 0.5,
                                         alignItems: "center",
-                                        justifyContent: "flex-end"
+                                        justifyContent: "center"
                                     }}>
                                         <Typography align={"right"}>{purchaseProduct.totalPointExchange}</Typography>
                                         <Avatar alt="img"
@@ -167,16 +180,21 @@ const ProductSummary: React.FC<Props> = ({enterprisePurchaseOrder, currentEnterp
                                                 sx={{width: 20, height: 20}}/>
                                     </Box>
                                 </Grid>
+                                <Grid item xs={1}>
+                                    <Typography
+                                        align={"right"}>{formatVndMoney(purchaseProduct.totalCash)}</Typography>
+                                </Grid>
                             </Grid>
                         </Box>
                     )
                 })
             }
             <Divider/>
-            <Box style={{backgroundColor: "#F9F9F9"}}>
+            <Box
+                style={{backgroundColor: enterprisePurchaseOrder.purchaseProducts.length % 2 == 0 ? "#F9F9F9" : "#fff"}}>
                 <Grid container spacing={2} p={1} alignItems={"center"}>
                     <Grid item xs={10}>
-                        <Typography align={"right"} fontWeight={"bold"}>Total:</Typography>
+                        <Typography align={"right"} fontWeight={"bold"}>Total point:</Typography>
                     </Grid>
                     <Grid item xs={2}>
                         <Box sx={{display: "flex", gap: 0.5, alignItems: "center", justifyContent: "flex-end"}}>
@@ -189,18 +207,20 @@ const ProductSummary: React.FC<Props> = ({enterprisePurchaseOrder, currentEnterp
                     </Grid>
                 </Grid>
             </Box>
-            <Box>
+            <Box
+                style={{backgroundColor: enterprisePurchaseOrder.purchaseProducts.length % 2 != 0 ? "#F9F9F9" : "#fff"}}>
                 <Grid container spacing={2} p={1} alignItems={"center"}>
                     <Grid item xs={10}>
-                        <Typography align={"right"} fontWeight={"bold"}>To VND:</Typography>
+                        <Typography align={"right"} fontWeight={"bold"}>To cash (VND):</Typography>
                     </Grid>
                     <Grid item xs={2}>
                         <Typography align={"right"}
-                                    fontWeight={"bold"}>{formatVndMoney(enterprisePurchaseOrder.orderTotalPointExchange * currentEnterprise.contract.cashPerPoint)}</Typography>
+                                    fontWeight={"bold"}>{formatVndMoney(enterprisePurchaseOrder.orderTotalCash)}</Typography>
                     </Grid>
                 </Grid>
             </Box>
-            <Box style={{backgroundColor: "#F9F9F9"}}>
+            <Box
+                style={{backgroundColor: enterprisePurchaseOrder.purchaseProducts.length % 2 == 0 ? "#F9F9F9" : "#fff"}}>
                 <Grid container spacing={2} p={1} alignItems={"center"} justifyContent={"flex-end"}>
                     <Grid item xs={10}>
                         <Typography align={"right"} fontWeight={"bold"}>Order Status:</Typography>
@@ -395,7 +415,7 @@ const TrackingOrder: React.FC<Props> = ({enterprisePurchaseOrder, onUpdateOrderS
                 color: "#777777",
             }}>
                 <Typography fontSize={"16px"} fontWeight={"bold"}>TRACKING ORDER NO
-                    - {enterprisePurchaseOrder.id}</Typography>
+                    - #{enterprisePurchaseOrder.id}</Typography>
             </Box>
             <Box sx={{
                 display: "flex",
@@ -430,6 +450,7 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
     const [enterprisePurchaseOrder, setEnterprisePurchaseOrder] = useState<EnterprisePurchaseOrder>();
     const [isShow, setIsShow] = useState<boolean>(false);
     const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>(null);
+    const [breadCrumbItems, setBreadCrumbItems] = useState<BreadcrumbItem[]>([]);
 
     /*TODO: add not found */
     useEffect(() => {
@@ -439,6 +460,16 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
                 getCurrentEnterpriseInfo()
                     .then((resEnterprise: Enterprise) => {
                         setCurrentEnterprise(resEnterprise);
+                        setBreadCrumbItems([
+                            {
+                                url: EnterpriseRouter.purchaseOrderManagement,
+                                title: "Order",
+                            },
+                            {
+                                title: "Order #" + resEnterprisePurchaseOrder.id,
+                                isLasted: true
+                            },
+                        ]);
                     }).catch((err: ExceptionResponse) => {
                     console.log(err);
                 });
@@ -471,23 +502,14 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                <Box sx={{
-                    backgroundColor: "#fff",
+            <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Order Detail"}/>
+                <Box className={"content-box"} sx={{
                     display: "flex",
                     flexDirection: "column",
-                    borderRadius: 2,
-                    gap: 2,
-                    p: 2
+                    gap: 2
                 }}>
-                    <Box sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between"
-                    }}>
-                        <Typography variant={"h6"} fontWeight={"bold"}>Order Detail</Typography>
-                        <Typography fontSize={"16px"}>Order ID: # {enterprisePurchaseOrder.id}</Typography>
-                    </Box>
+                    <Typography className={"page-sub-header"}>Order Detail: #{enterprisePurchaseOrder.id}</Typography>
                     <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>
                     <Grid container spacing={2}>
                         <Grid item xs={4}>
@@ -520,7 +542,7 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
                         )
                     }
                 </Box>
-                <Box sx={{backgroundColor: "#fff", p: 2, borderRadius: 2}}>
+                <Box className={"content-box"}>
                     <TrackingOrder enterprisePurchaseOrder={enterprisePurchaseOrder}
                                    onUpdateOrderStatus={(newStatus: OrderStatus) => handleUpdateOrderStatus((newStatus))}/>
                 </Box>

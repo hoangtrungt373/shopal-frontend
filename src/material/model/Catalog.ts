@@ -1,10 +1,17 @@
 import {AbstractModel} from "./AbstractModel";
-import {ProductType} from "./enums/ProductType";
+import {ProductTrendingState} from "./enums/ProductTrendingState";
+import {CatalogStatus} from "./enums/CatalogStatus";
 
 export interface Catalog extends AbstractModel {
-    productType: ProductType;
-    productTypeDescription: string;
+    catalogName: string,
+    parentCatalogId: number,
+    parentCatalogName: string,
     logoUrl: string;
     level: number;
     childCatalogs: Catalog[]
+    totalProduct: number,
+    totalSell: number,
+    productTrendingState: ProductTrendingState,
+    catalogStatus: CatalogStatus,
+    catalogStatusDescription: string
 }

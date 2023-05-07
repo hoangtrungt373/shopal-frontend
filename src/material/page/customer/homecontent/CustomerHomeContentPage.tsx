@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Catalog} from "../../../model/Catalog";
 import {Enterprise} from "../../../model/Enterprise";
 import {Link, useHistory} from "react-router-dom";
-import {getAllCatalog} from "../../../service/catalog.service";
+import {getAllMainCatalog} from "../../../service/catalog.service";
 import {getAllEnterprise} from "../../../service/enterprise.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import PageSpinner from "../../common/share/PageSpinner";
@@ -38,7 +38,7 @@ const CatalogList: React.FC<Props> = ({catalogs}) => {
                             <ListItem disablePadding key={index}>
                                 <ListItemButton
                                     href={CustomerRouter.productCollectionPage + createSearchQuery(productSearchPath)}>
-                                    <ListItemText primary={catalog.productTypeDescription}/>
+                                    <ListItemText primary={catalog.catalogName}/>
                                 </ListItemButton>
                             </ListItem>
                         )
@@ -98,7 +98,7 @@ const CustomerHomeContentPage: React.FC<Props> = () => {
 
     useEffect(() => {
 
-        getAllCatalog()
+        getAllMainCatalog()
             .then((resCatalogs: Catalog[]) => {
                 setCatalogs(resCatalogs);
 

@@ -1,13 +1,13 @@
 import * as React from "react";
 import {ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import StoreIcon from "@mui/icons-material/Store";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import {AdminRouter} from "../../../config/router";
 import GavelIcon from '@mui/icons-material/Gavel';
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
+import CategoryIcon from '@mui/icons-material/Category';
 
 interface Props {
 }
@@ -21,11 +21,11 @@ export const AdminMainListItem: React.FC<Props> = ({}) => (
             </ListItemIcon>
             <ListItemText primary="Dashboard"/>
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton href={AdminRouter.catalogManagementPage}>
             <ListItemIcon>
-                <StoreIcon/>
+                <CategoryIcon/>
             </ListItemIcon>
-            <ListItemText primary="Account"/>
+            <ListItemText primary="Catalog"/>
         </ListItemButton>
         <ListItemButton href={AdminRouter.productCollectionPage}>
             <ListItemIcon>
@@ -33,7 +33,7 @@ export const AdminMainListItem: React.FC<Props> = ({}) => (
             </ListItemIcon>
             <ListItemText primary="Product"/>
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton href={AdminRouter.purchaseOrderManagement}>
             <ListItemIcon>
                 <ShoppingCartIcon/>
             </ListItemIcon>

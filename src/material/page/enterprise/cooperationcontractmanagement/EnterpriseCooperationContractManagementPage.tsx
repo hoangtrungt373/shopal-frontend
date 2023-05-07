@@ -94,7 +94,7 @@ const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContract
                 }
 
                 return (
-                    <Chip label={params.row.contractStatusDescription}
+                    <Chip label={params.row.contractStatusDescription} size={"small"}
                           style={{backgroundColor: chipBgColor, color: chipTextColor}}/>
                 );
             }

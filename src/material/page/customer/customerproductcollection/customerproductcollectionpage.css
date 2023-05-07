@@ -8,10 +8,16 @@
 }
 
 .productCollectionPage .cartItem p, a {
-    text-decoration: none !important;
-    color: black !important;
-    font-size: 12px !important;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
 }
+
+/*.productCollectionPage .cartItem p, a {*/
+/*    text-decoration: none !important;*/
+/*    color: black !important;*/
+/*    font-size: 12px !important;*/
+/*}*/
 
 .productCollectionPage .cartItem:hover {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2) !important;

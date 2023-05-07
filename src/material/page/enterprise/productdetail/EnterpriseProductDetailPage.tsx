@@ -13,15 +13,17 @@ import {ProductDetail} from "../../../model/ProductDetail";
 import {useHistory, useParams} from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import {ProductImage} from "../../../model/ProductImage";
-import {AssetPath} from "../../../config/router";
+import {AssetPath, EnterpriseRouter} from "../../../config/router";
 import ImageGallery from 'react-image-gallery';
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
-import {ProductStatus} from "../../../model/enums/ProductStatus";
 import {formatVndMoney} from "../../../util/url.util";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import AlertDialog from "../../common/share/AlertDialog";
+import {ProductStatus} from "../../../model/enums/ProductStatus";
+import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
+import AdminPageHeader from "../../common/admin/AdminPageHeader";
 
 interface Props {
     productDetail?: ProductDetail
@@ -102,7 +104,7 @@ const ProductInfo: React.FC<Props> = ({
         }
 
         return (
-            <Chip label={productDetail.productStatusDescription}
+            <Chip label={productDetail.productStatusDescription} size={"small"}
                   style={{backgroundColor: chipBgColor, color: chipTextColor, position: "relative", bottom: 1}}/>
         );
     }
@@ -220,7 +222,7 @@ const ProductInfo: React.FC<Props> = ({
                                 }
 
                                 return (
-                                    <Chip label={productPoint.enterprise.enterpriseName} key={index}
+                                    <Chip label={productPoint.enterprise.enterpriseName} key={index} size={"small"}
                                           style={{
                                               backgroundColor: chipColor,
                                               color: "#fff"
@@ -255,6 +257,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
     const params: RouteParams = useParams()
     const [productDetail, setProductDetail] = useState<ProductDetail>();
     const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>()
+    const [breadCrumbItems, setBreadCrumbItems] = useState<BreadcrumbItem[]>([]);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState({
         open: false,
@@ -274,7 +277,18 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
                 setProductDetail(productDetailRes);
                 getCurrentEnterpriseInfo()
                     .then((resEnterprise: Enterprise) => {
+                        console.log(resEnterprise)
                         setCurrentEnterprise(resEnterprise);
+                        setBreadCrumbItems([
+                            {
+                                url: EnterpriseRouter.productCollectionPage,
+                                title: "Product",
+                            },
+                            {
+                                title: productDetailRes.productName,
+                                isLasted: true
+                            },
+                        ]);
                     }).catch((err: ExceptionResponse) => {
                     console.log(err);
                 });
@@ -379,25 +393,20 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box
-                sx={{display: "flex", flexDirection: "column", gap: 2, backgroundColor: "#fff", p: 2, borderRadius: 2}}>
+            <Box sx={{display: "flex", flexDirection: "column"}}>
                 <DisplayAlert/>
-                <Box sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between"
-                }}>
-                    <Typography variant={"h6"} fontWeight={"bold"}>Product Detail</Typography>
-                    <Typography fontSize={"16px"}>Product ID: # {productDetail.id}</Typography>
+                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <Typography className={"page-sub-header"}>Product Detail: #{productDetail.id}</Typography>
+                    <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>
+                    {
+                        currentEnterprise && (
+                            <ProductInfo productDetail={productDetail} currentEnterprise={currentEnterprise}
+                                         onRequestCancel={() => handleRequestCancel()}
+                                         onRequestSelling={() => handleRequestSelling()}/>
+                        )
+                    }
                 </Box>
-                <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>
-                {
-                    currentEnterprise && (
-                        <ProductInfo productDetail={productDetail} currentEnterprise={currentEnterprise}
-                                     onRequestCancel={() => handleRequestCancel()}
-                                     onRequestSelling={() => handleRequestSelling()}/>
-                    )
-                }
             </Box>
         )
             ;

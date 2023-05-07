@@ -1,5 +1,6 @@
 import {AbstractModel} from "./AbstractModel";
 import {ProductPoint} from "./ProductPoint";
+import {ProductType} from "./enums/ProductType";
 import {ProductStatus} from "./enums/ProductStatus";
 
 
@@ -18,5 +19,6 @@ export interface Product extends AbstractModel {
     expirationDate: string,
     initialCash: number,
     exchangeAblePoints: ProductPoint[];
+    productType: ProductType
 }
 

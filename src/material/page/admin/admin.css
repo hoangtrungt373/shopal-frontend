@@ -1,0 +1,20 @@
+.page-header {
+    font-size: 24px !important;
+    color: #56606e;
+    font-weight: bold !important;
+    margin-bottom: 4px !important;
+}
+
+.page-sub-header {
+    font-size: 18px !important;
+    color: #56606e;
+    font-weight: bold !important;
+}
+
+.content-box {
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.03);
+    background-color: #fff;
+    padding: 16px;
+    color: #8a909d;
+}

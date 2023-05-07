@@ -1,159 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="product detail, product collection, home, cart, checkout, order history, membership, enterprise cooperation contract, accouting, request product selling,">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/enterprise/circlek.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/enterprise/familymart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/enterprise/ministop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/enterprise/phuclong.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/enterprise/thegioididong.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/1_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/1_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/1_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/1_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/1_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/2_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/2_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/2_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/2_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/2_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/3_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/3_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/3_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/3_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/3_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/4_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/4_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/4_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/4_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/4_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/5_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/5_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/5_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/5_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/product/5_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/img/web/cart_empty.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/config/theme.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/Cart.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/Customer.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/Product.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/ProductCart.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/ProductCartGroupByEnterprise.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseOrder.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseProduct.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/customer/EnterpriseMembership.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enterprise/CustomerMembership.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enterprise/CustomerRegister.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enterprise/EnterpriseAccounting.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enterprise/EnterpriseCooperationContract.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enterprise/EnterprisePurchaseOrder.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/ContractStatus.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/DeliveryStatus.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/Gender.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/OrderStatus.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/PaymentProcess.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/PaymentStatus.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/enums/ProductStatus.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/AbstractSearchCriteria.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/CooperationContractChangeRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/CreateNewPurchaseOrderRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/EnterpriseCooperationContractSearchCriteriaRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/EnterprisePurchaseOrderSearchCriteriaRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/EnterpriseUpdateOrderStatusRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/ProductSearchCriteriaRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/ProductSearchPath.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/model/request/UpdateProductCartRequest.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/admin/dahboard/AdminDashboardPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/admin/login/AdminLoginPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminNewProductPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminAppBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminDrawer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminMainListItem.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerCheckoutHeader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/customer/customerhomeheader.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseAppBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseCopyRight.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseDrawer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseMainListItem.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/AlertDialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/AppBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/Drawer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/PageSpinner.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/accountinfo/CustomerAccountInfoPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/cart/CustomerCartPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/cart/customercartpage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/checkout/CustomerOrderCheckoutPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/checkout/customerordercheckoutpage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/checkoutsuccess/CustomerCheckoutSuccessPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/customerproductcollectionpage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/dashboard/CustomerDashboardPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/homecontent/CustomerHomeContentPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/homecontent/customerhomecontentpage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/membership/CustomerMembershipPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/customer/productdetail/customerproductdetailpage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/accountingdetail/EnterpriseAccountingDetailPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/customermanagement/EnterpriseCustomerManagementPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/customermanagement/enterprisecustomermanagement.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/orderdetail/EnterprisePurchaseOrderDetailPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/enterprisepurchaseordermanagementpage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/productdetail/EnterpriseProductDetailPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/accounting.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/cart.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/catalog.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/contract.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/customer.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/enterprise.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/membership.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/service/order.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/util/cart.util.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/util/search.utils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/util/url.util.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/theme.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/config/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/config/constants.js" afterDir="false" />
+    <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="catalog page, sub catalog page, new product page">
+      <change afterPath="$PROJECT_DIR$/public/content/product/1.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/catalog/1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/catalog/2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/10_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/10_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/10_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/10_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/10_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/11_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/11_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/11_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/11_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/11_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/12_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/12_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/12_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/12_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/12_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/13_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/13_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/13_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/13_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/13_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/14_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/14_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/14_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/14_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/14_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/15_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/15_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/15_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/15_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/15_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/16_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/16_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/16_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/16_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/16_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/17_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/17_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/17_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/17_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/17_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/18_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/18_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/18_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/18_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/18_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/19_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/19_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/19_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/19_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/19_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/1_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/1_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/1_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/1_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/1_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/20_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/21_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/21_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/21_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/21_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/21_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/22_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/22_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/22_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/22_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/22_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/23_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/23_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/23_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/23_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/23_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/24_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/24_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/24_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/24_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/24_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/25_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/25_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/25_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/25_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/25_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/26_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/26_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/26_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/26_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/27_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/28_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/28_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/2_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/2_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/2_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/2_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/2_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/3_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/3_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/3_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/3_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/3_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/4_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/4_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/4_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/4_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/4_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/5_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/5_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/5_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/5_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/5_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/6_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/6_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/6_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/6_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/6_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/7_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/7_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/7_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/7_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/7_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/8_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/8_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/8_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/8_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/8_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/9_1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/9_2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/9_3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/9_4.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/product/9_5.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/web/upload-preview.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/web/upload-thumb-preview.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/common/BreadcrumbItem.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/common/GroupHeader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/common/GroupItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/common/TabPanelProps.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/enums/CatalogStatus.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/enums/ProductTrendingState.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateCatalogRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/admin.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/catalog/AdminCatalogManagementPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/catalog/admincatalogmanagementpage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/childcatalog/AdminChildCatalogManagementPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/childcatalog/adminchildcatalogmanagementpage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/newproduct/adminnewproductpage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/ordermanagement/AdminPurchaseOrderManagementPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminPageHeader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/PageBreadCrumb.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/TabPanel.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/a11yProps.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/pagebreadcrumb.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/1_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/1_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/1_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/1_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/1_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/2_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/2_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/2_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/2_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/2_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/3_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/3_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/3_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/3_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/3_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/4_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/4_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/4_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/4_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/4_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/5_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/5_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/5_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/5_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/product/5_5.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/config/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/config/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/AuthenticationResponse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/AuthenticationResponse.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/model/Catalog.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/Catalog.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/Enterprise.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/Enterprise.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/Product.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/Product.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/ProductPoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/ProductPoint.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/enums/UserRole.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/enums/UserRole.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/exception/ExceptionResponse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/exception/ExceptionResponse.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/form/AuthenticationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/AuthenticationRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/form/CustomerRegisterRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/CustomerRegisterRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseProduct.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseProduct.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/enterprise/EnterprisePurchaseOrder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/enterprise/EnterprisePurchaseOrder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/enums/ProductType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/enums/ProductType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/request/ProductSearchCriteriaRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/ProductSearchCriteriaRequest.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/common/component/PrivateRoute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/PrivateRoute.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/CustomerHomePage.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/FeaturedPost.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/Header.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/Main.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/MainFeaturedPost.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/Markdown.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/Sidebar.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/blog-post.1.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/blog-post.2.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/home/blog-post.3.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/login/CustomerLoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/login/CustomerLoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/productdetail/CustomerProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/productdetail/CustomerProductDetailPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/resiter/CustomerRegisterPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/resiter/CustomerRegisterPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/service/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminNewProductPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminNewProductPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/admin/AdminMainListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminMainListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/cart/customercartpage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/cart/customercartpage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/customerproductcollectionpage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/customerproductcollectionpage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/homecontent/CustomerHomeContentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/homecontent/CustomerHomeContentPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/productdetail/customerproductdetailpage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/productdetail/customerproductdetailpage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/orderdetail/EnterprisePurchaseOrderDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/orderdetail/EnterprisePurchaseOrderDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/productdetail/EnterpriseProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/productdetail/EnterpriseProductDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/catalog.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/catalog.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/service/product.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/product.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/util/auth.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/util/auth.util.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +258,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/TTG/Documents/GitHub/shopal-frontend/src/material/page/admin/dahboard",
+    "last_opened_file_path": "C:/Users/TTG/Documents/GitHub/shopal-frontend/src/material/page/admin/ordermanagement",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -217,11 +270,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\dahboard" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\admin" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\enterprise" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\login" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\ordermanagement" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\productdetail" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\model\enums" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\admin" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\childcatalog" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\share" />
@@ -319,7 +372,8 @@
       <workItem from="1682993024277" duration="9211000" />
       <workItem from="1683169282043" duration="1382000" />
       <workItem from="1683256574562" duration="1394000" />
-      <workItem from="1683342183255" duration="4147000" />
+      <workItem from="1683342183255" duration="33970000" />
+      <workItem from="1683431946381" duration="38276000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1681829427393</created>
@@ -342,7 +396,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682015670758</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="product detail, product collection, home, cart, checkout, order history, membership, enterprise cooperation contract, accouting, request product selling,">
+      <created>1683346879043</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1683346879043</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -363,7 +424,8 @@
     <MESSAGE value="initial commit" />
     <MESSAGE value="add page product detail" />
     <MESSAGE value="product detail, product collection, home, cart, checkout, order history, membership, enterprise cooperation contract, accouting, request product selling," />
-    <option name="LAST_COMMIT_MESSAGE" value="product detail, product collection, home, cart, checkout, order history, membership, enterprise cooperation contract, accouting, request product selling," />
+    <MESSAGE value="catalog page, sub catalog page, new product page" />
+    <option name="LAST_COMMIT_MESSAGE" value="catalog page, sub catalog page, new product page" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
