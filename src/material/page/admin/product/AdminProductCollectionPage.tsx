@@ -25,6 +25,7 @@ import {getAllMainCatalog} from "../../../service/catalog.service";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import {Enterprise} from "../../../model/Enterprise";
+import {UserRole} from "../../../model/enums/UserRole";
 
 
 interface Props {
@@ -339,7 +340,8 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
     useEffect(() => {
         getProductByCriteria({
             catalogIdList: [],
-            enterpriseIdList: []
+            enterpriseIdList: [],
+            userRole: UserRole.ADMIN
         }).then((resProducts: Product[]) => {
             setProducts(resProducts);
             getAllMainCatalog()

@@ -1,4 +1,5 @@
 import {AbstractSearchCriteria} from "./AbstractSearchCriteria";
+import {UserRole} from "../enums/UserRole";
 
 export interface ProductSearchCriteriaRequest extends AbstractSearchCriteria {
     keyword?: string;
@@ -10,4 +11,5 @@ export interface ProductSearchCriteriaRequest extends AbstractSearchCriteria {
     isPolular?: boolean;
     isLastest?: boolean;
     isTopSales?: boolean;
+    userRole?: UserRole;
 }

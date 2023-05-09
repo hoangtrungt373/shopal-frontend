@@ -4,6 +4,8 @@
   "proxy": "http://localhost:8095/api",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^37.1.0",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.16",
@@ -24,11 +26,13 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-hook-form-mui": "^6.0.1",
+    "react-html-parser": "^2.0.2",
     "react-i18next": "^11.8.15",
     "react-image-gallery": "^1.2.11",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.5.0",
+    "sass": "^1.62.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

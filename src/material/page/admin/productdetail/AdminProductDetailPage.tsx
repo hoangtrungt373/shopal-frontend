@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {getProductDetail} from "../../../service/product.service";
+import {getProductDetailForAdmin} from "../../../service/product.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {Box, Chip, Rating, Stack, Tabs, Tooltip} from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -253,7 +253,7 @@ const AdminProductDetailPage: React.FC<Props> = ({}) => {
     const [breadCrumbItems, setBreadCrumbItems] = useState<BreadcrumbItem[]>([]);
 
     useEffect(() => {
-        getProductDetail(params.productId)
+        getProductDetailForAdmin(params.productId)
             .then((productDetailRes: ProductDetail) => {
                 setProductDetail(productDetailRes);
                 setBreadCrumbItems([

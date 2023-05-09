@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {
-    getProductDetail,
+    getProductDetailForCustomer,
     handleRequestCancellingProductForCurrentEnterprise,
     handleRequestSellingProductForCurrentEnterprise
 } from "../../../service/product.service";
@@ -272,7 +272,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
     const history = useHistory();
 
     useEffect(() => {
-        getProductDetail(params.productId)
+        getProductDetailForCustomer(params.productId)
             .then((productDetailRes: ProductDetail) => {
                 setProductDetail(productDetailRes);
                 getCurrentEnterpriseInfo()
@@ -308,7 +308,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
             handleAccept: async () => {
                 handleRequestSellingProductForCurrentEnterprise(params.productId)
                     .then(() => {
-                        getProductDetail(params.productId)
+                        getProductDetailForCustomer(params.productId)
                             .then((productDetailRes: ProductDetail) => {
                                 setProductDetail(productDetailRes);
                             })
@@ -347,7 +347,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
             handleAccept: async () => {
                 handleRequestCancellingProductForCurrentEnterprise(params.productId)
                     .then(() => {
-                        getProductDetail(params.productId)
+                        getProductDetailForCustomer(params.productId)
                             .then((productDetailRes: ProductDetail) => {
                                 setProductDetail(productDetailRes);
                             })

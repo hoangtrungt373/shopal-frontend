@@ -7,9 +7,24 @@ import {Product} from "../model/Product";
 import {AdminCreateOrUpdateProductRequest} from "../model/request/AdminCreateOrUpdateProductRequest";
 
 
-export const getProductDetail = async (productId: number) => {
+export const getProductDetailForCustomer = async (productId: number) => {
     try {
-        const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/get-detail/${productId}`);
+        const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/customer/get-detail/${productId}`);
+        const product = result.data;
+        // await fetch(`${AssetPath.productContentUrl}${product.descriptionContentUrl}`)
+        //     .then((r) => r.text())
+        //     .then(text => {
+        //         product.content = text
+        //     })
+        return product;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const getProductDetailForAdmin = async (productId: number) => {
+    try {
+        const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/current-admin/get-detail/${productId}`);
         const product = result.data;
         // await fetch(`${AssetPath.productContentUrl}${product.descriptionContentUrl}`)
         //     .then((r) => r.text())
@@ -52,7 +67,12 @@ export const handleRequestCancellingProductForCurrentEnterprise = async (product
 
 export const createOrUpdateProduct = async (request: AdminCreateOrUpdateProductRequest) => {
     try {
-        const result: AxiosResponse = await axiosClient.post<String>(`/product/current-admin/create-or-update-product`, request);
+        const formData = new FormData();
+        formData.append('dto', new Blob([JSON.stringify(request)], {type: 'application/json'}));
+        request.files.forEach((file, index) => {
+            formData.append("images", file);
+        })
+        const result: AxiosResponse = await axiosClient.post<string>(`/product/current-admin/create-or-update-product`, formData);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

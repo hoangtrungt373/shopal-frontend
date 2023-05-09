@@ -11,7 +11,7 @@ import {ProductImage} from "../../../model/ProductImage";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {isAuthenticated} from "../../../util/auth.util";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
-import {getProductDetail} from "../../../service/product.service";
+import {getProductDetailForCustomer} from "../../../service/product.service";
 import {Link, useHistory, useParams} from "react-router-dom";
 import './customerproductdetailpage.css'
 import Avatar from "@mui/material/Avatar";
@@ -204,7 +204,7 @@ const CustomerProductDetailPage: React.FC<Props> = () => {
     });
 
     useEffect(() => {
-        getProductDetail(params.productId)
+        getProductDetailForCustomer(params.productId)
             .then((productDetailRes: ProductDetail) => {
                 setProductDetail(productDetailRes);
                 console.log(productDetailRes);

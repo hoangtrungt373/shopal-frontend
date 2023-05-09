@@ -16,7 +16,6 @@ import './adminnewproductpage.css'
 import {AdminRouter, AssetPath} from "../../../config/router";
 import ImageSearchOutlinedIcon from '@mui/icons-material/ImageSearchOutlined';
 import IconButton from "@mui/material/IconButton";
-import {createOrUpdateProduct} from "../../../service/product.service";
 import AlertDialog from "../../common/share/AlertDialog";
 import {useHistory} from "react-router-dom";
 import '../admin.css'
@@ -26,6 +25,7 @@ import {CatalogStatus} from "../../../model/enums/CatalogStatus";
 import {GroupHeader} from "../../../model/common/GroupHeader";
 import {GroupItems} from "../../../model/common/GroupItem";
 import {ProductType} from "../../../model/enums/ProductType";
+import {createOrUpdateProduct} from "../../../service/product.service";
 
 const breadCrumbItems: BreadcrumbItem[] = [
     {
@@ -96,48 +96,52 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
     }, []);
 
     const onSubmit = handleSubmit(data => {
-        let request: AdminCreateOrUpdateProductRequest = {
-            productId: null,
-            productName: data.productName,
-            sku: data.sku,
-            quantityInStock: data.quantityInStock,
-            expirationDate: data.expirationDate,
-            initialCash: data.initialCash,
-            catalogId: childCatalogs.find(x => x.catalogName == data.catalogName).id,
-            imageUrls: [...imgUrls.map(x => x.name)],
-            productStatus: data.productStatus,
-            productType: data.productType
-        }
-        console.log([...imgUrls.map(x => x.name)]);
-        createOrUpdateProduct(request)
-            .then((res: string) => {
-                setShowAlert(prevState1 => ({
-                    ...prevState1,
-                    open: true,
-                    handleAccept: () => {
-                        reset();
-                        setImgUrls([]);
-                        setShowAlert(prevState2 => ({
-                            ...prevState2,
-                            open: false,
-                        }));
-                    },
-                    handleDenied: () => history.push(AdminRouter.productCollectionPage),
-                }));
-                setShowError({
-                    open: false,
-                    content: null
-                })
-            }).catch((err: ExceptionResponse) => {
-            if (err.status == 409) {
-                setShowError({
-                    open: true,
-                    content: err.errorMessage
-                })
-            } else {
-                console.log(err);
+        let reqImgUrls: any[] = [...imgUrls.filter(x => x != undefined)];
+        if (reqImgUrls.length == 0) {
+            return;
+        } else {
+            let request: AdminCreateOrUpdateProductRequest = {
+                productId: null,
+                productName: data.productName,
+                sku: data.sku,
+                quantityInStock: data.quantityInStock,
+                expirationDate: data.expirationDate,
+                initialCash: data.initialCash,
+                catalogId: childCatalogs.find(x => x.catalogName == data.catalogName).id,
+                files: [...reqImgUrls],
+                productStatus: data.productStatus,
+                productType: data.productType
             }
-        })
+            createOrUpdateProduct(request)
+                .then((res: string) => {
+                    setShowAlert(prevState1 => ({
+                        ...prevState1,
+                        open: true,
+                        handleAccept: () => {
+                            reset();
+                            setImgUrls([]);
+                            setShowAlert(prevState2 => ({
+                                ...prevState2,
+                                open: false,
+                            }));
+                        },
+                        handleDenied: () => history.push(AdminRouter.productCollectionPage),
+                    }));
+                    setShowError({
+                        open: false,
+                        content: null
+                    })
+                }).catch((err: ExceptionResponse) => {
+                if (err.status == 409) {
+                    setShowError({
+                        open: true,
+                        content: err.errorMessage
+                    })
+                } else {
+                    console.log(err);
+                }
+            })
+        }
     });
 
     /*TODO: handle autocomplete with react hook form*/
@@ -146,7 +150,6 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
     };
 
     const handleSetImg = (e, pos) => {
-        // console.log(e.target.files[0])
         let newImgUrls = [...imgUrls];
         newImgUrls[pos] = e.target.files[0];
         setImgUrls([...newImgUrls]);
@@ -363,7 +366,6 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                                     </Grid>
                                 </Grid>
                                 <Button type={"submit"} variant={"contained"} onClick={() => {
-                                    console.log(imgUrls);
                                     if (!imgUrls.find(x => x != undefined)) {
                                         setShowError({
                                             open: true,
