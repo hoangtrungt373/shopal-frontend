@@ -65,6 +65,7 @@ export const productSearchPathToProductSearchCriteriaRequest = (productSearchPat
     let productCriterion: ProductSearchCriteriaRequest = {
         // @ts-ignore
         catalogIdList: productSearchPath.catalog != null ? [productSearchPath.catalog] : [],
+        ratingMin: productSearchPath.rating,
         // @ts-ignore
         enterpriseIdList: [...productSearchPath.enterprise || []],
         limit: DEFAULT_SEARCH_LIMIT,

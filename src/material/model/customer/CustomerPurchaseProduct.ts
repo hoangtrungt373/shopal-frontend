@@ -10,4 +10,5 @@ export interface CustomerPurchaseProduct {
     totalPointExchange: number;
     initialCash: number;
     totalCash: number;
+    isReview: boolean
 }

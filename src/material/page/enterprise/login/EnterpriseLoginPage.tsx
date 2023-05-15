@@ -40,7 +40,6 @@ export default function EnterpriseLoginPage() {
     const [t] = useTranslation('common');
     const history = useHistory();
 
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -52,11 +51,11 @@ export default function EnterpriseLoginPage() {
         //TODO: validate form
         authenticate(authenticationRequest)
             .then((token: string) => {
-                history.push(EnterpriseRouter.dashboardPage)
-            })
-            .catch((err: ExceptionResponse) => {
-                console.log(err);
-            });
+                console.log(token);
+                window.location.pathname = EnterpriseRouter.dashboardPage;
+            }).catch((err: ExceptionResponse) => {
+            console.log(err);
+        });
     };
 
     // TODO: if already login -> redirect /

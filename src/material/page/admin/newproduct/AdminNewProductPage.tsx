@@ -18,9 +18,9 @@ import ImageSearchOutlinedIcon from '@mui/icons-material/ImageSearchOutlined';
 import IconButton from "@mui/material/IconButton";
 import AlertDialog from "../../common/share/AlertDialog";
 import {useHistory} from "react-router-dom";
-import '../admin.css'
+import '../Admin.scss'
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import {CatalogStatus} from "../../../model/enums/CatalogStatus";
 import {GroupHeader} from "../../../model/common/GroupHeader";
 import {GroupItems} from "../../../model/common/GroupItem";
@@ -200,7 +200,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
             <Box
                 sx={{display: "flex", flexDirection: "column"}}>
                 <DisplayAlert/>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Add Product"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Add Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", flexDirection: "column", gap: 2}}>
                     <Typography className={"page-sub-header"}>Add Product</Typography>
                     <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>
@@ -223,7 +223,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                                     position: "relative"
                                 }}>
                                     <img
-                                        src={imgUrls[0] !== undefined ? URL.createObjectURL(imgUrls[0]) : AssetPath.uploadReviewUrl}
+                                        src={imgUrls[0] !== undefined ? URL.createObjectURL(imgUrls[0]) : AssetPath.productUploadPreviewImg}
                                         alt={"img"}
                                         style={{borderRadius: 5, width: "100%", margin: "auto", display: "block"}}/>
                                     <IconButton color="primary" style={{position: "absolute", right: 10, top: 10}}
@@ -247,7 +247,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                                                         position: "relative"
                                                     }}>
                                                         <img
-                                                            src={imgUrls[number] !== undefined ? URL.createObjectURL(imgUrls[number]) : AssetPath.uploadReviewUrl}
+                                                            src={imgUrls[number] !== undefined ? URL.createObjectURL(imgUrls[number]) : AssetPath.productUploadPreviewImg}
                                                             alt={"img"}
                                                             style={{
                                                                 borderRadius: 5,

@@ -1,0 +1,60 @@
+@import "src/theme";
+
+.product-cart-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    color: $DayBreakBlueTheme6;
+  }
+}
+
+.amount-btn-group {
+  .amount-btn {
+    height: 30px;
+    width: 35px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    cursor: pointer;
+  }
+
+  .amount-input {
+    height: 30px;
+    width: 40px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    text-align: center;
+  }
+
+}
+
+.disable-item {
+  pointer-events: none;
+  opacity: 0.5;
+  background: #CCC;
+}
+
+.delete-svg {
+  color: rgba(0, 0, 0, 0.54);
+  cursor: pointer;
+
+  &:hover {
+    color: $DuskRedTheme6;
+  }
+}
+
+
+.css-355xbt-MuiButtonBase-root-MuiCheckbox-root {
+  padding: 0 !important;
+}
+
+.sticky-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 16px;
+}

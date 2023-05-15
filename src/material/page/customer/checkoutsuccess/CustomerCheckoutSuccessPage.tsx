@@ -24,18 +24,17 @@ export const CustomerCheckoutSuccessPage: React.FC<Props> = () => {
             width: "100%",
             backgroundColor: "#fff",
             borderRadius: 2,
-            height: "300px",
+            height: "400px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             gap: 2
         }}>
-            <img src={AssetPath.cartEmptyImg} alt={"cart-empty"} width={"200px"}/>
-            <Typography>Checkout successfully, <Link to={CustomerRouter.purchasedOrderHistory}
-                                                     style={{fontSize: "16px !important"}}>click
-                here to return to
-                your purchase</Link></Typography>
+            <img src={AssetPath.orderSuccessImg} alt={"cart-empty"} width={"300px"}/>
+            <Typography>Bạn đã đặt hàng thành công. <Link to={CustomerRouter.purchasedOrderHistory}
+                                                          style={{fontSize: "16px !important"}}>Nhấp vào đây để vào
+                trang quản lý đơn hàng</Link></Typography>
         </Box>
     );
 }

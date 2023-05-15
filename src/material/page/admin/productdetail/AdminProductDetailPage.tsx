@@ -12,9 +12,9 @@ import {ProductImage} from "../../../model/ProductImage";
 import {AdminRouter, AssetPath} from "../../../config/router";
 import ImageGallery from 'react-image-gallery';
 import {Enterprise} from "../../../model/Enterprise";
-import {formatVndMoney} from "../../../util/url.util";
+import {formatVndMoney} from "../../../util/other.util";
 import {ProductStatus} from "../../../model/enums/ProductStatus";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -177,7 +177,7 @@ const ProductInfo: React.FC<Props> = ({
                         minWidth: 70
                     }}>
                         <Typography fontWeight={"bold"}>Sold</Typography>
-                        <Typography>{productDetail.amountSold}</Typography>
+                        <Typography>{productDetail.totalSold}</Typography>
                     </Box>
                     <Box sx={{
                         borderRadius: 5,
@@ -277,7 +277,7 @@ const AdminProductDetailPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <Typography className={"page-sub-header"}>Product Detail: #{productDetail.id}</Typography>
                     <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>

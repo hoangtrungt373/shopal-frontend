@@ -2,17 +2,100 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="implement file upload">
+      <change afterPath="$PROJECT_DIR$/src/material/model/AbstractFilter.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/ProductReview.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/admin/EnterpriseCooperationRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerNewMembershipRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerProductReviewRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseOrderCancelRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/enterprise/EnterpriseRegisterRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/enums/EnterpriseRegisterRequestStatus.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/request/CustomerSearchOrderCriteriaRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/cooperationrequestmanagement/AdminEnterpriseCooperationRequestManagementPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/enterprises/AdminEnterpriseManagementPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminAppBar.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminDrawer.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/CartEmpty.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/CopyRight.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/EnterpriseLogo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/ErrorText.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/MainSideBarListItem.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/common/share/MainSideBarListItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/customer/orderdetail/CustomerPurchaseOrderDetailPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/customer/updateemail/CustomerUpdateEmailPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/customer/updatephonenumber/CustomerUpdatePhoneNumberPage.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/customer/updatephonenumber/CustomerUpdatePhoneNumberPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/dashboard/EnterpriseDashboardPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/register/EnterpriseRegisterPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/util/other.util.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/request/ProductSearchCriteriaRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/ProductSearchCriteriaRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/content/product/1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/public/content/product/1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/config/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/config/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/config/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/config/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/Customer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/Customer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/Product.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/Product.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/ProductPoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/ProductPoint.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseProduct.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/customer/CustomerPurchaseProduct.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/enums/Gender.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/enums/Gender.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/Admin.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/catalog/AdminCatalogManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/catalog/AdminCatalogManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/childcatalog/AdminChildCatalogManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/childcatalog/AdminChildCatalogManagementPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminNewProductPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminNewProductPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/ordermanagement/AdminPurchaseOrderManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/ordermanagement/AdminPurchaseOrderManagementPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/admin/AdminAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminAppBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/admin/AdminDrawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/admin/AdminDrawer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/admin/AdminMainListItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/admin/AdminPageHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/PageHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/customer/customerhomeheader.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseAppBar.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseCopyRight.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseDrawer.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/enterprise/EnterpriseMainListItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/share/AlertDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/AlertDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/share/AppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/AppBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/share/Drawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/Drawer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/share/PageBreadCrumb.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/PageBreadCrumb.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/share/PrivateRoute.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/PrivateRoute.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/common/share/pagebreadcrumb.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/share/PageBreadCrumb.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/accountinfo/CustomerAccountInfoPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/accountinfo/CustomerAccountInfoPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/cart/CustomerCartPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/cart/CustomerCartPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/cart/customercartpage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/cart/CustomerCartPage.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/checkout/CustomerOrderCheckoutPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/checkout/CustomerOrderCheckoutPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/checkoutsuccess/CustomerCheckoutSuccessPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/checkoutsuccess/CustomerCheckoutSuccessPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/customerproductcollectionpage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/dashboard/CustomerDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/dashboard/CustomerDashboardPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/homecontent/CustomerHomeContentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/homecontent/CustomerHomeContentPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/membership/CustomerMembershipPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/membership/CustomerMembershipPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/customer/productdetail/CustomerProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/productdetail/CustomerProductDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/productdetail/customerproductdetailpage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/productdetail/CustomerProductDetailPage.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/orderdetail/EnterprisePurchaseOrderDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/orderdetail/EnterprisePurchaseOrderDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/productdetail/EnterpriseProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/productdetail/EnterpriseProductDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/customer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/customer.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/enterprise.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/enterprise.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/membership.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/membership.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/order.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/order.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/service/product.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/product.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/util/cart.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/util/cart.util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/util/search.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/util/search.utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/util/url.util.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +127,7 @@
     <setting file="file://$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/enterprise/accountingdetail/EnterpriseAccountingDetailPage.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/material/util/url.util.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/util/other.util.ts" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -64,7 +147,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/TTG/Documents/GitHub/shopal-frontend/src/material/page/admin/ordermanagement&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/TTG/Documents/GitHub/shopal-frontend/src/material/model/customer&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -76,18 +159,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\ordermanagement" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\productdetail" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\model\customer" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\customer\updateemail" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\model\enums" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\admin" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\childcatalog" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\enterprises" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\share" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\customer\updatephonenumber" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\cooperationrequestmanagement" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\admin" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\share" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\util" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\model\customer" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\service" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\customer" />
     </key>
   </component>
   <component name="RunManager">
@@ -185,7 +268,14 @@
       <workItem from="1683525019365" duration="8143000" />
       <workItem from="1683537735788" duration="10425000" />
       <workItem from="1683600592469" duration="596000" />
-      <workItem from="1683628712988" duration="2226000" />
+      <workItem from="1683628712988" duration="4320000" />
+      <workItem from="1683685419741" duration="3760000" />
+      <workItem from="1683772597344" duration="29130000" />
+      <workItem from="1683858293713" duration="19229000" />
+      <workItem from="1683950784443" duration="32755000" />
+      <workItem from="1684037136213" duration="34752000" />
+      <workItem from="1684118138569" duration="961000" />
+      <workItem from="1684131459370" duration="660000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1681829427393</created>
@@ -215,7 +305,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683346879043</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="implement file upload">
+      <created>1683633372947</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1683633372947</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,6 +336,17 @@
     <MESSAGE value="catalog page, sub catalog page, new product page" />
     <MESSAGE value="implement file upload" />
     <option name="LAST_COMMIT_MESSAGE" value="implement file upload" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/material/page/admin/newproduct/AdminNewProductPage.tsx</url>
+          <line>261</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

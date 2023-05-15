@@ -10,4 +10,4 @@ export const PAYMENT_PROCESS = PaymentProcess.NO_PAYMENT_EXISTS;
 export const CURRENT_USER_ROLE = UserRole.NULL
 
 export const DEFAULT_SEARCH_OFFSET = 0;
-export const DEFAULT_SEARCH_LIMIT = 5;
+export const DEFAULT_SEARCH_LIMIT = 8;

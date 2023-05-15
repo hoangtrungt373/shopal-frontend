@@ -10,7 +10,7 @@ import {
 } from "../../../service/accounting.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridRowId} from "@mui/x-data-grid-premium";
-import {formatVndMoney} from "../../../util/url.util";
+import {formatVndMoney} from "../../../util/other.util";
 import {PaymentStatus} from "../../../model/enums/PaymentStatus";
 
 

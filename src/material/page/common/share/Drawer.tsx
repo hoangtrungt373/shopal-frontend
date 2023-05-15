@@ -1,13 +1,16 @@
 import {styled} from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 
-const drawerWidth: number = 240;
+const drawerWidth: number = 250;
 
 export const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})(
     ({theme, open}) => ({
         '& .MuiDrawer-paper': {
-            position: 'relative',
-            whiteSpace: 'nowrap',
+            position: 'fixed',
+            zIndex: 1,
+            top: 64,
+            left: 0,
+            overflowX: "hidden",
             width: drawerWidth,
             transition: theme.transitions.create('width', {
                 easing: theme.transitions.easing.sharp,

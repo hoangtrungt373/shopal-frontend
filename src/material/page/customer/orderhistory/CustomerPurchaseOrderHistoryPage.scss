@@ -1,0 +1,19 @@
+.img-upload-block {
+  cursor: pointer;
+
+  .cancel-btn {
+    display: none;
+  }
+
+  &:hover {
+    .upload-img {
+      filter: grayscale(100%);
+      transition: 0.3s;
+    }
+
+    .cancel-btn {
+      display: block;
+      transition: 0.3s;
+    }
+  }
+}

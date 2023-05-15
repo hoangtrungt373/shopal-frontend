@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import {isAuthenticated} from "../../../util/auth.util";
 import {Customer} from "../../../model/Customer";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import './customerhomeheader.css'
+import './CustomerHomeHeader.scss'
 import {ListItemButton, ListItemText} from "@mui/material";
 import {logout} from "../../../service/auth.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
@@ -84,19 +84,21 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
     }
 
     return (
-        <Box sx={{backgroundColor: "#fff", mb: 2, p: "24px 172px"}}>
+        <Box sx={{backgroundColor: "#fff", mb: 2, p: "24px 194px"}}>
             <Grid container spacing={2} alignItems={"center"}>
                 <Grid item xs={1}>
                     <Link to={CustomerRouter.homePage}><img src={AssetPath.webLogoUrl} alt={"img"}
-                                                            width={"70px"}/></Link>
+                                                            width={"60px"}/></Link>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={6}>
                     <form style={{display: "flex", width: "100%"}}>
-                        <TextField fullWidth onChange={handleChange} onKeyDown={(e) => handleKeyDown(e)}/>
+
+                        <TextField fullWidth onChange={handleChange} onKeyDown={(e) => handleKeyDown(e)}
+                                   placeholder={"Search products..."} size={"small"}/>
                         <Button variant={"outlined"} onClick={() => searchProductByKeyword()}>Search</Button>
                     </form>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={5}>
                     {
                         !isAuthenticated() ? (
                             <Box sx={{

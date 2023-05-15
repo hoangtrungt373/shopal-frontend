@@ -12,7 +12,7 @@ export interface Product extends AbstractModel {
     rating?: number;
     productStatus: ProductStatus,
     productStatusDescription: string,
-    amountSold?: number;
+    totalSold?: number;
     mainImgUrl: string;
     mainImgText: string;
     inputDate: string,

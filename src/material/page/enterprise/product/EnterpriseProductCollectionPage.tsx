@@ -10,12 +10,12 @@ import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
 import {AssetPath, EnterpriseRouter} from "../../../config/router";
-import {createSeoLink, formatVndMoney} from "../../../util/url.util";
+import {createSeoLink, formatVndMoney} from "../../../util/other.util";
 import {ProductStatus} from "../../../model/enums/ProductStatus";
 import {Catalog} from "../../../model/Catalog";
 import {getAllMainCatalog} from "../../../service/catalog.service";
 import {ProductSearchCriteriaRequest} from "../../../model/request/ProductSearchCriteriaRequest";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import {useForm} from "react-hook-form";
 import Grid from "@mui/material/Grid";
@@ -359,7 +359,7 @@ const EnterpriseProductCollectionPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <ProductSearch childCatalogs={childCatalogs}
                                    onSearchProduct={(criteria: ProductSearchCriteriaRequest) => handleSearchProduct(criteria)}/>

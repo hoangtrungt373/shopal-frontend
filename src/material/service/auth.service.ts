@@ -5,6 +5,7 @@ import {CustomerRegisterRequest} from "../model/request/CustomerRegisterRequest"
 import {AuthenticationRequest} from "../model/request/AuthenticationRequest";
 import {AuthenticationResponse} from "../model/AuthenticationResponse";
 import {AxiosResponse} from "axios";
+import {UserRole} from "../model/enums/UserRole";
 
 export const register = async (customerRegisterRequest: CustomerRegisterRequest) => {
     try {
@@ -30,6 +31,7 @@ export const logout = async () => {
     try {
         const response = await axiosClient.get(`/v1/auth/logout`);
         localStorage.setItem(ACCESS_TOKEN, '');
+        localStorage.setItem(CURRENT_USER_ROLE, UserRole.NULL);
         return response.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data)

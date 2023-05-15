@@ -29,6 +29,7 @@
     "react-html-parser": "^2.0.2",
     "react-i18next": "^11.8.15",
     "react-image-gallery": "^1.2.11",
+    "react-pro-sidebar": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.5.0",

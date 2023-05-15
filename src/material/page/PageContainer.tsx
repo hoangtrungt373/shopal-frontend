@@ -32,19 +32,14 @@ import EnterprisePurchaseOrderManagementPage from "./enterprise/ordermanagement/
 import EnterpriseCooperationContractManagementPage
     from "./enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage";
 import Toolbar from "@mui/material/Toolbar";
-import {Copyright} from '@mui/icons-material';
-import {EnterpriseMainListItems} from "./common/enterprise/EnterpriseMainListItem";
 import EnterpriseAccountingPage from "./enterprise/accounting/EnterpriseAccountingPage";
 import EnterpriseAccountingDetailPage from "./enterprise/accountingdetail/EnterpriseAccountingDetailPage";
 import EnterprisePurchaseOrderDetailPage from "./enterprise/orderdetail/EnterprisePurchaseOrderDetailPage";
 import EnterpriseProductCollectionPage from "./enterprise/product/EnterpriseProductCollectionPage";
 import EnterpriseProductDetailPage from "./enterprise/productdetail/EnterpriseProductDetailPage";
 import AdminNewProductPage from "./admin/newproduct/AdminNewProductPage";
-import EnterpriseAppBar from "./common/enterprise/EnterpriseAppBar";
 import AdminAppBar from "./common/admin/AdminAppBar";
-import EnterpriseDrawer from "./common/enterprise/EnterpriseDrawer";
 import AdminDrawer from "./common/admin/AdminDrawer";
-import {AdminMainListItem} from "./common/admin/AdminMainListItem";
 import AdminDashboardPage from './admin/dahboard/AdminDashboardPage';
 import AdminLoginPage from './admin/login/AdminLoginPage';
 import AdminCatalogManagementPage from "./admin/catalog/AdminCatalogManagementPage";
@@ -52,6 +47,23 @@ import AdminChildCatalogManagementPage from "./admin/childcatalog/AdminChildCata
 import AdminProductCollectionPage from "./admin/product/AdminProductCollectionPage";
 import AdminProductDetailPage from "./admin/productdetail/AdminProductDetailPage";
 import AdminPurchaseOrderManagementPage from "./admin/ordermanagement/AdminPurchaseOrderManagementPage";
+import EnterpriseRegisterPage from './enterprise/register/EnterpriseRegisterPage';
+import {isCurrentScreenIsLoginOrRegisterPage} from "../util/other.util";
+import {MainSideBarListItem, SideBarListItem} from "./common/share/MainSideBarListItem";
+import {CopyRight} from './common/share/CopyRight';
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import CategoryIcon from "@mui/icons-material/Category";
+import ViewInArIcon from "@mui/icons-material/ViewInAr";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import GroupIcon from '@mui/icons-material/Group';
+import AdminEnterpriseManagementPage from "./admin/enterprises/AdminEnterpriseManagementPage";
+import AdminEnterpriseCooperationRequestManagementPage
+    from "./admin/cooperationrequestmanagement/AdminEnterpriseCooperationRequestManagementPage";
+import '../../theme.scss'
+import EnterpriseDashboardPage from "./enterprise/dashboard/EnterpriseDashboardPage";
 
 const theme = createTheme({
     typography: {
@@ -59,15 +71,149 @@ const theme = createTheme({
             fontSize: 14
         },
         button: {
-            fontSize: 14
+            fontSize: 14,
+            textTransform: "initial"
         },
+    },
+    palette: {
+        primary: {
+            light: "#40a9ff",
+            main: "#1890ff",
+            dark: '#096dd9',
+            contrastText: '#fff'
+        },
+        error: {
+            light: "#ff4d4f",
+            main: "#f5222d",
+            dark: '#cf1322',
+            contrastText: '#fff'
+        },
+        success: {
+            light: "#73d13d",
+            main: "#52c41a",
+            dark: '#389e0d',
+            contrastText: '#fff'
+        }
     },
 });
 
+const adminListItems: SideBarListItem[] = [
+    {
+        title: "DASHBOARD",
+        url: AdminRouter.dashboardPage,
+        icon: <DashboardIcon/>,
+    },
+    {
+        title: "ENTERPRISES",
+        icon: <ApartmentIcon/>,
+        subItems: [
+            {
+                title: "Cooperation Requests",
+                url: AdminRouter.enterpriseCooperationRequestManagement,
+            },
+            {
+                title: "Enterprise List",
+                url: AdminRouter.enterpriseManagement,
+            }
+        ]
+    },
+    {
+        title: "CUSTOMERS",
+        icon: <GroupIcon/>,
+    },
+    {
+        title: "CATEGORIES",
+        icon: <CategoryIcon/>,
+        subItems: [
+            {
+                title: "Main Categories",
+                url: AdminRouter.catalogManagementPage,
+            },
+            {
+                title: "Sub Categories",
+                url: AdminRouter.childCatalogManagementPage,
+            }
+        ]
+    },
+    {
+        title: "PRODUCTS",
+        icon: <ViewInArIcon/>,
+        subItems: [
+            {
+                title: "New Product",
+                url: AdminRouter.newProductPage,
+            },
+            {
+                title: "Product List",
+                url: AdminRouter.productCollectionPage,
+            }
+        ]
+    },
+    {
+        title: "ORDERS",
+        icon: <ShoppingCartIcon/>,
+        url: AdminRouter.dashboardPage
+    },
+    {
+        title: "CONTRACTS",
+        icon: <LocalOfferIcon/>,
+        url: AdminRouter.dashboardPage
+    },
+    {
+        title: "ACCOUNTINGS",
+        icon: <ReceiptIcon/>,
+        url: AdminRouter.dashboardPage
+    },
+
+]
+
+const enterpriseListItems: SideBarListItem[] = [
+    {
+        title: "DASHBOARD",
+        url: EnterpriseRouter.dashboardPage,
+        icon: <DashboardIcon/>,
+    },
+    {
+        title: "CUSTOMERS",
+        icon: <GroupIcon/>,
+        subItems: [
+            {
+                title: "Membership Customers",
+                url: EnterpriseRouter.customerManagementPage,
+            },
+            {
+                title: "Register Customers",
+                url: EnterpriseRouter.customerManagementPage,
+            }
+        ]
+    },
+    {
+        title: "PRODUCTS",
+        icon: <ViewInArIcon/>,
+        url: EnterpriseRouter.productCollectionPage
+    },
+    {
+        title: "ORDERS",
+        url: EnterpriseRouter.purchaseOrderManagement,
+        icon: <ShoppingCartIcon/>
+    },
+    {
+        title: "CONTRACTS",
+        url: EnterpriseRouter.cooperationContractManagement,
+        icon: <LocalOfferIcon/>
+    },
+    {
+        title: "ACCOUNTINGS",
+        url: EnterpriseRouter.accounting,
+        icon: <ReceiptIcon/>
+    },
+
+]
 
 const PageContainer = () => {
 
     const [currentCustomer, setCurrentCustomer] = useState<Customer>();
+    const [currentScreen, setCurrentScreen] = useState<string>();
     const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>();
     const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -78,7 +224,8 @@ const PageContainer = () => {
 
     useEffect(() => {
         console.log(localStorage.getItem(CURRENT_USER_ROLE));
-        console.log(localStorage.getItem(ACCESS_TOKEN))
+        console.log(localStorage.getItem(ACCESS_TOKEN));
+        setCurrentScreen(window.location.href)
         if (isAuthenticated()) {
             if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.CUSTOMER) {
                 getCurrentCustomerInfo()
@@ -99,259 +246,188 @@ const PageContainer = () => {
         }
     }, []);
 
-    const EnterprisePageContainer = () => {
-        return (
-            <Box>
-                <Box sx={{display: 'flex'}}>
-                    <EnterpriseAppBar open={open} toggleDrawer={toggleDrawer}/>
-                    <EnterpriseDrawer open={open} toggleDrawer={toggleDrawer} content={<EnterpriseMainListItems/>}/>
-                    <Box
-                        component="main"
-                        sx={{
-                            backgroundColor: (theme) =>
-                                theme.palette.mode === 'light'
-                                    ? theme.palette.grey[100]
-                                    : theme.palette.grey[900],
-                            flexGrow: 1,
-                            height: '100vh',
-                            overflow: 'auto',
-                        }}
-                    >
-                        <Toolbar/>
-                        <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                        <Switch>
-                                            <PrivateRoute path={EnterpriseRouter.customerManagementPage}
-                                                          component={EnterpriseCustomerManagementPage}/>
-                                            <PrivateRoute path={EnterpriseRouter.purchaseOrderManagement}
-                                                          component={EnterprisePurchaseOrderManagementPage}
-                                                          exact/>
-                                            <PrivateRoute path={EnterpriseRouter.productCollectionPage}
-                                                          component={EnterpriseProductCollectionPage}
-                                                          exact/>
-                                            <PrivateRoute
-                                                path={EnterpriseRouter.productCollectionPage + "/*.:productId"}
-                                                component={EnterpriseProductDetailPage} exact/>
-                                            <PrivateRoute
-                                                path={EnterpriseRouter.purchaseOrderManagement + "/*.:purchaseOrderId"}
-                                                component={EnterprisePurchaseOrderDetailPage}/>
-                                            <PrivateRoute
-                                                path={EnterpriseRouter.cooperationContractManagement}
-                                                component={EnterpriseCooperationContractManagementPage}
-                                                exact/>
-                                            <PrivateRoute path={EnterpriseRouter.accounting}
-                                                          component={EnterpriseAccountingPage} exact/>
-                                            <PrivateRoute
-                                                path={EnterpriseRouter.accounting + "/*.:accountingId"}
-                                                component={EnterpriseAccountingDetailPage}/>
-                                        </Switch>
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                            <Copyright sx={{pt: 4}}/>
-                        </Container>
-                    </Box>
-                </Box>
-            </Box>
-        )
-    }
-
-    const AdminPageContainer = () => {
-        return (
-            <Box sx={{display: 'flex'}}>
-                <AdminAppBar open={open} toggleDrawer={toggleDrawer}/>
-                <AdminDrawer open={open} toggleDrawer={toggleDrawer} content={<AdminMainListItem/>}/>
-                <Box
-                    component="main"
-                    sx={{
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === 'light'
-                                ? theme.palette.grey[100]
-                                : theme.palette.grey[900],
-                        flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
-                    }}
-                >
-                    <Toolbar/>
-                    <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                    <Switch>
-                                        <PrivateRoute path={AdminRouter.dashboardPage}
-                                                      component={AdminDashboardPage} exact/>
-                                        <PrivateRoute path={AdminRouter.newProductPage}
-                                                      component={AdminNewProductPage} exact/>
-                                    </Switch>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Copyright sx={{pt: 4}}/>
-                    </Container>
-                </Box>
-            </Box>
-        )
-    }
-
-    const CustomerPageContainer = () => {
-        return (
-            <Box>
-                <CustomerHomeHeader currentCustomer={currentCustomer}/>
-                <Container maxWidth="lg">
-                    <Switch>
-                        <Route path={CustomerRouter.homePage} component={CustomerHomeContentPage}
-                               exact/>
-                        <Route path={CustomerRouter.productCollectionPage}
-                               component={CustomerProductCollectionPage}/>
-                        <Route path={CustomerRouter.productDetailPage + "/*.:productId"}
-                               component={CustomerProductDetailPage}/>
-                        <Route path={CustomerRouter.cartPage} component={CustomerCartPage}/>
-                        <Route path={CustomerRouter.checkoutPage} component={CustomerOrderCheckoutPage}
-                               exact/>
-                        <Route path={CustomerRouter.checkoutSuccess}
-                               component={CustomerCheckoutSuccessPage}/>
-                        <PrivateRoute path={CustomerRouter.dashBoardPage}
-                                      component={CustomerDashboardPage}/>
-                    </Switch>
-                </Container>
-            </Box>
-        )
-    }
-
-
     if (isShow) {
-        return (
-            <BrowserRouter>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline/>
-                    <Route path={CustomerRouter.registerPage} component={CustomerRegisterPage}/>
-                    <Route path={CustomerRouter.loginPage} component={CustomerLoginPage}/>
-                    <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
-                    <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
-                    {
-                        localStorage.getItem(CURRENT_USER_ROLE) == UserRole.ENTERPRISE_MANAGER ? (
-                            <Box sx={{display: 'flex'}}>
-                                <EnterpriseAppBar open={open} toggleDrawer={toggleDrawer}/>
-                                <EnterpriseDrawer open={open} toggleDrawer={toggleDrawer}
-                                                  content={<EnterpriseMainListItems/>}/>
-                                <Box
-                                    component="main"
-                                    sx={{
-                                        backgroundColor: "#FDFDFD",
-                                        flexGrow: 1,
-                                        overflow: 'auto',
-                                    }}
-                                >
-                                    <Toolbar/>
-                                    <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={12}>
-                                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                                    <Switch>
-                                                        <PrivateRoute path={EnterpriseRouter.customerManagementPage}
-                                                                      component={EnterpriseCustomerManagementPage}/>
-                                                        <PrivateRoute path={EnterpriseRouter.purchaseOrderManagement}
-                                                                      component={EnterprisePurchaseOrderManagementPage}
-                                                                      exact/>
-                                                        <PrivateRoute path={EnterpriseRouter.productCollectionPage}
-                                                                      component={EnterpriseProductCollectionPage}
-                                                                      exact/>
-                                                        <PrivateRoute
-                                                            path={EnterpriseRouter.productCollectionPage + "/*.:productId"}
-                                                            component={EnterpriseProductDetailPage} exact/>
-                                                        <PrivateRoute
-                                                            path={EnterpriseRouter.purchaseOrderManagement + "/*.:purchaseOrderId"}
-                                                            component={EnterprisePurchaseOrderDetailPage}/>
-                                                        <PrivateRoute
-                                                            path={EnterpriseRouter.cooperationContractManagement}
-                                                            component={EnterpriseCooperationContractManagementPage}
-                                                            exact/>
-                                                        <PrivateRoute path={EnterpriseRouter.accounting}
-                                                                      component={EnterpriseAccountingPage} exact/>
-                                                        <PrivateRoute
-                                                            path={EnterpriseRouter.accounting + "/*.:accountingId"}
-                                                            component={EnterpriseAccountingDetailPage}/>
-                                                    </Switch>
-                                                </Box>
-                                            </Grid>
+        if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.ENTERPRISE_MANAGER) {
+            return (
+                <BrowserRouter>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline/>
+                        <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
+                        <Box sx={{display: 'flex'}}>
+                            {
+                                !isCurrentScreenIsLoginOrRegisterPage(currentScreen) && (
+                                    <React.Fragment>
+                                        <AdminAppBar open={open} toggleDrawer={toggleDrawer}
+                                                     userRole={UserRole.ENTERPRISE_MANAGER}/>
+                                        <AdminDrawer open={open} toggleDrawer={toggleDrawer}
+                                                     content={<MainSideBarListItem items={enterpriseListItems}/>}/>
+                                    </React.Fragment>
+                                )
+                            }
+                            <Box
+                                component="main"
+                                sx={{
+                                    backgroundColor: "#FDFDFD",
+                                    flexGrow: 1,
+                                    overflow: 'auto',
+                                    marginLeft: "250px"
+                                }}
+                            >
+                                <Toolbar/>
+                                <Container maxWidth="lg" sx={{my: 4}}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                                <Switch>
+                                                    <PrivateRoute path={EnterpriseRouter.dashboardPage}
+                                                                  component={EnterpriseDashboardPage} exact/>
+                                                    <PrivateRoute path={EnterpriseRouter.customerManagementPage}
+                                                                  component={EnterpriseCustomerManagementPage}/>
+                                                    <PrivateRoute path={EnterpriseRouter.purchaseOrderManagement}
+                                                                  component={EnterprisePurchaseOrderManagementPage}
+                                                                  exact/>
+                                                    <PrivateRoute path={EnterpriseRouter.productCollectionPage}
+                                                                  component={EnterpriseProductCollectionPage}
+                                                                  exact/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.productCollectionPage + "/*.:productId"}
+                                                        component={EnterpriseProductDetailPage} exact/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.purchaseOrderManagement + "/*.:purchaseOrderId"}
+                                                        component={EnterprisePurchaseOrderDetailPage}/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.cooperationContractManagement}
+                                                        component={EnterpriseCooperationContractManagementPage}
+                                                        exact/>
+                                                    <PrivateRoute path={EnterpriseRouter.accounting}
+                                                                  component={EnterpriseAccountingPage} exact/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.accounting + "/*.:accountingId"}
+                                                        component={EnterpriseAccountingDetailPage}/>
+                                                </Switch>
+                                            </Box>
                                         </Grid>
-                                        <Copyright sx={{pt: 4}}/>
-                                    </Container>
-                                </Box>
-                            </Box>
-                        ) : localStorage.getItem(CURRENT_USER_ROLE) == UserRole.ADMIN ? (
-                            <Box sx={{display: 'flex'}}>
-                                <AdminAppBar open={open} toggleDrawer={toggleDrawer}/>
-                                <AdminDrawer open={open} toggleDrawer={toggleDrawer} content={<AdminMainListItem/>}/>
-                                <Box
-                                    component="main"
-                                    sx={{
-                                        backgroundColor: "#FDFDFD",
-                                        flexGrow: 1,
-                                        overflow: 'auto',
-                                    }}
-                                >
-                                    <Toolbar/>
-                                    <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={12}>
-                                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                                    <Switch>
-                                                        <PrivateRoute path={AdminRouter.dashboardPage}
-                                                                      component={AdminDashboardPage} exact/>
-                                                        <PrivateRoute path={AdminRouter.catalogManagementPage}
-                                                                      component={AdminCatalogManagementPage} exact/>
-                                                        <PrivateRoute path={AdminRouter.childCatalogManagementPage}
-                                                                      component={AdminChildCatalogManagementPage}
-                                                                      exact/>
-                                                        <PrivateRoute path={AdminRouter.productCollectionPage}
-                                                                      component={AdminProductCollectionPage}
-                                                                      exact/>
-                                                        <PrivateRoute path={AdminRouter.purchaseOrderManagement}
-                                                                      component={AdminPurchaseOrderManagementPage}
-                                                                      exact/>
-                                                        <PrivateRoute
-                                                            path={AdminRouter.productCollectionPage + "/*.:productId"}
-                                                            component={AdminProductDetailPage}/>
-                                                        <PrivateRoute path={AdminRouter.newProductPage}
-                                                                      component={AdminNewProductPage} exact/>
-                                                    </Switch>
-                                                </Box>
-                                            </Grid>
-                                        </Grid>
-                                        <Copyright sx={{pt: 4}}/>
-                                    </Container>
-                                </Box>
-                            </Box>
-                        ) : (
-                            <Box>
-                                <CustomerHomeHeader currentCustomer={currentCustomer}/>
-                                <Container maxWidth="lg">
-                                    <Switch>
-                                        <Route path={CustomerRouter.homePage} component={CustomerHomeContentPage}
-                                               exact/>
-                                        <Route path={CustomerRouter.productCollectionPage}
-                                               component={CustomerProductCollectionPage}/>
-                                        <Route path={CustomerRouter.productDetailPage + "/*.:productId"}
-                                               component={CustomerProductDetailPage}/>
-                                        <Route path={CustomerRouter.cartPage} component={CustomerCartPage}/>
-                                        <Route path={CustomerRouter.checkoutPage} component={CustomerOrderCheckoutPage}
-                                               exact/>
-                                        <Route path={CustomerRouter.checkoutSuccess}
-                                               component={CustomerCheckoutSuccessPage}/>
-                                        <PrivateRoute path={CustomerRouter.dashBoardPage}
-                                                      component={CustomerDashboardPage}/>
-                                    </Switch>
+                                    </Grid>
                                 </Container>
+                                <CopyRight url={EnterpriseRouter.dashboardPage}/>
                             </Box>
-                        )
-                    }
-                </ThemeProvider>
-            </BrowserRouter>
-        )
+                        </Box>
+                    </ThemeProvider>
+                </BrowserRouter>
+            )
+
+        } else if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.ADMIN) {
+
+            return (
+                <BrowserRouter>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline/>
+                        <Route path={CustomerRouter.registerPage} component={CustomerRegisterPage}/>
+                        <Route path={CustomerRouter.loginPage} component={CustomerLoginPage}/>
+                        <Route path={EnterpriseRouter.registerPage} component={EnterpriseRegisterPage}/>
+                        <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
+                        <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
+                        <Box sx={{display: 'flex'}}>
+                            {
+                                !isCurrentScreenIsLoginOrRegisterPage(currentScreen) && (
+                                    <React.Fragment>
+                                        <AdminAppBar open={open} toggleDrawer={toggleDrawer} userRole={UserRole.ADMIN}/>
+                                        <AdminDrawer open={open} toggleDrawer={toggleDrawer}
+                                                     content={<MainSideBarListItem items={adminListItems}/>}/>
+                                    </React.Fragment>
+                                )
+                            }
+                            <Box
+                                component="main"
+                                sx={{
+                                    backgroundColor: "#FDFDFD",
+                                    flexGrow: 1,
+                                    overflow: 'auto',
+                                    marginLeft: "250px"
+                                }}
+                            >
+                                <Toolbar/>
+                                <Container maxWidth="lg" sx={{my: 4}}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                                <Switch>
+                                                    <PrivateRoute path={AdminRouter.dashboardPage}
+                                                                  component={AdminDashboardPage} exact/>
+                                                    <PrivateRoute path={AdminRouter.catalogManagementPage}
+                                                                  component={AdminCatalogManagementPage} exact/>
+                                                    <PrivateRoute path={AdminRouter.childCatalogManagementPage}
+                                                                  component={AdminChildCatalogManagementPage}
+                                                                  exact/>
+                                                    <PrivateRoute path={AdminRouter.enterpriseManagement}
+                                                                  component={AdminEnterpriseManagementPage} exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.enterpriseCooperationRequestManagement}
+                                                        component={AdminEnterpriseCooperationRequestManagementPage}
+                                                        exact/>
+                                                    <PrivateRoute path={AdminRouter.productCollectionPage}
+                                                                  component={AdminProductCollectionPage}
+                                                                  exact/>
+                                                    <PrivateRoute path={AdminRouter.purchaseOrderManagement}
+                                                                  component={AdminPurchaseOrderManagementPage}
+                                                                  exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.productCollectionPage + "/*.:productId"}
+                                                        component={AdminProductDetailPage}/>
+                                                    <PrivateRoute path={AdminRouter.newProductPage}
+                                                                  component={AdminNewProductPage} exact/>
+                                                </Switch>
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
+                                </Container>
+                                <CopyRight url={AdminRouter.dashboardPage}/>
+                            </Box>
+                        </Box>
+                    </ThemeProvider>
+                </BrowserRouter>
+            )
+
+        } else {
+            return (
+                <BrowserRouter>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline/>
+                        <Route path={CustomerRouter.registerPage} component={CustomerRegisterPage}/>
+                        <Route path={CustomerRouter.loginPage} component={CustomerLoginPage}/>
+                        <Route path={EnterpriseRouter.registerPage} component={EnterpriseRegisterPage}/>
+                        <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
+                        <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
+                        <Box>
+                            {
+                                !isCurrentScreenIsLoginOrRegisterPage(currentScreen) && (
+                                    <React.Fragment>
+                                        <CustomerHomeHeader currentCustomer={currentCustomer}/>
+                                    </React.Fragment>
+                                )
+                            }
+                            <Container maxWidth="lg" sx={{marginBottom: "24px"}}>
+                                <Switch>
+                                    <Route path={CustomerRouter.homePage} component={CustomerHomeContentPage}
+                                           exact/>
+                                    <Route path={CustomerRouter.productCollectionPage}
+                                           component={CustomerProductCollectionPage}/>
+                                    <Route path={CustomerRouter.productDetailPage + "/*.:productId"}
+                                           component={CustomerProductDetailPage}/>
+                                    <Route path={CustomerRouter.cartPage} component={CustomerCartPage}/>
+                                    <Route path={CustomerRouter.checkoutPage} component={CustomerOrderCheckoutPage}
+                                           exact/>
+                                    <Route path={CustomerRouter.checkoutSuccess}
+                                           component={CustomerCheckoutSuccessPage}/>
+                                    <PrivateRoute path={CustomerRouter.dashBoardPage}
+                                                  component={CustomerDashboardPage}/>
+                                </Switch>
+                            </Container>
+                        </Box>
+                    </ThemeProvider>
+                </BrowserRouter>
+            )
+        }
     } else {
         return (
             <PageSpinner/>

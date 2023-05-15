@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import './pagebreadcrumb.css';
+import './PageBreadCrumb.css';
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import {CURRENT_USER_ROLE} from "../../../config/constants";
 import {UserRole} from "../../../model/enums/UserRole";

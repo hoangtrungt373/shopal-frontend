@@ -18,11 +18,11 @@ import {
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router-dom";
 import {AssetPath, EnterpriseRouter} from "../../../config/router";
-import {createSeoLink, formatVndMoney} from "../../../util/url.util";
+import {createSeoLink, formatVndMoney} from "../../../util/other.util";
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 
 
@@ -306,7 +306,7 @@ const EnterprisePurchaseOrderManagementPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Order History"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Order History"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <CustomerPurchaseOrderSearch
                         onSearchPurchaseOrder={(criteria: EnterprisePurchaseOrderSearchCriteriaRequest) => handleSearchPurchaseOrder(criteria)}/>

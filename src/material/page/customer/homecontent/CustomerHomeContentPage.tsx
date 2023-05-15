@@ -124,7 +124,7 @@ const CustomerHomeContentPage: React.FC<Props> = () => {
                 <Box sx={{width: "20%"}}>
                     <CatalogList catalogs={catalogs}/>
                 </Box>
-                <Box sx={{width: "80%"}}>
+                <Box sx={{width: "100%"}}>
                     <EnterpriseList enterprises={enterprises}/>
                 </Box>
             </Box>

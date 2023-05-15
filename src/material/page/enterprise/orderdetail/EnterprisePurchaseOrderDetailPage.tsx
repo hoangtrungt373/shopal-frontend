@@ -23,9 +23,9 @@ import AlertDialog from "../../common/share/AlertDialog";
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";
-import {formatVndMoney} from "../../../util/url.util";
+import {formatVndMoney} from "../../../util/other.util";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 
 interface RouteParams {
     purchaseOrderId: any;
@@ -503,7 +503,7 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Order Detail"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Order Detail"}/>
                 <Box className={"content-box"} sx={{
                     display: "flex",
                     flexDirection: "column",

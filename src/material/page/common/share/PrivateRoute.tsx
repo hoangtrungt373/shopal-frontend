@@ -5,6 +5,7 @@ import {isAuthenticated} from "../../../util/auth.util";
 
 const PrivateRoute = ({component: Component, ...rest}) => {
 
+
     return (
         <Route
             {...rest}

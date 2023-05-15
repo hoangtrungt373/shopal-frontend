@@ -1,0 +1,53 @@
+@import "src/theme";
+
+.btn-amount-group {
+  .amount-btn {
+    height: 30px;
+    width: 35px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    cursor: pointer;
+  }
+
+  .amount-input {
+    height: 30px;
+    width: 40px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    text-align: center;
+  }
+}
+
+.point-list {
+  .point-description {
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    cursor: pointer;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    justify-content: center;
+  }
+
+  .active {
+    color: $DuskRedTheme6;
+    border: 1px solid $DuskRedTheme6;
+  }
+}
+
+.product-review-block {
+  .show-review-btn {
+    height: 35px;
+    min-width: 70px;
+    background-color: white;
+    border: 1px solid #E8E8E8;
+    cursor: pointer;
+  }
+
+  .active {
+    color: $DuskRedTheme6;
+    border: 1px solid $DuskRedTheme6;
+  }
+}

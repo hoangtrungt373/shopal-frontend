@@ -13,7 +13,7 @@ interface Props {
     handleDenied?: Function,
     acceptText?: string,
     deniedText?: string,
-    title: string,
+    title: any,
     isOpen: boolean,
     isShowContent?: boolean,
     isShowAcceptBtn?: boolean,
@@ -35,12 +35,14 @@ const AlertDialog: React.FC<Props> = ({
     const [open, setOpen] = useState(isOpen);
 
     const handleDisagree = () => {
+        setOpen(false);
         if (handleDenied != undefined) {
             handleDenied();
         }
     };
 
     const handleAgree = () => {
+        setOpen(false);
         if (handleAccept != undefined) {
             handleAccept();
         }
@@ -68,12 +70,14 @@ const AlertDialog: React.FC<Props> = ({
             <DialogActions>
                 {
                     isShowDeniedBtn && (
-                        <Button onClick={handleDisagree} variant={"outlined"}>{deniedText ? deniedText : "Denied"}</Button>
+                        <Button onClick={handleDisagree} variant={"outlined"} color={"error"}
+                                size={"small"}>{deniedText ? deniedText : "Denied"}</Button>
                     )
                 }
                 {
                     isShowAcceptBtn && (
-                        <Button onClick={handleAgree} variant={"contained"} style={{marginLeft: "16px"}}>
+                        <Button onClick={handleAgree} variant={"contained"} color={"success"} size={"small"}
+                                style={{marginLeft: "16px"}}>
                             {acceptText ? acceptText : "Accept"}
                         </Button>
                     )

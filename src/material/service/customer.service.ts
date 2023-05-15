@@ -11,3 +11,24 @@ export const getCurrentCustomerInfo = async () => {
         throw new Object(err.response.data);
     }
 }
+
+export const handleSendEmailVerifyEmailUpdate = async (newEmail: string) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<string>(`/customer/current-customer/verify-new-email`, newEmail);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const updateCurrentCustomerInfo = async (request: Customer) => {
+    try {
+        const formData = new FormData();
+        formData.append('dto', new Blob([JSON.stringify(request)], {type: 'application/json'}));
+        formData.append("uploadAvatarUrl", request.uploadAvatarUrl);
+        const result: AxiosResponse = await axiosClient.post<string>(`/customer/current-customer/update`, formData);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}

@@ -119,8 +119,14 @@ const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContract
                 rows={enterpriseCooperationContracts}
                 columns={columns}
                 pageSizeOptions={[5]}
-                checkboxSelection
                 disableRowSelectionOnClick
+                initialState={{
+                    columns: {
+                        columnVisibilityModel: {
+                            id: false
+                        },
+                    },
+                }}
             />
         </Box>
     )
@@ -142,15 +148,15 @@ const EnterpriseCooperationContractSearch: React.FC<Props> = ({onSearchContract}
             value: ContractStatus.ALL
         },
         {
-            label: "Pending",
+            label: "Chưa áp dụng",
             value: ContractStatus.PENDING
         },
         {
-            label: "Active",
+            label: "Đang áp dụng",
             value: ContractStatus.ACTIVE
         },
         {
-            label: "Inactive",
+            label: "Hết hạn",
             value: ContractStatus.INACTIVE
         }
     ];
@@ -168,15 +174,15 @@ const EnterpriseCooperationContractSearch: React.FC<Props> = ({onSearchContract}
         <Box sx={{display: "flex", gap: 2}}>
             <form onSubmit={onSubmit} style={{display: "flex", gap: "16px"}}>
                 <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Typography>From date</Typography>
+                    <Typography>From Date</Typography>
                     <TextField {...register("startDate")} type={"date"} style={{width: "150px"}} size={"small"}/>
                 </Box>
                 <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Typography>To date</Typography>
+                    <Typography>To Date</Typography>
                     <TextField {...register("endDate")} type={"date"} style={{width: "150px"}} size={"small"}/>
                 </Box>
                 <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Typography>Contract status</Typography>
+                    <Typography>Status</Typography>
                     <TextField
                         select
                         defaultValue={OrderStatus.ALL}

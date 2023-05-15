@@ -4,13 +4,12 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #F5F5F5 !important;
+    background-color: #F5F5FA !important;
     font-size: 0.895rem;
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
     margin: 0;
-    padding-bottom: 116px !important;
 }
 
 

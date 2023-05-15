@@ -1,0 +1,79 @@
+$primary: #a6aab4;
+$textOnHover: #1f1f1f;
+$iconOnHover: #88AAF3;
+
+.admin-main-list-item {
+  font-size: 14px;
+  color: $primary;
+  background-color: #fff;
+
+  .menu {
+    background-color: #fff;
+
+    .css-honxw6 {
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+    }
+
+    .css-jn69v9 {
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+    }
+
+    .menu-item {
+      position: relative;
+
+      .flag-active {
+        position: absolute;
+        border-left: 5px solid $iconOnHover;
+        left: 0;
+        top: 0;
+        color: $iconOnHover;
+        border-radius: 5px;
+      }
+
+      a {
+        &:hover {
+          background-color: #fff;
+        }
+      }
+
+      .sub-menu {
+        display: flex;
+        flex-direction: column;
+        background-color: #F7F7F7;
+        padding-left: 49px;
+
+        .selected {
+          color: $textOnHover;
+        }
+
+        .sub-menu-item a {
+          &:hover {
+            background-color: #F7F7F7;
+            color: $textOnHover;
+            transition: 0.5s;
+          }
+        }
+      }
+    }
+
+    .active {
+
+      a {
+        color: $iconOnHover;
+      }
+
+      .sub-menu-item a {
+        color: $primary;
+      }
+
+      svg {
+        color: $iconOnHover;
+      }
+    }
+
+  }
+}

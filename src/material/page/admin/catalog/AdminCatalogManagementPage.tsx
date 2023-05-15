@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Autocomplete, Box, Chip, MenuItem, Stack} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import {useForm} from "react-hook-form";
@@ -284,7 +284,7 @@ const AdminCatalogManagementPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}} className={"admin-catalog-management-page"}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Main Category"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Main Category"}/>
                 <Stack direction="row" spacing={2}>
                     <Box sx={{width: "35%", display: "flex", flexDirection: "column", gap: 2}}
                          className={"content-box"}>
@@ -308,7 +308,7 @@ const AdminCatalogManagementPage: React.FC<Props> = ({}) => {
                                         position: "relative"
                                     }}>
                                         <img
-                                            src={imgUrl !== undefined ? AssetPath.catalogLogoUrl + imgUrl : AssetPath.uploadReviewUrl}
+                                            src={imgUrl !== undefined ? AssetPath.catalogLogoUrl + imgUrl : AssetPath.productUploadPreviewImg}
                                             alt={"img"}
                                             style={{
                                                 borderRadius: 5,

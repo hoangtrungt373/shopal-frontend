@@ -9,6 +9,7 @@ import {
     EnterprisePurchaseOrderSearchCriteriaRequest
 } from "../model/request/EnterprisePurchaseOrderSearchCriteriaRequest";
 import {EnterpriseUpdateOrderStatusRequest} from "../model/request/EnterpriseUpdateOrderStatusRequest";
+import {CustomerPurchaseOrderCancelRequest} from "../model/customer/CustomerPurchaseOrderCancelRequest";
 
 export const createNewPurchaseOrderForCurrentCustomer = async (createNewPurchaseOrderRequests: CreateNewPurchaseOrderRequest[]) => {
     try {
@@ -50,6 +51,15 @@ export const getPurchaseOrderDetailForCurrentEnterprise = async (purchaseOrderId
 export const updatePurchaseOrderStatusForCurrentEnterprise = async (request: EnterpriseUpdateOrderStatusRequest) => {
     try {
         const result: AxiosResponse = await axiosClient.post<string>(`/order/current-enterprise/customer-order/update-order-status`, request);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const cancelOrderForCurrentCustomer = async (request: CustomerPurchaseOrderCancelRequest) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<string>(`/order/current-customer/cancel-order`, request);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

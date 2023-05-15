@@ -2,14 +2,14 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {Autocomplete, Box, Chip, Rating, Tooltip} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import {Product} from "../../../model/Product";
 import {useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
 import {AdminRouter, AssetPath, EnterpriseRouter} from "../../../config/router";
 import Typography from "@mui/material/Typography";
-import {createSeoLink, formatVndMoney} from "../../../util/url.util";
+import {createSeoLink, formatVndMoney} from "../../../util/other.util";
 import {getProductByCriteria} from "../../../service/product.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {ProductType} from "../../../model/enums/ProductType";
@@ -367,7 +367,7 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <ProductSearch childCatalogs={childCatalogs}
                                    onSearchProduct={(criteria: ProductSearchCriteriaRequest) => handleSearchProduct(criteria)}/>

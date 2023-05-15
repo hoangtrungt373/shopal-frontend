@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Box, Chip, MenuItem, Stack} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import {useForm} from "react-hook-form";
@@ -277,7 +277,7 @@ const AdminChildCatalogManagementPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}} className={"admin-catalog-management-page"}>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Sub Category"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Sub Category"}/>
                 <Stack direction="row" spacing={2}>
                     <Box sx={{width: "35%", display: "flex", flexDirection: "column", gap: 2}}
                          className={"content-box"}>

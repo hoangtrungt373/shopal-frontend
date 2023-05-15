@@ -11,11 +11,10 @@ import {Customer} from "../../../model/Customer";
 import {getCurrentCustomerInfo} from "../../../service/customer.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {Link, useHistory} from "react-router-dom";
-import {Chip} from "@mui/material";
+import {Alert, Chip} from "@mui/material";
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
 import {CreateNewPurchaseOrderRequest} from "../../../model/request/CreateNewPurchaseOrderRequest";
 import {createNewPurchaseOrderForCurrentCustomer} from "../../../service/order.service";
 import {PAYMENT_PROCESS} from "../../../config/constants";
@@ -25,6 +24,8 @@ import {getCurrentCustomerCart} from "../../../service/cart.service";
 import {Cart} from "../../../model/Cart";
 import PageSpinner from "../../common/share/PageSpinner";
 import AlertDialog from "../../common/share/AlertDialog";
+import {EnterpriseLogo} from "../../common/share/EnterpriseLogo";
+import {CartEmpty} from "../../common/share/CartEmpty";
 
 interface Props {
     productCartGroupByEnterprises?: ProductCartGroupByEnterprise[];
@@ -64,16 +65,16 @@ const ProductOrderList: React.FC<Props> = ({productCartGroupByEnterprises}) => {
             <Box sx={{backgroundColor: "#fff", borderRadius: 2}}>
                 <Grid container spacing={2} p={2} alignItems={"center"} justifyContent={"space-between"}>
                     <Grid item xs={6}>
-                        <Typography align={"left"}>Products Ordered</Typography>
+                        <Typography align={"left"}>Sản phẩm đặt</Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography align={"center"}>Point</Typography>
+                        <Typography align={"center"}>Điểm</Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography align={"center"}>Quantity</Typography>
+                        <Typography align={"center"}>Số lượng</Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography align={"right"}>Total point</Typography>
+                        <Typography align={"right"}>Tổng điểm</Typography>
                     </Grid>
                 </Grid>
             </Box>
@@ -108,17 +109,37 @@ const ProductOrderList: React.FC<Props> = ({productCartGroupByEnterprises}) => {
                                             </Box>
                                         </Grid>
                                         <Grid item xs={1}>
-                                            <Typography align={"center"}>{productCart.pointSelected.pointExchange + " "}
-                                                <sup
-                                                    style={{textDecoration: "underline"}}>p</sup></Typography>
+                                            <Box sx={{
+                                                display: "flex",
+                                                gap: 0.5,
+                                                alignItems: "center",
+                                                justifyContent: "center"
+                                            }}>
+                                                <Typography
+                                                    align={"center"}>{productCart.pointSelected.pointExchange}</Typography>
+                                                <EnterpriseLogo
+                                                    title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                    logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                    height={15} width={15}/>
+                                            </Box>
+
                                         </Grid>
                                         <Grid item xs={1}>
                                             <Typography align={"center"}>{productCart.amountSelected}</Typography>
                                         </Grid>
                                         <Grid item xs={2}>
-                                            <Typography align={"right"}
-                                            >{productCart.pointSelected.pointExchange * productCart.amountSelected + " "}
-                                                <sup style={{textDecoration: "underline"}}>p</sup></Typography>
+                                            <Box sx={{
+                                                display: "flex",
+                                                gap: 0.5,
+                                                alignItems: "center",
+                                                justifyContent: "flex-end"
+                                            }}>
+                                                <Typography>{productCart.pointSelected.pointExchange * productCart.amountSelected + " "}</Typography>
+                                                <EnterpriseLogo
+                                                    title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                    logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                    height={15} width={15}/>
+                                            </Box>
                                         </Grid>
                                     </Grid>
                                 ))
@@ -139,11 +160,10 @@ const ProductOrderList: React.FC<Props> = ({productCartGroupByEnterprises}) => {
                                     ({productCartGroupByEnterprise.productCarts.length} Item):</Typography>
                                 <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
                                     <Typography fontWeight={"bold"} color={"#FF424E"}
-                                                variant={"h6"}>{productCartGroupByEnterprise.orderTotal}<sup
-                                        style={{textDecoration: "underline", fontSize: "12px"}}>p</sup></Typography>
-                                    <Avatar alt="img"
-                                            src={AssetPath.enterpriseLogoUrl + productCartGroupByEnterprise.enterprise.logoUrl}
-                                            sx={{width: 20, height: 20}}/>
+                                                variant={"h6"}>{productCartGroupByEnterprise.orderTotal}</Typography>
+                                    <EnterpriseLogo title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                    logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                    height={20} width={20}/>
                                 </Box>
                             </Box>
                             <Divider/>
@@ -157,24 +177,39 @@ const ProductOrderList: React.FC<Props> = ({productCartGroupByEnterprises}) => {
 
 const ShippingAddress: React.FC<Props> = ({customer}) => {
 
-    return (
-        <Box sx={{backgroundColor: "#fff", p: 2, borderRadius: 2, display: "flex", flexDirection: "column"}}>
-            <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                <Typography color={"rgb(128, 128, 137);"}>Shipping to:</Typography>
-                <Link to={"/"}>Change</Link>
+    if (customer.fullName && customer.phoneNumber && customer.address) {
+        return (
+            <Box sx={{backgroundColor: "#fff", p: 2, borderRadius: 2, display: "flex", flexDirection: "column"}}>
+
+                <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                    <Typography color={"rgb(128, 128, 137);"}>Shipping to:</Typography>
+                    <Link to={CustomerRouter.dashBoardPage} target="_blank"
+                          rel="noopener noreferrer">Cập nhật</Link>
+                </Box>
+                <Box sx={{display: "flex", gap: 1, alignItems: "center", mt: 1.5}}>
+                    <Typography fontWeight={"bold"}>{customer.fullName}</Typography>
+                    <Typography style={{position: "relative", top: -2}}>|</Typography>
+                    <Typography fontWeight={"bold"}>{customer.phoneNumber}</Typography>
+                </Box>
+                <Box sx={{mt: 1}}>
+                    <Typography color={"rgb(128, 128, 137);"}><Chip label="Home" size="small"
+                                                                    style={{marginRight: 4}}
+                                                                    color="primary"/>{customer.address}</Typography>
+                </Box>
             </Box>
-            <Box sx={{display: "flex", gap: 1, alignItems: "center", mt: 1.5}}>
-                <Typography fontWeight={"bold"}>{customer.fullName}</Typography>
-                <Typography style={{position: "relative", top: -2}}>|</Typography>
-                <Typography fontWeight={"bold"}>{customer.phoneNumber}</Typography>
+        )
+    } else {
+        return (
+            <Box
+                sx={{backgroundColor: "#fff", p: 2, borderRadius: 2, display: "flex", flexDirection: "column", gap: 2}}>
+                <Alert severity="error">Hãy cập nhật thông tin họ tên, số điện thoại, địa chỉ liên lạc để tiến hành đặt
+                    hàng</Alert>
+                <Link to={CustomerRouter.dashBoardPage} target="_blank"
+                      rel="noopener noreferrer" style={{marginLeft: "auto"}}>Cập nhật</Link>
             </Box>
-            <Box sx={{mt: 1}}>
-                <Typography color={"rgb(128, 128, 137);"}><Chip label="Home" size="small"
-                                                                style={{marginRight: 4}}
-                                                                color="primary"/>{customer.address}</Typography>
-            </Box>
-        </Box>
-    )
+        )
+    }
+
 }
 
 const CheckoutTotalPoint: React.FC<Props> = ({productCartGroupByEnterprises}) => {
@@ -195,12 +230,11 @@ const CheckoutTotalPoint: React.FC<Props> = ({productCartGroupByEnterprises}) =>
                                     <Typography fontWeight={"bold"}>Total Payment:</Typography>
                                     <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
                                         <Typography fontWeight={"bold"} color={"#FF424E"}
-                                                    variant={"h6"}>{productCartGroupByEnterprise.orderTotal}<sup
-                                            style={{textDecoration: "underline", fontSize: "12px"}}>p</sup>
+                                                    variant={"h6"}>{productCartGroupByEnterprise.orderTotal}
                                         </Typography>
-                                        <Avatar alt="img"
-                                                src={AssetPath.enterpriseLogoUrl + productCartGroupByEnterprise.enterprise.logoUrl}
-                                                sx={{width: 20, height: 20}}/>
+                                        <EnterpriseLogo title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                        logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                        height={20} width={20}/>
                                     </Box>
                                 </Box>
                             </Box>
@@ -208,27 +242,6 @@ const CheckoutTotalPoint: React.FC<Props> = ({productCartGroupByEnterprises}) =>
                         </Box>
                     ))
             }
-        </Box>
-    )
-}
-
-const NoOrderProduct: React.FC<Props> = ({}) => {
-
-    return (
-        <Box sx={{
-            width: "100%",
-            backgroundColor: "#fff",
-            borderRadius: 2,
-            height: "300px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2
-        }}>
-            <img src={AssetPath.cartEmptyImg} alt={"cart-empty"} width={"200px"}/>
-            <Typography>{isAuthenticated() ? "There is no item in your cart" : "Please login to add item in your cart"}</Typography>
-            <Link to={"/"}><Button variant="contained">Continue shopping</Button></Link>
         </Box>
     )
 }
@@ -349,16 +362,16 @@ const CustomerOrderCheckoutPage: React.FC<Props> = ({location}) => {
                                                     <CheckoutTotalPoint
                                                         productCartGroupByEnterprises={productCartGroupByEnterprises}/>
                                                     <Button variant={"contained"} size={"large"} fullWidth
+                                                            disabled={!currentCustomer.fullName || !currentCustomer.phoneNumber || !currentCustomer.address}
                                                             style={{backgroundColor: "#FF424E"}}
-                                                            onClick={() => placeOrder()}>Place
-                                                        Order</Button>
+                                                            onClick={() => placeOrder()}>Đặt hàng</Button>
                                                 </Box>
                                             )
                                         }
                                     </Grid>
                                 </Grid>
                             ) : (
-                                <NoOrderProduct/>
+                                <CartEmpty/>
                             )
                         }
                     </Box>

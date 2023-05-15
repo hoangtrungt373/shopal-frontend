@@ -17,13 +17,13 @@ import {AssetPath, EnterpriseRouter} from "../../../config/router";
 import ImageGallery from 'react-image-gallery';
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
-import {formatVndMoney} from "../../../util/url.util";
+import {formatVndMoney} from "../../../util/other.util";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import AlertDialog from "../../common/share/AlertDialog";
 import {ProductStatus} from "../../../model/enums/ProductStatus";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
-import AdminPageHeader from "../../common/admin/AdminPageHeader";
+import PageHeader from "../../common/share/PageHeader";
 
 interface Props {
     productDetail?: ProductDetail
@@ -195,7 +195,7 @@ const ProductInfo: React.FC<Props> = ({
                         minWidth: 70
                     }}>
                         <Typography fontWeight={"bold"}>Sold</Typography>
-                        <Typography>{productDetail.amountSold}</Typography>
+                        <Typography>{productDetail.totalSold}</Typography>
                     </Box>
                     <Box sx={{
                         borderRadius: 5,
@@ -395,7 +395,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}}>
                 <DisplayAlert/>
-                <AdminPageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <Typography className={"page-sub-header"}>Product Detail: #{productDetail.id}</Typography>
                     <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>

@@ -9,8 +9,8 @@ import PageSpinner from "../../common/share/PageSpinner";
 import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
-import './customerproductcollectionpage.css';
-import {Card, CardMedia, Rating} from "@mui/material";
+import './CustomerProductCollectionPage.scss';
+import {Card, CardMedia, Pagination, Rating, Tooltip} from "@mui/material";
 import {Enterprise} from "../../../model/Enterprise";
 import {getAllEnterprise} from "../../../service/enterprise.service";
 import Button from "@mui/material/Button";
@@ -20,10 +20,15 @@ import {AssetPath, CustomerRouter} from "../../../config/router";
 import {Link, useHistory} from "react-router-dom";
 import {ProductSearchPath} from "../../../model/request/ProductSearchPath";
 import {ProductSearchCriteriaRequest} from "../../../model/request/ProductSearchCriteriaRequest";
-import {getModelFromSearchParams, productSearchPathToProductSearchCriteriaRequest} from "../../../util/search.utils";
-import {getProductByCriteria} from "../../../service/product.service";
-import {createSeoLink} from "../../../util/url.util";
+import {
+    createSearchQuery,
+    getModelFromSearchParams,
+    productSearchPathToProductSearchCriteriaRequest
+} from "../../../util/search.utils";
+import {countProductByCriteria, getProductByCriteria} from "../../../service/product.service";
+import {createSeoLink} from "../../../util/other.util";
 import Avatar from "@mui/material/Avatar";
+import {DEFAULT_SEARCH_LIMIT} from "../../../config/constants";
 
 interface Props {
     catalogs?: Catalog[],
@@ -31,12 +36,33 @@ interface Props {
     products?: Product[],
 
     title?: string,
-    isTitleKeyword?: boolean
+    isTitleKeyword?: boolean,
+    onClickCatalog?: Function,
+    selectedCatalog?: number
+    onClickRating?: Function,
+    selectedRating?: number,
+    onClickEnterprise?: Function,
+    selectedEnterprises?: number[]
 }
 
-const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
+const SearchCriteriaList: React.FC<Props> = ({
+                                                 catalogs,
+                                                 enterprises,
+                                                 onClickCatalog,
+                                                 selectedCatalog,
+                                                 onClickRating,
+                                                 selectedRating,
+                                                 onClickEnterprise,
+                                                 selectedEnterprises,
+                                             }) => {
 
     const [checkedEnterprise, setCheckedEnterprise] = React.useState([0]);
+
+    /*TODO: search related catalog*/
+    useEffect(() => {
+        setCheckedEnterprise(selectedEnterprises.map(x => Number.parseInt(String(x))));
+    }, [selectedEnterprises])
+
 
     const handleToggleEnterprise = (enterpriseId: number) => () => {
         const currentIndex = checkedEnterprise.indexOf(enterpriseId);
@@ -49,6 +75,7 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
         }
 
         setCheckedEnterprise(newChecked);
+        onClickEnterprise(enterpriseId);
     };
 
     return (
@@ -58,14 +85,15 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
             flexDirection: "column",
             gap: 2,
             borderRadius: 2,
-        }}>
+        }} className={"search-block"}>
             <Box sx={{px: 2, pt: 2, borderTopLeftRadius: 2, borderTopRightRadius: 2}}>
                 <Box style={{display: "flex", flexDirection: "column", gap: "12px"}}>
-                    <Typography fontWeight={"bold"}>Related Catalog</Typography>
+                    <Typography fontWeight={"bold"}>Danh mục sản phẩm</Typography>
                     {catalogs.map((catalog, index) => {
                         return (
-                            <Link to={"/"} style={{fontSize: "12px"}}
-                                  key={index} className={"selectLink"}>{catalog.catalogName}</Link>
+                            <Typography onClick={() => onClickCatalog(catalog.id)}
+                                        key={index}
+                                        className={catalog.id == selectedCatalog ? "select-link active" : "select-link"}>{catalog.catalogName}</Typography>
                         );
                     })}
                 </Box>
@@ -78,7 +106,9 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
                         return (
                             <Box sx={{display: "flex", alignItems: "center", ml: -0.5}}>
                                 <Rating name="read-only" value={star} readOnly sx={{mr: 1}} size="small"/>
-                                <Typography fontSize={"12px"} className={"selectLink"}>from {star} star</Typography>
+                                <Typography
+                                    className={star == selectedRating ? "select-link active" : "select-link"}
+                                    onClick={() => onClickRating(star)}>from {star} star</Typography>
                             </Box>
                         );
                     })}
@@ -87,12 +117,15 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
             <Divider/>
             <Box sx={{px: 2}}>
                 <Box style={{display: "flex", flexDirection: "column"}}>
-                    <Typography fontWeight={"bold"} style={{marginBottom: "8px"}}>Supplier</Typography>
+                    <Typography fontWeight={"bold"} style={{marginBottom: "8px"}}>Nhà cung cấp</Typography>
                     {enterprises.map((enterprise, index) => {
+
+
                         return (
                             <Box sx={{display: "flex", alignItems: "center"}} key={index}>
                                 <Checkbox
                                     edge="start"
+                                    defaultChecked={checkedEnterprise.indexOf(enterprise.id) !== -1}
                                     checked={checkedEnterprise.indexOf(enterprise.id) !== -1}
                                     tabIndex={-1}
                                     disableRipple
@@ -102,8 +135,10 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
                                     }}
                                     size={"small"}
                                     onClick={handleToggleEnterprise(enterprise.id)}
+
                                 />
-                                <Typography fontSize={"12px"}>{enterprise.enterpriseName}</Typography>
+                                <Typography style={{cursor: "auto"}}
+                                            className={checkedEnterprise.indexOf(enterprise.id) !== -1 ? "select-link active" : "select-link"}>{enterprise.enterpriseName}</Typography>
 
                             </Box>
                         );
@@ -114,12 +149,19 @@ const SearchCriteriaList: React.FC<Props> = ({catalogs, enterprises}) => {
     )
 }
 
-const ProductCollectionHeader: React.FC<Props> = ({title}) => {
+const ProductCollectionHeader: React.FC<Props> = ({title, isTitleKeyword}) => {
 
     return (
         <Box sx={{p: 2, display: "flex", flexDirection: "column", gap: 2, borderRadius: 2, backgroundColor: "#fff"}}>
-            <Typography variant={"h6"}>Search result for <Link to="/"
-                                                               className={"keyword"}>{title}</Link></Typography>
+            {
+                isTitleKeyword ? (
+                    <Typography variant={"h6"}>Kết quả tìm kiếm cho <Link to="/"
+                                                                          className={"keyword"}>{title}</Link></Typography>
+                ) : (
+                    <Typography variant={"h6"}>{title}</Typography>
+                )
+            }
+
             <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
                 <Button variant={"outlined"} size={"small"}>Pho bien</Button>
                 <Button variant={"outlined"} size={"small"}>Ban chay</Button>
@@ -138,16 +180,17 @@ const ProductCollectionContent: React.FC<Props> = ({products}) => {
                     <Grid item xs={3}>
                         <Link
                             to={CustomerRouter.productDetailPage + "/" + createSeoLink(product.productName) + "." + product.id}
-                            key={index}>
-                            <Card sx={{width: "100%"}} className={"cartItem"}>
+                            key={index} style={{textDecoration: "none"}}>
+                            <Card sx={{width: "100%"}} className={"cart-item"}>
                                 <CardMedia
                                     sx={{height: 200, p: 5}}
                                     image={AssetPath.productImgUrl + product.mainImgUrl}
                                     title="green iguana"
                                 />
-                                <CardContent style={{display: "flex", flexDirection: "column", gap: "8px"}}>
+                                <CardContent style={{display: "flex", flexDirection: "column", gap: "8px"}}
+                                             className={"product-card"}>
                                     <Box sx={{height: "32px"}}>
-                                        <Typography className={"productName"}>{product.productName}</Typography>
+                                        <Typography className={"product-name"}>{product.productName}</Typography>
                                     </Box>
                                     <Box sx={{display: "flex", alignItems: "center"}}>
                                         <Typography>{product.rating}</Typography>
@@ -155,18 +198,21 @@ const ProductCollectionContent: React.FC<Props> = ({products}) => {
                                                 style={{position: "relative", bottom: 1, marginLeft: 0.5}}/>
                                         <Typography
                                             style={{position: "relative", bottom: 1, margin: "auto 8px"}}>|</Typography>
-                                        <Typography>500+ Sold</Typography>
+                                        <Typography>{product.totalSold}+ Sold</Typography>
                                     </Box>
                                     <Grid container spacing={2}>
                                         {
                                             product.exchangeAblePoints.map((productPoint, index) => (
-                                                <Grid item xs={4} key={index}>
+                                                <Grid item xs={3} key={index}>
                                                     <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
-                                                        <Typography
-                                                            color={"#FF424E"}>{productPoint.pointExchange}</Typography>
-                                                        <Avatar alt="img"
-                                                                src={AssetPath.enterpriseLogoUrl + productPoint.enterprise.logoUrl}
-                                                                sx={{width: 20, height: 20}}/>
+                                                        <Typography fontWeight={"bold"}
+                                                                    color={"#FF424E"}>{productPoint.pointExchange}</Typography>
+                                                        <Tooltip title={productPoint.enterprise.enterpriseName}
+                                                                 key={index}>
+                                                            <Avatar alt="img"
+                                                                    src={AssetPath.enterpriseLogoUrl + productPoint.enterprise.logoUrl}
+                                                                    sx={{width: 20, height: 20}}/>
+                                                        </Tooltip>
                                                     </Box>
                                                 </Grid>
                                             ))
@@ -188,7 +234,8 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
     const [enterprises, setEnterprises] = useState<Enterprise[]>([]);
     const [products, setProducts] = useState<Product[]>([])
     const [isShow, setIsShow] = useState<boolean>(false);
-
+    const [productSearchPath, setProductSearchPath] = useState<ProductSearchPath>();
+    const [total, setTotal] = useState<number>();
     const [isTitleKeyword, setIsTitleKeyword] = useState<boolean>(false);
     const [title, setTitle] = useState<string>();
 
@@ -201,7 +248,8 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
             catalog: null,
             enterprise: [],
             rating: null,
-            keyword: null
+            keyword: null,
+            page: 0
         }
         newProductSearchPath = getModelFromSearchParams(query, newProductSearchPath);
 
@@ -211,8 +259,11 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
             if (newProductSearchPath.keyword != null) {
                 setTitle(newProductSearchPath.keyword);
                 setIsTitleKeyword(true);
+            } else {
             }
         }
+        console.log(newProductSearchPath)
+        setProductSearchPath(newProductSearchPath);
 
         let productSearchRequest: ProductSearchCriteriaRequest = productSearchPathToProductSearchCriteriaRequest(newProductSearchPath);
         getAllMainCatalog()
@@ -232,8 +283,16 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
                     })
                     .catch((err: ExceptionResponse) => {
                         console.log(err);
-                    })
+                    });
 
+                countProductByCriteria(productSearchRequest)
+                    .then((resTotal: number) => {
+                        setTotal(resTotal);
+                        console.log(Math.ceil(resTotal / DEFAULT_SEARCH_LIMIT))
+                    })
+                    .catch((err: ExceptionResponse) => {
+                        console.log(err);
+                    });
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
@@ -243,15 +302,65 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
             })
     }, [window.location.search]);
 
+    const handleClickCatalog = (catalogId: number) => {
+        let newProductSearchPath = productSearchPath;
+        newProductSearchPath.catalog = catalogId;
+        refreshSearch(newProductSearchPath);
+    }
+
+    const handleClickRating = (star: number) => {
+        let newProductSearchPath = productSearchPath;
+        newProductSearchPath.rating = star;
+        refreshSearch(newProductSearchPath);
+    }
+
+    const handleClickEnterprise = (enterpriseId: number) => {
+        const currentIndex = productSearchPath.enterprise.findIndex(x => Number.parseInt(String(x)) == enterpriseId);
+        const newChecked = [...productSearchPath.enterprise];
+
+        if (currentIndex == -1) {
+            newChecked.push(enterpriseId);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+        let newProductSearchPath = productSearchPath;
+        newProductSearchPath.enterprise = [...newChecked]
+        refreshSearch(newProductSearchPath);
+    }
+
+    const handleChangePage = (page: number) => {
+        let newProductSearchPath = productSearchPath;
+        newProductSearchPath.page = page;
+        refreshSearch(newProductSearchPath);
+    }
+
+    const refreshSearch = (productSearchPath: ProductSearchPath) => {
+        history.push(CustomerRouter.productCollectionPage + createSearchQuery(productSearchPath));
+    }
+
     if (isShow) {
         return (
             <Box sx={{display: "flex", justifyContent: "space-between", gap: 2}} className={"productCollectionPage"}>
                 <Box width={"20%"}>
-                    <SearchCriteriaList catalogs={catalogs.filter(x => x.id <= 5)} enterprises={enterprises}/>
+                    {
+                        productSearchPath && (
+                            <SearchCriteriaList catalogs={catalogs.filter(x => x.id <= 5)} enterprises={enterprises}
+                                                selectedCatalog={productSearchPath.catalog}
+                                                onClickCatalog={(catalogId: number) => handleClickCatalog(catalogId)}
+                                                selectedRating={productSearchPath.rating}
+                                                onClickRating={(star: number) => handleClickRating(star)}
+                                                selectedEnterprises={productSearchPath.enterprise}
+                                                onClickEnterprise={(enterpriseId: number) => handleClickEnterprise(enterpriseId)}/>
+                        )
+                    }
                 </Box>
                 <Box width={"80%"} sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                    <ProductCollectionHeader title={title}/>
+                    <ProductCollectionHeader title={title} isTitleKeyword={true}/>
                     <ProductCollectionContent products={products}/>
+                    <Pagination count={Math.ceil(total / DEFAULT_SEARCH_LIMIT)} color="primary" shape="rounded"
+                                onChange={(e, page: number) => handleChangePage(page)}
+                                sx={{margin: "32px auto 0px auto"}}/>
+
                 </Box>
             </Box>
         )

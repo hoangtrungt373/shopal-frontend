@@ -7,9 +7,9 @@ import Box from "@mui/material/Box";
 import {AssetPath, CustomerRouter} from "../../../config/router";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import {ButtonGroup, Divider, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
-import './customercartpage.css'
+import './CustomerCartPage.scss'
 import Grid from "@mui/material/Grid";
-import {createSeoLink} from '../../../util/url.util';
+import {createSeoLink} from '../../../util/other.util';
 import {UpdateProductCartRequest} from "../../../model/request/UpdateProductCartRequest";
 import {getCurrentCustomerCart, updateProductCartsForCurrentCustomer} from "../../../service/cart.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
@@ -24,6 +24,8 @@ import {isAuthenticated} from "../../../util/auth.util";
 import PageSpinner from "../../common/share/PageSpinner";
 import AlertDialog from "../../common/share/AlertDialog";
 import {ProductCart} from "../../../model/ProductCart";
+import {EnterpriseLogo} from "../../common/share/EnterpriseLogo";
+import {CartEmpty} from '../../common/share/CartEmpty';
 
 interface Props {
     cart?: Cart;
@@ -86,23 +88,23 @@ const ProductCartList: React.FC<Props> = ({
                             <Checkbox className={"rowCheckbox"} disableRipple checked={isCheckAll} onClick={() => {
                                 handleCheckAll();
                             }}/>
-                            <Typography align={"left"} marginLeft={"12px"}>Select all
-                                ({cart.productCarts.length} product)</Typography>
+                            <Typography align={"left"} marginLeft={"12px"}>Chọn tất cả
+                                ({cart.productCarts.length} sản phẩm)</Typography>
                         </Box>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography align={"center"}>Point source</Typography>
+                        <Typography align={"center"}>Nhà cung cấp</Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography align={"center"} style={{position: "relative", left: 3}}>Unit point</Typography>
+                        <Typography align={"center"} style={{position: "relative", left: 3}}>Điểm</Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography align={"center"}>Quantity</Typography>
+                        <Typography align={"center"}>Số lượng</Typography>
                     </Grid>
                     <Grid item xs={2}>
                         <Box style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                            <Typography align={"center"}>Total point</Typography>
-                            <DeleteOutlineOutlinedIcon className={"deleteSvg"}
+                            <Typography align={"center"}>Số tiền</Typography>
+                            <DeleteOutlineOutlinedIcon className={"delete-svg"}
                                                        onClick={() => onRemoveProductCartMany()}/>
                         </Box>
                     </Grid>
@@ -133,7 +135,8 @@ const ProductCartList: React.FC<Props> = ({
                                                  marginLeft: "12px",
                                                  marginRight: "16px"
                                              }}/>
-                                        <Link className={"productCartName"} style={{width: "100%"}}
+                                        <Link className={"product-cart-name"} style={{width: "100%"}} target="_blank"
+                                              rel="noopener noreferrer"
                                               to={CustomerRouter.productDetailPage + "/" + createSeoLink(productCart.productName) + "." + productCart.productId}
                                         >{productCart.productName}</Link>
                                     </Box>
@@ -150,7 +153,7 @@ const ProductCartList: React.FC<Props> = ({
                                             {
                                                 productCart.exchangeAblePoints.map((point, index) => (
                                                     <MenuItem value={point.id}
-                                                              className={isDuplicatePointSelected(point.id, productCart.id) ? "disableItem" : ""}
+                                                              className={isDuplicatePointSelected(point.id, productCart.id) ? "disable-item" : ""}
                                                               key={index}>{point.enterprise.enterpriseName}</MenuItem>
                                                 ))
                                             }
@@ -166,15 +169,16 @@ const ProductCartList: React.FC<Props> = ({
                                         left: 12
                                     }}>
                                         <Typography>{productCart.pointSelected.pointExchange}</Typography>
-                                        <Avatar alt="img"
-                                                src={AssetPath.enterpriseLogoUrl + productCart.pointSelected.enterprise.logoUrl}
-                                                sx={{width: 15, height: 15}}/>
+                                        <EnterpriseLogo title={productCart.pointSelected.enterprise.enterpriseName}
+                                                        logoUrl={productCart.pointSelected.enterprise.logoUrl}
+                                                        height={15} width={15}/>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <ButtonGroup variant="outlined" aria-label="outlined primary button group"
+                                                 className={"amount-btn-group"}
                                                  style={{display: "flex", justifyContent: "center"}}>
-                                        <button className={"amountBtn"} type={"button"}
+                                        <button className={"amount-btn"} type={"button"}
                                                 style={{borderTopLeftRadius: "2px", borderBottomLeftRadius: "2px"}}
                                                 onClick={() => {
                                                     if (productCart.amountSelected - 1 > 0) {
@@ -185,7 +189,7 @@ const ProductCartList: React.FC<Props> = ({
                                         {/* TODO: handle 0 amount */}
                                         {/* TODO: do not allow user input str */}
                                         <input id={"amount"} value={productCart.amountSelected}
-                                               className={"amountInput"}
+                                               className={"amount-input"}
                                                onChange={event => {
                                                    let newAmount = parseInt(event.target.value);
                                                    if (Number.isNaN(newAmount)) {
@@ -199,7 +203,7 @@ const ProductCartList: React.FC<Props> = ({
                                                        onUpdateProductCart(productCart.id, productCart.pointSelected.id, 1);
                                                    }
                                                }}></input>
-                                        <button className={"amountBtn"} type={"button"}
+                                        <button className={"amount-btn"} type={"button"}
                                                 style={{borderTopRightRadius: "2px", borderBottomRightRadius: "2px"}}
                                                 onClick={() => {
                                                     if (productCart.amountSelected + 1 <= productCart.quantityInStock) {
@@ -225,11 +229,11 @@ const ProductCartList: React.FC<Props> = ({
                                             <Typography fontWeight={"bold"} ml={2.3} align={"center"}
                                                         color={"#EE4D2D"}>{productCart.pointSelected.pointExchange * productCart.amountSelected + " "}
                                             </Typography>
-                                            <Avatar alt="img"
-                                                    src={AssetPath.enterpriseLogoUrl + productCart.pointSelected.enterprise.logoUrl}
-                                                    sx={{width: 15, height: 15}}/>
+                                            <EnterpriseLogo title={productCart.pointSelected.enterprise.enterpriseName}
+                                                            logoUrl={productCart.pointSelected.enterprise.logoUrl}
+                                                            height={15} width={15}/>
                                         </Box>
-                                        <DeleteOutlineOutlinedIcon className={"deleteSvg"}
+                                        <DeleteOutlineOutlinedIcon className={"delete-svg"}
                                                                    onClick={() => onUpdateProductCart(productCart.id, productCart.pointSelected.id, 0)}/>
                                     </Box>
                                 </Grid>
@@ -243,14 +247,11 @@ const ProductCartList: React.FC<Props> = ({
     );
 }
 
-const OrderPointTotal: React.FC<Props> = ({cart}) => {
-
-    const [productCartGroupByEnterprises, setProductCartGroupByEnterprises] = useState<ProductCartGroupByEnterprise[]>([])
+const OrderPointTotal: React.FC<Props> = ({productCartGroupByEnterprises}) => {
 
     useEffect(() => {
-        let newProductCartGroupByEnterprises: ProductCartGroupByEnterprise[] = groupProductCartsByEnterprise(cart.productCarts.filter(pc => pc.checked));
-        setProductCartGroupByEnterprises([...newProductCartGroupByEnterprises]);
-    }, [cart])
+        console.log(productCartGroupByEnterprises)
+    }, [productCartGroupByEnterprises])
 
     if (productCartGroupByEnterprises.length > 0) {
         return (
@@ -275,8 +276,13 @@ const OrderPointTotal: React.FC<Props> = ({cart}) => {
                                     <Divider/>
                                     <Box sx={{display: "flex", justifyContent: "space-between"}}>
                                         <Typography>Merchandise Subtotal:</Typography>
-                                        <Typography>{productCartGroupByEnterprise.orderTotal + " "}
-                                        </Typography>
+                                        <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
+                                            <Typography>{productCartGroupByEnterprise.orderTotal + " "}</Typography>
+                                            <EnterpriseLogo
+                                                title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                height={20} width={20}/>
+                                        </Box>
                                     </Box>
                                     <Divider/>
                                     <Box sx={{display: "flex", justifyContent: "space-between"}}>
@@ -284,9 +290,10 @@ const OrderPointTotal: React.FC<Props> = ({cart}) => {
                                         <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
                                             <Typography fontWeight={"bold"} color={"#FF424E"}
                                                         variant={"h6"}>{productCartGroupByEnterprise.orderTotal}</Typography>
-                                            <Avatar alt="img"
-                                                    src={AssetPath.enterpriseLogoUrl + productCartGroupByEnterprise.enterprise.logoUrl}
-                                                    sx={{width: 20, height: 20}}/>
+                                            <EnterpriseLogo
+                                                title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                height={20} width={20}/>
                                         </Box>
                                     </Box>
                                 </Box>
@@ -299,31 +306,10 @@ const OrderPointTotal: React.FC<Props> = ({cart}) => {
     } else {
         return (
             <Box sx={{backgroundColor: "#fff", p: 2, borderRadius: 2}}>
-                <Typography>Please choose product want to order</Typography>
+                <Typography>Hãy chọn sản phẩm bạn muốn mua</Typography>
             </Box>
         )
     }
-}
-
-const CartEmpty: React.FC<Props> = ({}) => {
-
-    return (
-        <Box sx={{
-            width: "100%",
-            backgroundColor: "#fff",
-            borderRadius: 2,
-            height: "300px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2
-        }}>
-            <img src={AssetPath.cartEmptyImg} alt={"cart-empty"} width={"200px"}/>
-            <Typography>{isAuthenticated() ? "There is no item in your cart" : "Please login to add item in your cart"}</Typography>
-            <Link to={"/"}><Button variant="contained">Continue shopping</Button></Link>
-        </Box>
-    )
 }
 
 const CustomerCartPage: React.FC<Props> = ({}) => {
@@ -335,16 +321,16 @@ const CustomerCartPage: React.FC<Props> = ({}) => {
     const [isShow, setIsShow] = useState<boolean>(false);
     const [showAlertDelete, setShowAlertDelete] = useState({
         open: false,
-        title: "Remove product",
+        title: "Xóa sản phẩm này khỏi giỏ hàng?",
         content: <Typography>Are you sure want to remove selected products?</Typography>,
-        acceptText: "Accept",
-        deniedText: "Denied",
+        acceptText: "Từ chối",
+        deniedText: "Xóa",
         handleDenied: null,
         handleAccept: null
     });
     const [showAlertError, setShowAlertError] = useState({
         open: false,
-        title: "You still not choose any product to order",
+        title: "Bạn vẫn chưa chọn sản phẩm nào để đặt hagnf",
         acceptText: "Ok, got it",
         handleAccept: null,
     });
@@ -564,11 +550,13 @@ const CustomerCartPage: React.FC<Props> = ({}) => {
                                     </Grid>
                                     <Grid item xs={3}>
                                         <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
-                                             className={"stickySidebar"}>
-                                            <OrderPointTotal cart={cart}/>
+                                             className={"sticky-sidebar"}>
+                                            <OrderPointTotal
+                                                productCartGroupByEnterprises={groupProductCartsByEnterprise(cart.productCarts.filter(pc => pc.checked))}/>
                                             <Button variant={"contained"} size={"large"} fullWidth
-                                                    style={{backgroundColor: "#FF424E"}}
-                                                    onClick={() => moveToCheckout()}>Checkout ({totalItem})</Button>
+                                                    disabled={cart.productCarts.filter(x => x.checked).length == 0}
+                                                    style={{backgroundColor: "var(--red-500)"}}
+                                                    onClick={() => moveToCheckout()}>Mua Hàng ({totalItem})</Button>
                                         </Box>
                                     </Grid>
                                 </Grid>

@@ -4,6 +4,7 @@ import {ProductPoint} from "./ProductPoint";
 import {ProductImage} from "./ProductImage";
 import {ProductStatus} from "./enums/ProductStatus";
 import {ProductType} from "./enums/ProductType";
+import {ProductReview} from "./ProductReview";
 
 
 export interface ProductDetail extends AbstractModel {
@@ -16,12 +17,14 @@ export interface ProductDetail extends AbstractModel {
     productStatusDescription: string,
     content?: string;
     rating?: number;
-    amountSold?: number;
+    totalSold?: number;
+    totalReview?: number,
     catalogs: Catalog[];
     inputDate: string;
     expirationDate: string;
     initialCash: number,
     exchangeAblePoints: ProductPoint[];
     imageUrls: ProductImage[];
+    reviews: ProductReview[]
 }
 

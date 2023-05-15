@@ -7,6 +7,7 @@ import i18next from "i18next";
 import en from './material/lang/en.json';
 import vn from './material/lang/vn.json';
 import {I18nextProvider} from 'react-i18next';
+import {ProSidebarProvider} from "react-pro-sidebar";
 
 
 const root = ReactDOM.createRoot(
@@ -35,7 +36,9 @@ i18next.init({
 root.render(
     <React.StrictMode>
         <I18nextProvider i18n={i18next}>
-            <App/>
+            <ProSidebarProvider>
+                <App/>
+            </ProSidebarProvider>
         </I18nextProvider>
     </React.StrictMode>
 );

@@ -1,7 +1,7 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import {Box} from "@mui/material";
-import PageBreadCrumb from "../share/PageBreadCrumb";
+import PageBreadCrumb from "./PageBreadCrumb";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 
-const AdminPageHeader: React.FC<Props> = ({breadCrumbItems, title}) => {
+const PageHeader: React.FC<Props> = ({breadCrumbItems, title}) => {
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", mb: 4}}>
@@ -20,4 +20,4 @@ const AdminPageHeader: React.FC<Props> = ({breadCrumbItems, title}) => {
     )
 }
 
-export default AdminPageHeader;
+export default PageHeader;
