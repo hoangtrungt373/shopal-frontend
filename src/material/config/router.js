@@ -40,7 +40,7 @@ export const EnterpriseRouter = {
     registerPage: "/enterprise/register",
     loginPage: "/enterprise/login",
     dashboardPage: "/enterprise/dashboard",
-    customerManagementPage: "/enterprise/dashboard/customers",
+    customerMembershipManagementPage: "/enterprise/dashboard/customers/memberships",
     purchaseOrderManagement: "/enterprise/dashboard/orders",
     productCollectionPage: "/enterprise/dashboard/products",
     cooperationContractManagement: "/enterprise/dashboard/contract",
@@ -50,6 +50,7 @@ export const EnterpriseRouter = {
 export const AdminRouter = {
     loginPage: "/admin/login",
     dashboardPage: "/admin/dashboard",
+    customerManagementPage: "/admin/dashboard/customers",
     enterpriseCooperationRequestManagement: "/admin/dashboard/enterprises/request",
     enterpriseManagement: "/admin/dashboard/enterprises",
     catalogManagementPage: "/admin/dashboard/catalogs",

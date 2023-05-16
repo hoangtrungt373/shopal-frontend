@@ -13,7 +13,7 @@ interface Props {
 const PageHeader: React.FC<Props> = ({breadCrumbItems, title}) => {
 
     return (
-        <Box sx={{display: "flex", flexDirection: "column", mb: 4}}>
+        <Box sx={{display: "flex", flexDirection: "column", mb: 2}}>
             <Typography className={"page-header"}>{title}</Typography>
             <PageBreadCrumb items={breadCrumbItems}/>
         </Box>

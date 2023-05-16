@@ -13,7 +13,7 @@ export const getProductDetailForCustomer = async (productId: number) => {
     try {
         const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/customer/get-detail/${productId}`);
         const product = result.data;
-        await fetch(`${AssetPath.productContentUrl}${product.descriptionContentUrl}`)
+        await fetch(`${AssetPath.productContentUrl}${product.productDescriptionUrl}`)
             .then((r) => r.text())
             .then(text => {
                 product.content = text
@@ -28,7 +28,7 @@ export const getProductDetailForAdmin = async (productId: number) => {
     try {
         const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/current-admin/get-detail/${productId}`);
         const product = result.data;
-        await fetch(`${AssetPath.productContentUrl}${product.descriptionContentUrl}`)
+        await fetch(`${AssetPath.productContentUrl}${product.productDescriptionUrl}`)
             .then((r) => r.text())
             .then(text => {
                 product.content = text

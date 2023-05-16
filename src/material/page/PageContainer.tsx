@@ -27,7 +27,6 @@ import {CustomerCheckoutSuccessPage} from "./customer/checkoutsuccess/CustomerCh
 import PrivateRoute from "./common/share/PrivateRoute";
 import CustomerDashboardPage from "./customer/dashboard/CustomerDashboardPage";
 import Grid from "@mui/material/Grid";
-import {EnterpriseCustomerManagementPage} from "./enterprise/customermanagement/EnterpriseCustomerManagementPage";
 import EnterprisePurchaseOrderManagementPage from "./enterprise/ordermanagement/EnterprisePurchaseOrderManagementPage";
 import EnterpriseCooperationContractManagementPage
     from "./enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage";
@@ -64,6 +63,12 @@ import AdminEnterpriseCooperationRequestManagementPage
     from "./admin/cooperationrequestmanagement/AdminEnterpriseCooperationRequestManagementPage";
 import '../../theme.scss'
 import EnterpriseDashboardPage from "./enterprise/dashboard/EnterpriseDashboardPage";
+import AdminCustomerManagementPage from "./admin/customermanagement/AdminCustomerManagementPage";
+import AdminCustomerDetailPage from "./admin/customerdetail/AdminCustomerDetailPage";
+import EnterpriseCustomerMembershipManagementPage
+    from './enterprise/customermanagement/EnterpriseCustomerMembershipManagementPage';
+import {getCurrentEnterpriseInfo} from "../service/enterprise.service";
+import EnterpriseCustomerMembershipDetailPage from "./enterprise/customerdetail/EnterpriseCustomerMembershipDetailPage";
 
 const theme = createTheme({
     typography: {
@@ -104,6 +109,20 @@ const adminListItems: SideBarListItem[] = [
         icon: <DashboardIcon/>,
     },
     {
+        title: "CATEGORIES",
+        icon: <CategoryIcon/>,
+        subItems: [
+            {
+                title: "Main Categories",
+                url: AdminRouter.catalogManagementPage,
+            },
+            {
+                title: "Sub Categories",
+                url: AdminRouter.childCatalogManagementPage,
+            }
+        ]
+    },
+    {
         title: "ENTERPRISES",
         icon: <ApartmentIcon/>,
         subItems: [
@@ -120,20 +139,7 @@ const adminListItems: SideBarListItem[] = [
     {
         title: "CUSTOMERS",
         icon: <GroupIcon/>,
-    },
-    {
-        title: "CATEGORIES",
-        icon: <CategoryIcon/>,
-        subItems: [
-            {
-                title: "Main Categories",
-                url: AdminRouter.catalogManagementPage,
-            },
-            {
-                title: "Sub Categories",
-                url: AdminRouter.childCatalogManagementPage,
-            }
-        ]
+        url: AdminRouter.customerManagementPage,
     },
     {
         title: "PRODUCTS",
@@ -152,17 +158,17 @@ const adminListItems: SideBarListItem[] = [
     {
         title: "ORDERS",
         icon: <ShoppingCartIcon/>,
-        url: AdminRouter.dashboardPage
+        url: "*"
     },
     {
         title: "CONTRACTS",
         icon: <LocalOfferIcon/>,
-        url: AdminRouter.dashboardPage
+        url: "*"
     },
     {
         title: "ACCOUNTINGS",
         icon: <ReceiptIcon/>,
-        url: AdminRouter.dashboardPage
+        url: "*"
     },
 
 ]
@@ -179,11 +185,11 @@ const enterpriseListItems: SideBarListItem[] = [
         subItems: [
             {
                 title: "Membership Customers",
-                url: EnterpriseRouter.customerManagementPage,
+                url: EnterpriseRouter.customerMembershipManagementPage,
             },
             {
                 title: "Register Customers",
-                url: EnterpriseRouter.customerManagementPage,
+                url: "*",
             }
         ]
     },
@@ -238,6 +244,17 @@ const PageContainer = () => {
                     .finally(() => {
                         setIsShow(true);
                     });
+            } else if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.ENTERPRISE_MANAGER) {
+                getCurrentEnterpriseInfo()
+                    .then((resEnterprise: Enterprise) => {
+                        setCurrentEnterprise(resEnterprise);
+                    })
+                    .catch((err: ExceptionResponse) => {
+                        console.log(err);
+                    })
+                    .finally(() => {
+                        setIsShow(true);
+                    });
             } else {
                 setIsShow(true);
             }
@@ -281,8 +298,14 @@ const PageContainer = () => {
                                                 <Switch>
                                                     <PrivateRoute path={EnterpriseRouter.dashboardPage}
                                                                   component={EnterpriseDashboardPage} exact/>
-                                                    <PrivateRoute path={EnterpriseRouter.customerManagementPage}
-                                                                  component={EnterpriseCustomerManagementPage}/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.customerMembershipManagementPage}
+                                                        component={EnterpriseCustomerMembershipManagementPage} exact
+                                                        currentEnterprise={currentEnterprise}/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.customerMembershipManagementPage + "/*.:customerId"}
+                                                        component={EnterpriseCustomerMembershipDetailPage} exact
+                                                        currentEnterprise={currentEnterprise}/>
                                                     <PrivateRoute path={EnterpriseRouter.purchaseOrderManagement}
                                                                   component={EnterprisePurchaseOrderManagementPage}
                                                                   exact/>
@@ -356,6 +379,11 @@ const PageContainer = () => {
                                                                   component={AdminDashboardPage} exact/>
                                                     <PrivateRoute path={AdminRouter.catalogManagementPage}
                                                                   component={AdminCatalogManagementPage} exact/>
+                                                    <PrivateRoute path={AdminRouter.customerManagementPage}
+                                                                  component={AdminCustomerManagementPage} exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.customerManagementPage + "/*.:customerId"}
+                                                        component={AdminCustomerDetailPage}/>
                                                     <PrivateRoute path={AdminRouter.childCatalogManagementPage}
                                                                   component={AdminChildCatalogManagementPage}
                                                                   exact/>

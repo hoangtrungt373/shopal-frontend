@@ -15,6 +15,6 @@ export interface AdminCreateOrUpdateProductRequest {
     catalogName?: string,
     tags?: string[],
     files?: any[],
-    descriptionContentUrl?: string,
+    productDescriptionUrl?: string,
     productStatus: ProductStatus
 }

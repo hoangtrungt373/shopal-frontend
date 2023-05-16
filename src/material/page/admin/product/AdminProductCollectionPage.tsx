@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {Autocomplete, Box, Chip, Rating, Tooltip} from "@mui/material";
+import {Autocomplete, Box, Chip, Rating, Stack, Tooltip} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
@@ -366,14 +366,16 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column"}}>
+            <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <ProductSearch childCatalogs={childCatalogs}
                                    onSearchProduct={(criteria: ProductSearchCriteriaRequest) => handleSearchProduct(criteria)}/>
+                </Box>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <ProductList products={products}/>
                 </Box>
-            </Box>
+            </Stack>
         )
     } else {
         return <PageSpinner/>

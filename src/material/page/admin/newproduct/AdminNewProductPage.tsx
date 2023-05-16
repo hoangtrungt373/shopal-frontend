@@ -197,8 +197,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box
-                sx={{display: "flex", flexDirection: "column"}}>
+            <Stack spacing={2}>
                 <DisplayAlert/>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Add Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", flexDirection: "column", gap: 2}}>
@@ -387,7 +386,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                         </Stack>
                     </form>
                 </Box>
-            </Box>
+            </Stack>
         )
     } else {
         return <PageSpinner/>

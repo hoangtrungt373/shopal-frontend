@@ -8,7 +8,7 @@ export interface Product extends AbstractModel {
     productName: string;
     sku?: number;
     quantityInStock: number;
-    descriptionContentUrl?: string;
+    productDescriptionUrl?: string;
     rating?: number;
     productStatus: ProductStatus,
     productStatusDescription: string,

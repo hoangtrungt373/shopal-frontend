@@ -5,13 +5,6 @@ import {Box} from "@mui/material";
 import './MainSideBarListItem.scss'
 import {NavLink, useLocation} from "react-router-dom";
 import PageSpinner from "./PageSpinner";
-import {EnterpriseRouter} from "../../../config/router";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupIcon from "@mui/icons-material/Group";
-import ViewInArIcon from "@mui/icons-material/ViewInAr";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 
 export interface SideBarListItem {
     title: string,
@@ -25,48 +18,6 @@ interface Props {
     items: SideBarListItem[]
 }
 
-const enterpriseListItems: SideBarListItem[] = [
-    {
-        title: "DASHBOARD",
-        url: EnterpriseRouter.dashboardPage,
-        icon: <DashboardIcon/>,
-    },
-    {
-        title: "CUSTOMERS",
-        icon: <GroupIcon/>,
-        subItems: [
-            {
-                title: "Membership Customers",
-                url: EnterpriseRouter.customerManagementPage,
-            },
-            {
-                title: "Register Customers",
-                url: EnterpriseRouter.customerManagementPage,
-            }
-        ]
-    },
-    {
-        title: "PRODUCTS",
-        icon: <ViewInArIcon/>,
-        url: EnterpriseRouter.productCollectionPage
-    },
-    {
-        title: "ORDERS",
-        url: EnterpriseRouter.purchaseOrderManagement,
-        icon: <ShoppingCartIcon/>
-    },
-    {
-        title: "CONTRACTS",
-        url: EnterpriseRouter.cooperationContractManagement,
-        icon: <LocalOfferIcon/>
-    },
-    {
-        title: "ACCOUNTINGS",
-        url: EnterpriseRouter.accounting,
-        icon: <ReceiptIcon/>
-    },
-
-]
 
 export const MainSideBarListItem: React.FC<Props> = ({items}) => {
 

@@ -283,7 +283,7 @@ const AdminCatalogManagementPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column"}} className={"admin-catalog-management-page"}>
+            <Stack spacing={2} className={"admin-catalog-management-page"}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Main Category"}/>
                 <Stack direction="row" spacing={2}>
                     <Box sx={{width: "35%", display: "flex", flexDirection: "column", gap: 2}}
@@ -377,7 +377,7 @@ const AdminCatalogManagementPage: React.FC<Props> = ({}) => {
                         <MainCatalogList catalogs={mainCatalogs} onCLickDetail={(id: number) => handleClickDetail(id)}/>
                     </Box>
                 </Stack>
-            </Box>
+            </Stack>
         )
     } else {
         return <PageSpinner/>

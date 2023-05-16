@@ -276,7 +276,7 @@ const AdminProductDetailPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column"}}>
+            <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <Typography className={"page-sub-header"}>Product Detail: #{productDetail.id}</Typography>
@@ -284,7 +284,7 @@ const AdminProductDetailPage: React.FC<Props> = ({}) => {
                     <ProductInfo productDetail={productDetail}/>
                     {/*<ProductDetailInfo productDetail={productDetail}/>*/}
                 </Box>
-            </Box>
+            </Stack>
         )
     } else {
         return (

@@ -276,7 +276,8 @@ const AdminChildCatalogManagementPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column"}} className={"admin-catalog-management-page"}>
+            <Stack spacing={2} sx={{display: "flex", flexDirection: "column"}}
+                   className={"admin-catalog-management-page"}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Sub Category"}/>
                 <Stack direction="row" spacing={2}>
                     <Box sx={{width: "35%", display: "flex", flexDirection: "column", gap: 2}}
@@ -352,7 +353,7 @@ const AdminChildCatalogManagementPage: React.FC<Props> = ({}) => {
                                          onCLickDetail={(id: number) => handleClickDetail(id)}/>
                     </Box>
                 </Stack>
-            </Box>
+            </Stack>
         )
     } else {
         return <PageSpinner/>
