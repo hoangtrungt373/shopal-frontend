@@ -13,8 +13,9 @@ export interface ProductDetail extends AbstractModel {
     quantityInStock: number;
     productDescriptionUrl?: string;
     productStatus: ProductStatus,
-    productType: ProductType,
     productStatusDescription: string,
+    productType: ProductType,
+    productTypeDescription: string,
     content?: string;
     rating?: number;
     totalSold?: number;

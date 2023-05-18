@@ -26,7 +26,7 @@ import {
     productSearchPathToProductSearchCriteriaRequest
 } from "../../../util/search.utils";
 import {countProductByCriteria, getProductByCriteria} from "../../../service/product.service";
-import {createSeoLink} from "../../../util/other.util";
+import {createSeoLink} from "../../../util/display.util";
 import Avatar from "@mui/material/Avatar";
 import {DEFAULT_SEARCH_LIMIT} from "../../../config/constants";
 

@@ -18,7 +18,7 @@ import {
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router-dom";
 import {AssetPath, EnterpriseRouter} from "../../../config/router";
-import {createSeoLink, formatVndMoney} from "../../../util/other.util";
+import {createSeoLink, formatVndMoney} from "../../../util/display.util";
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";

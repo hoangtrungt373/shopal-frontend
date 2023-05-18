@@ -9,7 +9,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import {ButtonGroup, Divider, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import './CustomerCartPage.scss'
 import Grid from "@mui/material/Grid";
-import {createSeoLink} from '../../../util/other.util';
+import {createSeoLink} from '../../../util/display.util';
 import {UpdateProductCartRequest} from "../../../model/request/UpdateProductCartRequest";
 import {getCurrentCustomerCart, updateProductCartsForCurrentCustomer} from "../../../service/cart.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";

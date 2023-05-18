@@ -10,7 +10,7 @@ import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
 import {AssetPath, EnterpriseRouter} from "../../../config/router";
-import {createSeoLink, formatVndMoney} from "../../../util/other.util";
+import {createSeoLink, formatVndMoney} from "../../../util/display.util";
 import {ProductStatus} from "../../../model/enums/ProductStatus";
 import {Catalog} from "../../../model/Catalog";
 import {getAllMainCatalog} from "../../../service/catalog.service";

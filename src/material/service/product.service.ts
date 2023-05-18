@@ -7,26 +7,12 @@ import {Product} from "../model/Product";
 import {AdminCreateOrUpdateProductRequest} from "../model/request/AdminCreateOrUpdateProductRequest";
 import {AssetPath} from "../config/router";
 import {CustomerProductReviewRequest} from "../model/customer/CustomerProductReviewRequest";
+import {CreateOrUpdateProductResponse} from "../model/admin/CreateOrUpdateProductResponse";
 
 
-export const getProductDetailForCustomer = async (productId: number) => {
+export const getProductDetail = async (productId: number) => {
     try {
         const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/customer/get-detail/${productId}`);
-        const product = result.data;
-        await fetch(`${AssetPath.productContentUrl}${product.productDescriptionUrl}`)
-            .then((r) => r.text())
-            .then(text => {
-                product.content = text
-            })
-        return product;
-    } catch (err: ExceptionResponse | any) {
-        throw new Object(err.response.data);
-    }
-}
-
-export const getProductDetailForAdmin = async (productId: number) => {
-    try {
-        const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/current-admin/get-detail/${productId}`);
         const product = result.data;
         await fetch(`${AssetPath.productContentUrl}${product.productDescriptionUrl}`)
             .then((r) => r.text())
@@ -83,7 +69,7 @@ export const createOrUpdateProduct = async (request: AdminCreateOrUpdateProductR
         request.files.forEach((file, index) => {
             formData.append("images", file);
         })
-        const result: AxiosResponse = await axiosClient.post<string>(`/product/current-admin/create-or-update-product`, formData);
+        const result: AxiosResponse = await axiosClient.post<CreateOrUpdateProductResponse>(`/product/current-admin/create-or-update-product`, formData);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

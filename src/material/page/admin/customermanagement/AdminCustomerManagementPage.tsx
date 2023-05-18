@@ -19,7 +19,7 @@ import {Enterprise} from "../../../model/Enterprise";
 import {getAllEnterprise} from "../../../service/enterprise.service";
 import {AbstractFilter} from "../../../model/AbstractFilter";
 import Avatar from "@mui/material/Avatar";
-import {createSeoLink} from "../../../util/other.util";
+import {createSeoLink} from "../../../util/display.util";
 import {useHistory} from "react-router-dom";
 
 interface Props {
@@ -273,7 +273,7 @@ const AdminCustomerManagementPage: React.FC<Props> = ({}) => {
         })
     }, []);
 
-    const handleSearchCustomer = (criteria: CustomerSearchCriteriaRequest) => {
+    const handleSearchCustomer = async (criteria: CustomerSearchCriteriaRequest) => {
         getCustomerAllInfoByCriteria(criteria)
             .then((resCustomerAllInfos: CustomerAllInfo[]) => {
                 setCustomerAllInfos([...resCustomerAllInfos]);

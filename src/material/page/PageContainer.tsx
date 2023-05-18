@@ -47,7 +47,7 @@ import AdminProductCollectionPage from "./admin/product/AdminProductCollectionPa
 import AdminProductDetailPage from "./admin/productdetail/AdminProductDetailPage";
 import AdminPurchaseOrderManagementPage from "./admin/ordermanagement/AdminPurchaseOrderManagementPage";
 import EnterpriseRegisterPage from './enterprise/register/EnterpriseRegisterPage';
-import {isCurrentScreenIsLoginOrRegisterPage} from "../util/other.util";
+import {isCurrentScreenIsLoginOrRegisterPage} from "../util/display.util";
 import {MainSideBarListItem, SideBarListItem} from "./common/share/MainSideBarListItem";
 import {CopyRight} from './common/share/CopyRight';
 import DashboardIcon from "@mui/icons-material/Dashboard";

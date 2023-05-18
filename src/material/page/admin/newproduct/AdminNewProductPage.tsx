@@ -26,6 +26,9 @@ import {GroupHeader} from "../../../model/common/GroupHeader";
 import {GroupItems} from "../../../model/common/GroupItem";
 import {ProductType} from "../../../model/enums/ProductType";
 import {createOrUpdateProduct} from "../../../service/product.service";
+import {ProductStatus} from "../../../model/enums/ProductStatus";
+import {createSeoLink} from "../../../util/display.util";
+import {CreateOrUpdateProductResponse} from "../../../model/admin/CreateOrUpdateProductResponse";
 
 const breadCrumbItems: BreadcrumbItem[] = [
     {
@@ -113,7 +116,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                 productType: data.productType
             }
             createOrUpdateProduct(request)
-                .then((res: string) => {
+                .then((res: CreateOrUpdateProductResponse) => {
                     setShowAlert(prevState1 => ({
                         ...prevState1,
                         open: true,
@@ -125,7 +128,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                                 open: false,
                             }));
                         },
-                        handleDenied: () => history.push(AdminRouter.productCollectionPage),
+                        handleDenied: () => history.push(AdminRouter.productCollectionPage + "/" + createSeoLink(request.productName) + "." + res.productId),
                     }));
                     setShowError({
                         open: false,
@@ -337,7 +340,7 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
                                         <Typography gutterBottom fontWeight={"bold"}>STATUS</Typography>
                                         <TextField
                                             select
-                                            defaultValue={CatalogStatus.ACTIVE}
+                                            defaultValue={ProductStatus.ACTIVE}
                                             {...register("productStatus")} size={"small"}
                                             sx={{width: "100%"}}
                                         >

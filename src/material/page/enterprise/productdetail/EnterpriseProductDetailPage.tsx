@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {
-    getProductDetailForCustomer,
+    getProductDetail,
     handleRequestCancellingProductForCurrentEnterprise,
     handleRequestSellingProductForCurrentEnterprise
 } from "../../../service/product.service";
@@ -17,7 +17,7 @@ import {AssetPath, EnterpriseRouter} from "../../../config/router";
 import ImageGallery from 'react-image-gallery';
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
-import {formatVndMoney} from "../../../util/other.util";
+import {formatVndMoney} from "../../../util/display.util";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import AlertDialog from "../../common/share/AlertDialog";
@@ -272,7 +272,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
     const history = useHistory();
 
     useEffect(() => {
-        getProductDetailForCustomer(params.productId)
+        getProductDetail(params.productId)
             .then((productDetailRes: ProductDetail) => {
                 setProductDetail(productDetailRes);
                 getCurrentEnterpriseInfo()
@@ -308,7 +308,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
             handleAccept: async () => {
                 handleRequestSellingProductForCurrentEnterprise(params.productId)
                     .then(() => {
-                        getProductDetailForCustomer(params.productId)
+                        getProductDetail(params.productId)
                             .then((productDetailRes: ProductDetail) => {
                                 setProductDetail(productDetailRes);
                             })
@@ -347,7 +347,7 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
             handleAccept: async () => {
                 handleRequestCancellingProductForCurrentEnterprise(params.productId)
                     .then(() => {
-                        getProductDetailForCustomer(params.productId)
+                        getProductDetail(params.productId)
                             .then((productDetailRes: ProductDetail) => {
                                 setProductDetail(productDetailRes);
                             })

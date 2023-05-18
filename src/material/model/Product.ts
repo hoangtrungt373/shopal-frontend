@@ -19,6 +19,7 @@ export interface Product extends AbstractModel {
     expirationDate: string,
     initialCash: number,
     exchangeAblePoints: ProductPoint[];
-    productType: ProductType
+    productType: ProductType,
+    productTypeDescription: string
 }
 

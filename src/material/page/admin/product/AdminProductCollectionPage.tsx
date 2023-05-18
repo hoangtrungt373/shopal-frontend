@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {Autocomplete, Box, Chip, Rating, Stack, Tooltip} from "@mui/material";
+import {Autocomplete, Box, Chip, MenuItem, Rating, Stack, Tooltip} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
@@ -9,7 +9,7 @@ import {useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
 import {AdminRouter, AssetPath, EnterpriseRouter} from "../../../config/router";
 import Typography from "@mui/material/Typography";
-import {createSeoLink, formatVndMoney} from "../../../util/other.util";
+import {createSeoLink, formatVndMoney} from "../../../util/display.util";
 import {getProductByCriteria} from "../../../service/product.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {ProductType} from "../../../model/enums/ProductType";
@@ -25,13 +25,16 @@ import {getAllMainCatalog} from "../../../service/catalog.service";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import {Enterprise} from "../../../model/Enterprise";
-import {UserRole} from "../../../model/enums/UserRole";
+import {AbstractFilter} from "../../../model/AbstractFilter";
+import {getAllEnterprise} from "../../../service/enterprise.service";
+import {CustomerSearchCriteriaRequest} from "../../../model/request/CustomerSearchCriteriaRequest";
 
 
 interface Props {
     products?: Product[],
     childCatalogs?: Catalog[]
-    onSearchProduct?: Function
+    onSearchProduct?: Function,
+    enterpriseFilters?: AbstractFilter[]
 }
 
 const breadCrumbItems: BreadcrumbItem[] = [
@@ -40,26 +43,82 @@ const breadCrumbItems: BreadcrumbItem[] = [
         isLasted: true
     },
 ]
+/*TODO: fetch from be*/
+export const productTypeSearchOptions: AbstractFilter[] = [
+    {
+        label: "All",
+        value: ProductType.ALL
+    },
+    {
+        label: "Normal",
+        value: ProductType.NORMAL
+    },
+    {
+        label: "Voucher",
+        value: ProductType.VOUCHER
+    },
+    {
+        label: "Bill",
+        value: ProductType.BILL
+    },
+]
 
-const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
+/*TODO: fetch from be*/
+export const productStatusSearchOptions: AbstractFilter[] = [
+    {
+        label: "All",
+        value: ProductStatus.ALL
+    },
+    {
+        label: "Inactive",
+        value: ProductStatus.INACTIVE
+    },
+    {
+        label: "Active",
+        value: ProductStatus.ACTIVE
+    },
+]
+
+const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs, enterpriseFilters}) => {
 
     const {
         register,
         setValue,
+        reset,
+        getValues,
         handleSubmit,
         formState: {errors}
     } = useForm<ProductSearchCriteriaRequest>();
-    const [selectedCatalog, setSelectedCatalog] = useState<number>(null);
+    const [selectedCatalog, setSelectedCatalog] = useState<Catalog>(null);
+    const [selectedEnterprises, setSelectedEnterprises] = useState<AbstractFilter[]>([]);
+    const [selectedProductType, setSelectedProductType] = useState<ProductType>(ProductType.ALL);
+    const [selectedProductStatus, setSelectedProductStatus] = useState<ProductStatus>(ProductStatus.ALL);
 
     const onSubmit = handleSubmit(data => {
         let criteria: ProductSearchCriteriaRequest = {
             keyword: data.keyword,
             sku: data.sku,
-            catalogIdList: selectedCatalog != null ? [selectedCatalog] : [],
-            enterpriseIdList: null
+            catalogIdList: selectedCatalog != null ? [selectedCatalog.id] : [],
+            enterpriseIdList: [...selectedEnterprises.map(x => x.value)],
+            productStatus: selectedProductStatus,
+            productType: selectedProductType
         }
         onSearchProduct(criteria);
     });
+
+    const handleChangeSelectedEnterprises = (e, value) => {
+        setSelectedEnterprises([...value])
+    }
+
+    const handleClearFilter = () => {
+        reset();
+        setSelectedEnterprises([]);
+        setSelectedCatalog(null);
+        setSelectedProductType(ProductType.ALL);
+        setSelectedProductStatus(ProductStatus.ALL);
+        let criteria: CustomerSearchCriteriaRequest = {}
+        onSearchProduct(criteria);
+    }
 
     return (
         <Box sx={{display: "flex", gap: 2}}>
@@ -67,11 +126,12 @@ const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
                         <Typography gutterBottom>Keyword</Typography>
-                        <TextField {...register("keyword")} fullWidth size={"small"}/>
+                        <TextField {...register("keyword")} fullWidth size={"small"}
+                                   placeholder={"Product name"}/>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <Typography gutterBottom>SKU</Typography>
-                        <TextField {...register("sku")} fullWidth size={"small"}/>
+                        <TextField {...register("sku")} fullWidth size={"small"} placeholder={"Product sku"}/>
                     </Grid>
                     <Grid item xs={3}>
                         <Typography gutterBottom>Category</Typography>
@@ -80,7 +140,8 @@ const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
                             options={childCatalogs}
                             groupBy={(catalog) => catalog.parentCatalogName}
                             getOptionLabel={(catalog) => catalog.catalogName}
-                            onChange={(e, value) => setSelectedCatalog(value.id)}
+                            value={selectedCatalog}
+                            onChange={(e, value) => setSelectedCatalog(value)}
                             sx={{width: "100%"}}
                             renderInput={(params) => <TextField {...params}
                                                                 size={"small"}/>}
@@ -93,8 +154,67 @@ const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
                         />
                     </Grid>
                     <Grid item xs={2}>
+                        <Typography gutterBottom>Type</Typography>
+                        <TextField
+                            select
+                            defaultValue={ProductType.ALL}
+                            value={selectedProductType}
+                            onChange={(e) => setSelectedProductType(e.target.value as ProductType)}
+                            size={"small"}
+                            sx={{width: "100%"}}
+                        >
+                            {productTypeSearchOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography gutterBottom>
+                            Enterprise
+                        </Typography>
+                        <Autocomplete
+                            multiple
+                            id="tags-standard"
+                            options={enterpriseFilters}
+                            value={selectedEnterprises}
+                            onChange={handleChangeSelectedEnterprises}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    size={"small"}
+                                    placeholder="Associate Enterprises"
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom>Status</Typography>
+                        <TextField
+                            select
+                            defaultValue={ProductStatus.ALL}
+                            value={selectedProductStatus}
+                            onChange={(e) => {
+                                setSelectedProductStatus(e.target.value as ProductStatus);
+                            }} size={"small"}
+                            sx={{width: "100%"}}
+                        >
+                            {productStatusSearchOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={2}>
                         <Typography gutterBottom color={"#fff"}>empty</Typography>
                         <Button type={"submit"} variant={"contained"} fullWidth>Search</Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom color={"#fff"}>empty</Typography>
+                        <Button variant={"text"} color={"error"} onClick={() => handleClearFilter()}>Clear
+                            filter</Button>
                     </Grid>
                 </Grid>
             </form>
@@ -160,9 +280,9 @@ const ProductList: React.FC<Props> = ({products}) => {
             }
         },
         {
-            field: 'amountSold',
+            field: 'totalSold',
             headerName: 'Purchased',
-            flex: 0.3
+            flex: 0.35
         },
         {
             field: 'quantityInStock',
@@ -201,7 +321,7 @@ const ProductList: React.FC<Props> = ({products}) => {
 
                 /*TODO: use lan en vn*/
                 return (
-                    <Chip label={params.row.productType} size={"small"}
+                    <Chip label={params.row.productTypeDescription} size={"small"}
                           style={{backgroundColor: chipBgColor, color: chipTextColor}}/>
                 );
             }
@@ -314,7 +434,8 @@ const ProductList: React.FC<Props> = ({products}) => {
                         columnVisibilityModel: {
                             id: false,
                             inputDate: false,
-                            expirationDate: false
+                            expirationDate: false,
+                            productStatus: false,
                         },
                     },
                 }}
@@ -334,34 +455,52 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
 
     const [products, setProducts] = useState<Product[]>();
     const [childCatalogs, setChildCatalogs] = useState<Catalog[]>([]);
-    const [enterprises, setEnterprises] = useState<Enterprise[]>()
+    const [enterpriseFilters, setEnterpriseFilters] = useState<AbstractFilter[]>([]);
     const [isShow, setIsShow] = useState<boolean>(false);
 
     useEffect(() => {
-        getProductByCriteria({
-            catalogIdList: [],
-            enterpriseIdList: [],
-            userRole: UserRole.ADMIN
-        }).then((resProducts: Product[]) => {
+        getProductByCriteria({}).then((resProducts: Product[]) => {
             setProducts(resProducts);
             getAllMainCatalog()
                 .then((resCatalogs: Catalog[]) => {
-                    let childCatalogs: Catalog[] = resCatalogs.filter(x => x.childCatalogs.length > 0).flatMap(x => x.childCatalogs);
-                    setChildCatalogs(childCatalogs);
+                    let items: Catalog[] = resCatalogs.filter(x => x.childCatalogs.length > 0).flatMap(x => x.childCatalogs);
+                    setChildCatalogs(items);
+                    getAllEnterprise()
+                        .then((resEnterprises: Enterprise[]) => {
+                            let items: AbstractFilter[] = [];
+                            resEnterprises.forEach((resEnterprise, index) => {
+                                items.push({
+                                    label: resEnterprise.enterpriseName,
+                                    value: resEnterprise.id
+                                })
+                            });
+                            setEnterpriseFilters([...items]);
+                        }).finally(() => {
+                        setIsShow(true);
+                    })
                 }).catch((err: ExceptionResponse) => {
                 console.log(err);
             })
-                .finally(() => {
-                    setIsShow(true);
-                })
         }).catch((err: ExceptionResponse) => {
             console.log(err);
         })
     }, []);
 
     /*TODO: handle search*/
-    const handleSearchProduct = (criteria: ProductSearchCriteriaRequest) => {
+    const handleSearchProduct = async (criteria: ProductSearchCriteriaRequest) => {
+        getProductByCriteria(formatCriteria(criteria))
+            .then((resProducts: Product[]) => setProducts(resProducts))
+            .catch((err: ExceptionResponse) => console.log(err));
+    }
 
+    const formatCriteria = (criteria: ProductSearchCriteriaRequest) => {
+        if (criteria.productType == ProductType.ALL) {
+            criteria.productType = null;
+        }
+        if (criteria.productStatus == ProductStatus.ALL) {
+            criteria.productStatus = null;
+        }
+        return criteria;
     }
 
     if (isShow) {
@@ -369,7 +508,7 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
             <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                    <ProductSearch childCatalogs={childCatalogs}
+                    <ProductSearch childCatalogs={childCatalogs} enterpriseFilters={enterpriseFilters}
                                    onSearchProduct={(criteria: ProductSearchCriteriaRequest) => handleSearchProduct(criteria)}/>
                 </Box>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>

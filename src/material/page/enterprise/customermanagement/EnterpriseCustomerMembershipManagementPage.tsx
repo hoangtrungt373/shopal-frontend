@@ -17,7 +17,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import {Enterprise} from "../../../model/Enterprise";
 import Avatar from "@mui/material/Avatar";
-import {createSeoLink} from "../../../util/other.util";
+import {createSeoLink} from "../../../util/display.util";
 import {useHistory} from "react-router-dom";
 
 interface Props {

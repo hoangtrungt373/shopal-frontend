@@ -23,7 +23,7 @@ import AlertDialog from "../../common/share/AlertDialog";
 import {Enterprise} from "../../../model/Enterprise";
 import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";
-import {formatVndMoney} from "../../../util/other.util";
+import {formatVndMoney} from "../../../util/display.util";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import PageHeader from "../../common/share/PageHeader";
 

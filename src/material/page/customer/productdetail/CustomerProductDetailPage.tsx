@@ -11,7 +11,7 @@ import {ProductImage} from "../../../model/ProductImage";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {isAuthenticated} from "../../../util/auth.util";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
-import {getProductDetailForCustomer} from "../../../service/product.service";
+import {getProductDetail} from "../../../service/product.service";
 import {useHistory, useParams} from "react-router-dom";
 import './CustomerProductDetailPage.scss'
 import Avatar from "@mui/material/Avatar";
@@ -23,7 +23,7 @@ import PageSpinner from "../../common/share/PageSpinner";
 import Divider from "@mui/material/Divider";
 import {Product} from "../../../model/Product";
 import ReactHtmlParser from 'react-html-parser';
-import {formatDateTime, formatRating} from "../../../util/other.util";
+import {formatDateTime, formatRating} from "../../../util/display.util";
 import {getEnterpriseMembershipForCurrentCustomer} from "../../../service/membership.service";
 import {EnterpriseMembership} from "../../../model/customer/EnterpriseMembership";
 
@@ -47,7 +47,7 @@ interface Image {
     thumbnailWidth: string
 }
 
-interface ReviewOption {
+export interface ReviewOption {
     ratingMin: number,
     ratingMax?: number,
     isHaveContent?: boolean,
@@ -385,7 +385,7 @@ const CustomerProductDetailPage: React.FC<Props> = () => {
     });
 
     useEffect(() => {
-        getProductDetailForCustomer(params.productId)
+        getProductDetail(params.productId)
             .then((productDetailRes: ProductDetail) => {
 
                 // TODO: get exactly similar product by catalog
