@@ -158,7 +158,7 @@ const adminListItems: SideBarListItem[] = [
     {
         title: "ORDERS",
         icon: <ShoppingCartIcon/>,
-        url: "*"
+        url: AdminRouter.purchaseOrderManagement
     },
     {
         title: "CONTRACTS",

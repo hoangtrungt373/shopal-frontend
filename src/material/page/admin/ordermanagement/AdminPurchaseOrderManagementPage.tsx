@@ -1,8 +1,7 @@
-import {Box, Chip, MenuItem} from "@mui/material";
+import {Box, Chip, Grid, MenuItem, Stack} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {EnterprisePurchaseOrder} from "../../../model/enterprise/EnterprisePurchaseOrder";
-import {getPurchaseOrderForCurrentEnterpriseByCriteria} from "../../../service/order.service";
+import {getPurchaseOrderByCriteria} from "../../../service/order.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import PageSpinner from "../../common/share/PageSpinner";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef} from "@mui/x-data-grid-premium";
@@ -11,29 +10,23 @@ import {Customer} from "../../../model/Customer";
 import {OrderStatus} from "../../../model/enums/OrderStatus";
 import {useForm} from "react-hook-form";
 import TextField from "@mui/material/TextField";
-import {
-    EnterprisePurchaseOrderSearchCriteriaRequest
-} from "../../../model/request/EnterprisePurchaseOrderSearchCriteriaRequest";
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router-dom";
 import {AssetPath, EnterpriseRouter} from "../../../config/router";
 import {createSeoLink, formatVndMoney} from "../../../util/display.util";
-import {Enterprise} from "../../../model/Enterprise";
-import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import Avatar from "@mui/material/Avatar";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
+import {PurchaseOrder} from "../../../model/PurchaseOrder";
+import {AbstractFilter} from "../../../model/AbstractFilter";
+import {PurchaseOrderSearchCriteriaRequest} from "../../../model/request/PurchaseOrderSearchCriteriaRequest";
+import {CustomerSearchCriteriaRequest} from "../../../model/request/CustomerSearchCriteriaRequest";
 
 
 interface Props {
-    enterprisePurchaseOrders?: EnterprisePurchaseOrder[],
-    onSearchPurchaseOrder?: Function
-    currentEnterprise?: Enterprise
-}
-
-interface OrderStatusStep {
-    label: string,
-    value: OrderStatus
+    purchaseOrders?: PurchaseOrder[],
+    onSearchPurchaseOrder?: Function,
+    enterpriseFilters?: AbstractFilter[]
 }
 
 const breadCrumbItems: BreadcrumbItem[] = [
@@ -43,80 +36,112 @@ const breadCrumbItems: BreadcrumbItem[] = [
     }
 ]
 
-const CustomerPurchaseOrderSearch: React.FC<Props> = ({onSearchPurchaseOrder}) => {
+export const orderStatusOptions: AbstractFilter[] = [
+    {
+        label: "All",
+        value: OrderStatus.ALL
+    },
+    {
+        label: "Open",
+        value: OrderStatus.OPEN
+    },
+    {
+        label: "Processing",
+        value: OrderStatus.PROCESSING
+    },
+    {
+        label: "In transit",
+        value: OrderStatus.IN_TRANSIT
+    },
+    {
+        label: "Delivered",
+        value: OrderStatus.DELIVERED
+    },
+];
+
+const PurchaseOrderSearch: React.FC<Props> = ({onSearchPurchaseOrder}) => {
 
     const {
         register,
         setValue,
+        reset,
         handleSubmit,
         formState: {errors}
-    } = useForm<EnterprisePurchaseOrderSearchCriteriaRequest>();
-
-    const orderStatusList: OrderStatusStep[] = [
-        {
-            label: "All",
-            value: OrderStatus.ALL
-        },
-        {
-            label: "Open",
-            value: OrderStatus.OPEN
-        },
-        {
-            label: "Processing",
-            value: OrderStatus.PROCESSING
-        },
-        {
-            label: "In transit",
-            value: OrderStatus.IN_TRANSIT
-        },
-        {
-            label: "Delivered",
-            value: OrderStatus.DELIVERED
-        },
-    ];
+    } = useForm<PurchaseOrderSearchCriteriaRequest>();
+    const [selectedOrderStatus, setSelectedOrderStatus] = useState<OrderStatus>(OrderStatus.ALL);
 
     const onSubmit = handleSubmit(data => {
-        let criteria: EnterprisePurchaseOrderSearchCriteriaRequest = {
-            startDate: data.startDate,
-            endDate: data.endDate,
-            orderStatus: data.orderStatus
+        let criteria: PurchaseOrderSearchCriteriaRequest = {
+            orderDateFrom: data.orderDateFrom,
+            orderDateTo: data.orderDateTo,
+            orderStatus: selectedOrderStatus
         }
         onSearchPurchaseOrder(criteria);
     });
 
+    const handleClearFilter = () => {
+        reset();
+        setSelectedOrderStatus(OrderStatus.ALL);
+        let criteria: CustomerSearchCriteriaRequest = {}
+        onSearchPurchaseOrder(criteria);
+    }
+
     return (
         <Box sx={{display: "flex", gap: 2}}>
-            <form onSubmit={onSubmit} style={{display: "flex", gap: "16px"}}>
-                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Typography>From date</Typography>
-                    <TextField {...register("startDate")} type={"date"} style={{width: "150px"}} size={"small"}/>
-                </Box>
-                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Typography>To date</Typography>
-                    <TextField {...register("endDate")} type={"date"} style={{width: "150px"}} size={"small"}/>
-                </Box>
-                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Typography>Order status</Typography>
-                    <TextField
-                        select
-                        defaultValue={OrderStatus.ALL}
-                        {...register("orderStatus")}
-                        style={{width: "150px"}} size={"small"}
-                    >
-                        {orderStatusList.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Box>
-                <Button type={"submit"} variant={"contained"}>Search</Button>
+            <form onSubmit={onSubmit} style={{width: "100%"}}>
+                <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                        <Typography gutterBottom>From date</Typography>
+                        <TextField {...register("orderDateFrom")} type={"date"} size={"small"} fullWidth
+                                   placeholder={"From date"}/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography gutterBottom>To date</Typography>
+                        <TextField {...register("orderDateTo")} type={"date"} size={"small"} fullWidth
+                                   placeholder={"To date"}/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography gutterBottom>Email</Typography>
+                        <TextField {...register("customerContactEmail")} fullWidth size={"small"}
+                                   placeholder={"Customer email"}/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography gutterBottom>Phone number</Typography>
+                        <TextField {...register("customerPhoneNumber")} fullWidth size={"small"}
+                                   placeholder={"Customer phone number"}/>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom>Status</Typography>
+                        <TextField
+                            select
+                            defaultValue={OrderStatus.ALL}
+                            value={selectedOrderStatus}
+                            onChange={(e) => setSelectedOrderStatus(e.target.value as OrderStatus)}
+                            fullWidth size={"small"}
+                        >
+                            {orderStatusOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom color={"#fff"}>empty</Typography>
+                        <Button type={"submit"} variant={"contained"} fullWidth>Search</Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom color={"#fff"}>empty</Typography>
+                        <Button variant={"text"} color={"error"} onClick={() => handleClearFilter()}>Clear
+                            filter</Button>
+                    </Grid>
+                </Grid>
             </form>
         </Box>
     )
 }
 
-const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, currentEnterprise}) => {
+const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
 
     const history = useHistory();
 
@@ -128,14 +153,26 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
             flex: 0.3
         },
         {
-            field: 'customerFullName',
+            field: 'customer',
             headerName: 'Customer',
-            flex: 0.5
+            flex: 0.5,
+            renderCell(params: GridCellParams) {
+
+                return (
+                    <Typography>{params.row.customer.fullName}</Typography>
+                );
+            }
         },
         {
-            field: 'customerContactEmail',
+            field: 'email',
             headerName: 'Email',
-            flex: 0.7
+            flex: 0.7,
+            renderCell(params: GridCellParams) {
+
+                return (
+                    <Typography>{params.row.customer.contactEmail}</Typography>
+                );
+            }
         },
         {
             field: 'orderTotalItems',
@@ -153,7 +190,7 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
                         <Typography
                             fontWeight={"bold"}>{params.row.orderTotalPointExchange}</Typography>
                         <Avatar alt="img"
-                                src={AssetPath.enterpriseLogoUrl + currentEnterprise.logoUrl}
+                                src={AssetPath.enterpriseLogoUrl + params.row.enterprise.logoUrl}
                                 sx={{width: 20, height: 20}}/>
                     </Box>
                 );
@@ -166,7 +203,7 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
             renderCell(params: GridCellParams) {
 
                 return (
-                    <Typography>{formatVndMoney(params.row.orderTotalPointExchange * currentEnterprise.contract.cashPerPoint)}</Typography>
+                    <Typography>{formatVndMoney(params.row.orderTotalCash)}</Typography>
                 );
             }
         },
@@ -238,7 +275,7 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
     return (
         <Box sx={{width: '100%'}}>
             <DataGridPremium
-                rows={enterprisePurchaseOrders}
+                rows={purchaseOrders}
                 columns={columns}
                 pageSizeOptions={[5]}
                 disableRowSelectionOnClick
@@ -249,25 +286,13 @@ const CustomerPurchaseOrderList: React.FC<Props> = ({enterprisePurchaseOrders, c
 
 const AdminPurchaseOrderManagementPage: React.FC<Props> = ({}) => {
 
-    const [enterprisePurchaseOrders, setEnterprisePurchaseOrders] = useState<EnterprisePurchaseOrder[]>();
+    const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>();
     const [isShow, setIsShow] = useState<boolean>(false);
-    const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>(null);
 
     useEffect(() => {
-        let criteria: EnterprisePurchaseOrderSearchCriteriaRequest = {
-            startDate: null,
-            endDate: null,
-            orderStatus: null
-        }
-        getPurchaseOrderForCurrentEnterpriseByCriteria(criteria)
-            .then((resEnterprisePurchaseOrders: EnterprisePurchaseOrder[]) => {
-                setEnterprisePurchaseOrders(resEnterprisePurchaseOrders);
-                getCurrentEnterpriseInfo()
-                    .then((resEnterprise: Enterprise) => {
-                        setCurrentEnterprise(resEnterprise);
-                    }).catch((err: ExceptionResponse) => {
-                    console.log(err);
-                });
+        getPurchaseOrderByCriteria({})
+            .then((resPurchaseOrders: PurchaseOrder[]) => {
+                setPurchaseOrders(resPurchaseOrders);
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
@@ -277,13 +302,13 @@ const AdminPurchaseOrderManagementPage: React.FC<Props> = ({}) => {
             });
     }, []);
 
-    const handleSearchPurchaseOrder = (criteria: EnterprisePurchaseOrderSearchCriteriaRequest) => {
+    const handleSearchPurchaseOrder = (criteria: PurchaseOrderSearchCriteriaRequest) => {
         if (criteria.orderStatus == OrderStatus.ALL) {
             criteria.orderStatus = null;
         }
-        getPurchaseOrderForCurrentEnterpriseByCriteria(criteria)
-            .then((resEnterprisePurchaseOrders: EnterprisePurchaseOrder[]) => {
-                setEnterprisePurchaseOrders(resEnterprisePurchaseOrders);
+        getPurchaseOrderByCriteria(criteria)
+            .then((resPurchaseOrders: PurchaseOrder[]) => {
+                setPurchaseOrders(resPurchaseOrders);
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
@@ -292,19 +317,16 @@ const AdminPurchaseOrderManagementPage: React.FC<Props> = ({}) => {
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column"}}>
+            <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Order History"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                    <CustomerPurchaseOrderSearch
-                        onSearchPurchaseOrder={(criteria: EnterprisePurchaseOrderSearchCriteriaRequest) => handleSearchPurchaseOrder(criteria)}/>
-                    {
-                        currentEnterprise && (
-                            <CustomerPurchaseOrderList enterprisePurchaseOrders={enterprisePurchaseOrders}
-                                                       currentEnterprise={currentEnterprise}/>
-                        )
-                    }
+                    <PurchaseOrderSearch
+                        onSearchPurchaseOrder={(criteria: PurchaseOrderSearchCriteriaRequest) => handleSearchPurchaseOrder(criteria)}/>
                 </Box>
-            </Box>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <PurchaseOrderList purchaseOrders={purchaseOrders}/>
+                </Box>
+            </Stack>
         )
     } else {
         return (

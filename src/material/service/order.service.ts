@@ -10,6 +10,8 @@ import {
 } from "../model/request/EnterprisePurchaseOrderSearchCriteriaRequest";
 import {EnterpriseUpdateOrderStatusRequest} from "../model/request/EnterpriseUpdateOrderStatusRequest";
 import {CustomerPurchaseOrderCancelRequest} from "../model/customer/CustomerPurchaseOrderCancelRequest";
+import {PurchaseOrder} from "../model/PurchaseOrder";
+import {PurchaseOrderSearchCriteriaRequest} from "../model/request/PurchaseOrderSearchCriteriaRequest";
 
 export const createNewPurchaseOrderForCurrentCustomer = async (createNewPurchaseOrderRequests: CreateNewPurchaseOrderRequest[]) => {
     try {
@@ -38,15 +40,14 @@ export const getPurchaseOrderForCurrentEnterpriseByCriteria = async (criteria: E
     }
 }
 
-export const getPurchaseOrderDetailForCurrentEnterprise = async (purchaseOrderId: number) => {
+export const getPurchaseOrderByCriteria = async (criteria: PurchaseOrderSearchCriteriaRequest) => {
     try {
-        const result: AxiosResponse = await axiosClient.get<EnterprisePurchaseOrder>(`/order/current-enterprise/customer-order/get-detail/${purchaseOrderId}`);
+        const result: AxiosResponse = await axiosClient.post<PurchaseOrder[]>(`/order/get-by-crireria`, criteria);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);
     }
 }
-
 
 export const updatePurchaseOrderStatusForCurrentEnterprise = async (request: EnterpriseUpdateOrderStatusRequest) => {
     try {

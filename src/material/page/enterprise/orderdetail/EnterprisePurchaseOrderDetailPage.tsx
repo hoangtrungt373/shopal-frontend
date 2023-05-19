@@ -9,7 +9,7 @@ import {AssetPath, EnterpriseRouter} from "../../../config/router";
 import PageSpinner from "../../common/share/PageSpinner";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {
-    getPurchaseOrderDetailForCurrentEnterprise,
+    getPurchaseOrderByCriteria,
     updatePurchaseOrderStatusForCurrentEnterprise
 } from "../../../service/order.service";
 import Divider from "@mui/material/Divider";
@@ -454,7 +454,9 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
 
     /*TODO: add not found */
     useEffect(() => {
-        getPurchaseOrderDetailForCurrentEnterprise(params.purchaseOrderId)
+        getPurchaseOrderByCriteria({
+            purchaseOrderId: params.purchaseOrderId
+        })
             .then((resEnterprisePurchaseOrder: EnterprisePurchaseOrder) => {
                 setEnterprisePurchaseOrder(resEnterprisePurchaseOrder);
                 getCurrentEnterpriseInfo()
@@ -488,13 +490,13 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
         })
             .then((res: string) => {
                 console.log(res);
-                getPurchaseOrderDetailForCurrentEnterprise(enterprisePurchaseOrder.id)
-                    .then((resEnterprisePurchaseOrder: EnterprisePurchaseOrder) => {
-                        console.log(resEnterprisePurchaseOrder)
-                        setEnterprisePurchaseOrder(resEnterprisePurchaseOrder);
-                    }).catch((err: ExceptionResponse) => {
-                    console.log(err);
-                })
+                // getPurchaseOrderDetailForCurrentEnterprise(enterprisePurchaseOrder.id)
+                //     .then((resEnterprisePurchaseOrder: EnterprisePurchaseOrder) => {
+                //         console.log(resEnterprisePurchaseOrder)
+                //         setEnterprisePurchaseOrder(resEnterprisePurchaseOrder);
+                //     }).catch((err: ExceptionResponse) => {
+                //     console.log(err);
+                // })
             }).catch((err: ExceptionResponse) => {
             console.log(err);
         });
