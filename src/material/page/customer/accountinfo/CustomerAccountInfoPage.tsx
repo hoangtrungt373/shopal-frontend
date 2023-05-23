@@ -42,15 +42,16 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
     } = useForm<Customer>();
     const [showAlert, setShowAlert] = useState({
         open: false,
-        title: "Profile updated"
+        title: "Cập nhật thông tin thành công"
     });
+    const [gender, setGender] = useState<Gender>(null);
 
     /*TODO: handle update*/
     const onSubmit = handleSubmit(data => {
         let newCustomerInfo: Customer = {
             fullName: data.fullName,
             nickName: data.nickName,
-            gender: data.gender,
+            gender: gender,
             address: data.address,
             phoneNumber: data.phoneNumber,
             birthDate: data.birthDate,
@@ -70,7 +71,7 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
     useEffect(() => {
         setValue("fullName", customer.fullName);
         setValue("nickName", customer.nickName);
-        setValue("gender", customer.gender);
+        setGender(customer.gender)
         setValue("birthDate", customer.birthDate);
         setValue("address", customer.address);
         setValue("phoneNumber", customer.phoneNumber);
@@ -97,15 +98,15 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
     /*TODO: fetch from be*/
     const genderList: GenderOption[] = [
         {
-            label: "Male",
+            label: "Nam",
             value: Gender.MALE
         },
         {
-            label: "Female",
+            label: "Nữ",
             value: Gender.FEMALE
         },
         {
-            label: "Other",
+            label: "Khác",
             value: Gender.OTHER
         }
     ];
@@ -129,7 +130,7 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
         return (
             <Box>
                 <DisplayAlert/>
-                <Typography variant={"h6"} mb={2}>Account info</Typography>
+                <Typography variant={"h6"} mb={2}>Thông tin tài khoản</Typography>
                 <form onSubmit={onSubmit}
                       style={{backgroundColor: "#fff", borderRadius: "8px", padding: "16px", width: "100%"}}>
                     <Stack
@@ -137,7 +138,7 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
                         divider={<Divider orientation="vertical" flexItem/>}
                         spacing={3}>
                         <Box sx={{width: "60%", display: "flex", flexDirection: "column", gap: 2}}>
-                            <Typography fontSize={"16px"}>Personal information</Typography>
+                            <Typography fontSize={"16px"}>Thông tin cá nhân</Typography>
                             <Grid container spacing={2} alignItems={"center"}>
                                 <Grid item xs={3}>
                                     <Box sx={{
@@ -171,23 +172,24 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
                                 <Grid item xs={9}
                                       sx={{display: "flex", flexDirection: "column", gap: 3}}>
                                     <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                                        <Typography sx={{width: "175px"}}>Full Name</Typography>
+                                        <Typography sx={{width: "175px"}}>Họ & Tên</Typography>
                                         <TextField {...register("fullName")} size={"small"} fullWidth
-                                                   placeholder={"Add you full name here"}/>
+                                                   placeholder={"Thêm họ tên"}/>
                                     </Box>
                                     <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
                                         <Typography sx={{width: "175px"}}>Nickname</Typography>
                                         <TextField {...register("nickName")} size={"small"} fullWidth
-                                                   placeholder={"You hava any nickname?"}/>
+                                                   placeholder={"Thêm nickname?"}/>
                                     </Box>
 
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography gutterBottom>Gender</Typography>
+                                    <Typography gutterBottom>Giới tính</Typography>
                                     <TextField
                                         select
-                                        defaultValue={Gender.MALE}
-                                        {...register("gender")} size={"small"}
+                                        value={gender}
+                                        onChange={(e) => setGender(e.target.value as Gender)}
+                                        size={"small"}
                                         sx={{width: "100%"}}
                                     >
                                         {genderList.map((option) => (
@@ -198,42 +200,41 @@ const CustomerAccountInfoPage: React.FC<Props> = ({customer}) => {
                                     </TextField>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography gutterBottom>Birth Date</Typography>
+                                    <Typography gutterBottom>Ngày sinh</Typography>
                                     <TextField {...register("birthDate")} size={"small"} fullWidth
                                                type={"date"}/>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography gutterBottom>Address</Typography>
+                                    <Typography gutterBottom>Địa chỉ</Typography>
                                     <TextField {...register("address")} size={"small"} fullWidth/>
                                 </Grid>
                                 <Grid item xs={4} mt={4}>
-                                    <Button type={"submit"} variant={"contained"}>Save
-                                        change</Button>
+                                    <Button type={"submit"} variant={"contained"}>Lưu thay đổi</Button>
                                 </Grid>
                             </Grid>
                         </Box>
                         <Box sx={{width: "40%", display: "flex", flexDirection: "column", gap: 2}}>
-                            <Typography fontSize={"16px"}>Email and Phone</Typography>
+                            <Typography fontSize={"16px"}>Số điện thoại và Email</Typography>
                             <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
                                 <PhoneOutlinedIcon style={{fontSize: "20px"}}/>
                                 <Box sx={{display: "flex", flexDirection: "column"}}>
-                                    <Typography>Phone number</Typography>
+                                    <Typography>Số điện thoại</Typography>
                                     <Typography>{getValues("phoneNumber")}</Typography>
                                 </Box>
                                 <Button variant={"outlined"} href={CustomerRouter.updatePhoneNumberPage}
                                         sx={{justifySelf: "flex-end", marginLeft: "auto", height: 25}}
-                                        size={"small"}>Update</Button>
+                                        size={"small"}>Cập nhât</Button>
                             </Box>
                             <Divider/>
                             <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
                                 <EmailOutlinedIcon style={{fontSize: "20px"}}/>
                                 <Box sx={{display: "flex", flexDirection: "column"}}>
-                                    <Typography>Email address</Typography>
+                                    <Typography>Địa chỉ email</Typography>
                                     <Typography>{getValues("contactEmail")}</Typography>
                                 </Box>
                                 <Button variant={"outlined"} href={CustomerRouter.updateEmailPage}
                                         sx={{justifySelf: "flex-end", marginLeft: "auto", height: 25}}
-                                        size={"small"}>Update</Button>
+                                        size={"small"}>Cập nhật</Button>
                             </Box>
                         </Box>
                     </Stack>

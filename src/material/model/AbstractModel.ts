@@ -1,3 +1,4 @@
 export interface AbstractModel {
-    id?: number
+    id?: number,
+    originId?: number
 }

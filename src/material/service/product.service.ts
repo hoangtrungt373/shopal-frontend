@@ -12,7 +12,7 @@ import {CreateOrUpdateProductResponse} from "../model/admin/CreateOrUpdateProduc
 
 export const getProductDetail = async (productId: number) => {
     try {
-        const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/customer/get-detail/${productId}`);
+        const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/get-detail/${productId}`);
         const product = result.data;
         await fetch(`${AssetPath.productContentUrl}${product.productDescriptionUrl}`)
             .then((r) => r.text())

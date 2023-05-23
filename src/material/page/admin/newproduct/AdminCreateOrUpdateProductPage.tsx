@@ -12,7 +12,7 @@ import {Catalog} from "../../../model/Catalog";
 import {getAllMainCatalog} from "../../../service/catalog.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import Grid from "@mui/material/Grid";
-import './adminnewproductpage.css'
+import './AdminCreateOrUpdateProductPage.scss'
 import {AdminRouter, AssetPath} from "../../../config/router";
 import ImageSearchOutlinedIcon from '@mui/icons-material/ImageSearchOutlined';
 import IconButton from "@mui/material/IconButton";
@@ -60,7 +60,7 @@ interface Alert {
 }
 
 
-const AdminNewProductPage: React.FC<Props> = ({}) => {
+const AdminCreateOrUpdateProductPage: React.FC<Props> = ({}) => {
 
     const history = useHistory();
     const [isShow, setIsShow] = useState<boolean>(false);
@@ -396,4 +396,4 @@ const AdminNewProductPage: React.FC<Props> = ({}) => {
     }
 }
 
-export default AdminNewProductPage;
+export default AdminCreateOrUpdateProductPage;

@@ -1,7 +1,8 @@
 import {EnterpriseRegisterRequestStatus} from "../enums/EnterpriseRegisterRequestStatus";
 import {Enterprise} from "../Enterprise";
+import {AbstractModel} from "../AbstractModel";
 
-export interface EnterpriseCooperationRequest {
+export interface EnterpriseRegisterRequestAnn extends AbstractModel {
     fullName: string;
     position: string;
     workEmail: string;

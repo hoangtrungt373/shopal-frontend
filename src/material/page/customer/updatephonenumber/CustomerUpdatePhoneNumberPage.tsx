@@ -28,7 +28,7 @@ const CustomerUpdatePhoneNumberPage: React.FC<Props> = ({customer}) => {
     } = useForm<Customer>();
     const [showAlert, setShowAlert] = useState({
         open: false,
-        title: "Phone number updated"
+        title: "Cập nhật số điện thoại thành công"
     });
 
     const onSubmit = handleSubmit(data => {
@@ -67,7 +67,7 @@ const CustomerUpdatePhoneNumberPage: React.FC<Props> = ({customer}) => {
         return (
             <Box>
                 <DisplayAlert/>
-                <Typography variant={"h6"} mb={2}>Update phone number</Typography>
+                <Typography variant={"h6"} mb={2}>Cập nhật số điện thoại</Typography>
                 <Box sx={{width: "100%", backgroundColor: "#fff", borderRadius: 2, p: 4}}>
                     <form onSubmit={onSubmit}
                           style={{
@@ -77,14 +77,14 @@ const CustomerUpdatePhoneNumberPage: React.FC<Props> = ({customer}) => {
                               width: "50%",
                               border: "1px solid var(--neutralgray-500)",
                           }}>
-                        <Typography gutterBottom>Phone number</Typography>
+                        <Typography gutterBottom>Số điện thoại</Typography>
                         <TextField {...register("phoneNumber", {required: true})} fullWidth size={"small"}
                                    type={"number"}
-                                   placeholder={"Input your personal phone number"}
-                                   helperText={"Verification code (OTP) will be sent to this phone number to verify phone number is yours"}
+                                   placeholder={"Nhập số điện thoại"}
+                                   helperText={"Mã xác thực (OTP) sẽ được gửi đến số điện thoại này để xác minh số điện thoại là của bạn"}
                                    error={!!errors.phoneNumber}/>
-                        <Button type={"submit"} variant={"contained"} style={{marginTop: "32px"}} fullWidth>Save
-                            change</Button>
+                        <Button type={"submit"} variant={"contained"} style={{marginTop: "32px"}} fullWidth>Lưu thay
+                            đổi</Button>
                     </form>
                 </Box>
             </Box>

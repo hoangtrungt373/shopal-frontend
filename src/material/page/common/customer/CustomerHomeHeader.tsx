@@ -1,65 +1,31 @@
 import * as React from "react";
-import {useState} from "react";
-import {AssetPath, CustomerRouter} from "../../../config/router";
+import {useEffect, useState} from "react";
+import {AssetPath, CustomerRouter, EnterpriseRouter} from "../../../config/router";
 import {Link, useHistory} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import {isAuthenticated} from "../../../util/auth.util";
 import {Customer} from "../../../model/Customer";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import './CustomerHomeHeader.scss'
-import {ListItemButton, ListItemText} from "@mui/material";
+import {InputBase, Stack} from "@mui/material";
 import {logout} from "../../../service/auth.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {ProductSearchPath} from "../../../model/request/ProductSearchPath";
 import {createSearchQuery} from "../../../util/search.utils";
 import {ShoppingCartOutlined} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
+import SearchIcon from '@mui/icons-material/Search';
+import {isCurrentScreenIsLoginOrRegisterPage, removeExtensionEmail} from "../../../util/display.util";
 
 interface Props {
     currentCustomer?: Customer,
 }
 
-const CustomerBlock: React.FC<Props> = ({currentCustomer}) => {
-
-    const history = useHistory();
-
-    const handleLogout = () => {
-        logout()
-            .then(() => {
-                window.location.reload();
-            })
-            .catch((err: ExceptionResponse) => {
-                console.log(err);
-            })
-    }
-
-    return (
-        <Box className={"dropdown"}>
-            <Box sx={{display: "flex", alignItems: "center", gap: 1, p: 1.5}}>
-                <AccountCircleOutlinedIcon sx={{fontSize: "24px"}}/>
-                <Typography fontSize={"16px"}>Account</Typography>
-            </Box>
-            <Box className={"dropdown-content"}>
-                <ListItemButton href={CustomerRouter.dashBoardPage}>
-                    <ListItemText primary="My Account"/>
-                </ListItemButton>
-                <ListItemButton href={CustomerRouter.purchasedOrderHistory}>
-                    <ListItemText primary="My Purchase"/>
-                </ListItemButton>
-                <ListItemButton onClick={() => handleLogout()}>
-                    <ListItemText primary="Log out"/>
-                </ListItemButton>
-            </Box>
-        </Box>
-    );
-}
-
 export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
 
+    const [isShow, setIsShow] = useState<boolean>(false);
     const [keyword, setKeyword] = useState<string>();
 
     const history = useHistory();
@@ -83,56 +49,88 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
         }
     }
 
-    return (
-        <Box sx={{backgroundColor: "#fff", mb: 2, p: "24px 194px"}}>
-            <Grid container spacing={2} alignItems={"center"}>
-                <Grid item xs={1}>
-                    <Link to={CustomerRouter.homePage}><img src={AssetPath.webLogoUrl} alt={"img"}
-                                                            width={"60px"}/></Link>
-                </Grid>
-                <Grid item xs={6}>
-                    <form style={{display: "flex", width: "100%"}}>
+    const handleLogout = () => {
+        logout()
+            .then(() => {
+                window.location.pathname = CustomerRouter.homePage
+            })
+            .catch((err: ExceptionResponse) => {
+                console.log(err);
+            })
+    }
 
-                        <TextField fullWidth onChange={handleChange} onKeyDown={(e) => handleKeyDown(e)}
-                                   placeholder={"Search products..."} size={"small"}/>
-                        <Button variant={"outlined"} onClick={() => searchProductByKeyword()}>Search</Button>
-                    </form>
-                </Grid>
-                <Grid item xs={5}>
-                    {
-                        !isAuthenticated() ? (
-                            <Box sx={{
-                                marginLeft: "auto",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 2,
-                                justifyContent: "flex-end"
-                            }}>
-                                <Link to={CustomerRouter.registerPage}><Button
-                                    variant={"contained"}>Register</Button></Link>
-                                <Typography>|</Typography>
-                                <Link to={CustomerRouter.loginPage}><Button
-                                    variant={"outlined"}>Login</Button></Link>
+    useEffect(() => {
+        setIsShow(!isCurrentScreenIsLoginOrRegisterPage(window.location.href));
+    }, [window.location.href])
+
+    return (
+        <Stack sx={{
+            backgroundColor: "#fff", mb: 2, p: "8px 194px"
+            // , display: isShow ? "flex" : "none"
+        }} spacing={2}>
+            <Stack direction={"row"} justifyContent={"space-between"}>
+                <Stack direction={"row"} spacing={2} alignItems={"center"} className={"top-header"}
+                       divider={<Divider orientation="vertical" flexItem/>}>
+                    <Link to={EnterpriseRouter.loginPage}>Kênh doanh nghiệp</Link>
+                    <Link to={EnterpriseRouter.registerPage}>Trở thành doanh nghiệp hợp tác Shopal</Link>
+                </Stack>
+                {
+                    isAuthenticated() ? (
+                        <Stack direction={"row"} spacing={1} alignItems={"center"} className={"top-header dropdown"}
+                               style={{textAlign: "right"}}>
+                            <img alt="img" onError={(e) => {
+                                // @ts-ignore
+                                e.target.src = AssetPath.avatarDefaultImg
+                            }}
+                                 src={`${AssetPath.customerAvatarUrl}${currentCustomer.avatarUrl}`}
+                                 style={{width: 20, height: 20, display: "block", borderRadius: "50%"}}/>
+                            <Typography>{removeExtensionEmail(currentCustomer.contactEmail)}</Typography>
+                            <Box className={"dropdown-content"}>
+                                <Link to={CustomerRouter.dashBoardPage}>Tài khoản của tôi</Link>
+                                <Link to={CustomerRouter.purchasedOrderHistory}>Đơn mua</Link>
+                                <Typography onClick={() => handleLogout()}>Đăng xuất</Typography>
                             </Box>
-                        ) : (
-                            <Box sx={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                alignItems: "center",
-                                gap: 1
-                            }}>
-                                <CustomerBlock currentCustomer={currentCustomer}/>
-                                <Typography>|</Typography>
-                                <Link to={CustomerRouter.cartPage}>
-                                    <IconButton aria-label="delete" size="small">
-                                        <ShoppingCartOutlined/>
-                                    </IconButton>
-                                </Link>
-                            </Box>
-                        )
-                    }
-                </Grid>
-            </Grid>
-        </Box>
+                        </Stack>
+                    ) : (
+                        <Stack direction={"row"} spacing={2} alignItems={"center"} className={"top-header"}
+                               divider={<Divider orientation="vertical" flexItem/>} style={{textAlign: "right"}}>
+                            <Link to={CustomerRouter.registerPage}>Đăng ký</Link>
+                            <Link to={CustomerRouter.loginPage}>Đăng nhập</Link>
+                        </Stack>
+                    )
+                }
+            </Stack>
+            <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                <Box width={"13%"}>
+                    <Link to={CustomerRouter.homePage}><img src={AssetPath.webLogoUrl} alt={"img"}
+                                                            width={"70px"}/></Link>
+                </Box>
+                <Box
+                    sx={{
+                        width: "74%",
+                        display: 'flex',
+                        alignItems: 'center',
+                        border: "1px solid var(--neutralgray-500)",
+                        borderRadius: 2,
+                    }}
+                >
+                    <IconButton type="button" sx={{width: "7%", cursor: "auto"}} aria-label="search" disableRipple
+                                disableFocusRipple>
+                        <SearchIcon/>
+                    </IconButton>
+                    <InputBase style={{width: "78%"}} onChange={handleChange} onKeyDown={handleKeyDown}
+                               placeholder="Bạn tìm gì hôm nay"
+                    />
+                    <Divider orientation="vertical" flexItem style={{margin: "6px 0"}}/>
+                    <Button variant={"text"} style={{width: "15%", color: "var(--bluebreak-700)"}}
+                            onClick={() => searchProductByKeyword()}>Tìm kiếm</Button>
+                </Box>
+                <Box width={"13%"}>
+                    <Link to={CustomerRouter.cartPage} className={"cart-icon"}>
+                        <ShoppingCartOutlined style={{color: "var(--bluebreak-600)", fontSize: "24px"}}/>
+                    </Link>
+                </Box>
+            </Stack>
+        </Stack>
     );
 }

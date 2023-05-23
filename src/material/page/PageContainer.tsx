@@ -13,7 +13,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import {CustomerHomeHeader} from "./common/customer/CustomerHomeHeader";
 import Container from "@mui/material/Container";
 import PageSpinner from "./common/share/PageSpinner";
-import {ACCESS_TOKEN, CURRENT_USER_ROLE} from "../config/constants";
+import {CURRENT_USER_ROLE} from "../config/constants";
 import {UserRole} from "../model/enums/UserRole";
 import Box from "@mui/material/Box";
 import {getCurrentCustomerInfo} from "../service/customer.service";
@@ -36,7 +36,7 @@ import EnterpriseAccountingDetailPage from "./enterprise/accountingdetail/Enterp
 import EnterprisePurchaseOrderDetailPage from "./enterprise/orderdetail/EnterprisePurchaseOrderDetailPage";
 import EnterpriseProductCollectionPage from "./enterprise/product/EnterpriseProductCollectionPage";
 import EnterpriseProductDetailPage from "./enterprise/productdetail/EnterpriseProductDetailPage";
-import AdminNewProductPage from "./admin/newproduct/AdminNewProductPage";
+import AdminCreateOrUpdateProductPage from "./admin/newproduct/AdminCreateOrUpdateProductPage";
 import AdminAppBar from "./common/admin/AdminAppBar";
 import AdminDrawer from "./common/admin/AdminDrawer";
 import AdminDashboardPage from './admin/dahboard/AdminDashboardPage';
@@ -59,8 +59,8 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import GroupIcon from '@mui/icons-material/Group';
 import AdminEnterpriseManagementPage from "./admin/enterprises/AdminEnterpriseManagementPage";
-import AdminEnterpriseCooperationRequestManagementPage
-    from "./admin/cooperationrequestmanagement/AdminEnterpriseCooperationRequestManagementPage";
+import AdminEnterpriseRegisterRequestManagementPage
+    from "./admin/enterpriseregistermanagement/AdminEnterpriseRegisterRequestManagementPage";
 import '../../theme.scss'
 import EnterpriseDashboardPage from "./enterprise/dashboard/EnterpriseDashboardPage";
 import AdminCustomerManagementPage from "./admin/customermanagement/AdminCustomerManagementPage";
@@ -219,7 +219,6 @@ const enterpriseListItems: SideBarListItem[] = [
 const PageContainer = () => {
 
     const [currentCustomer, setCurrentCustomer] = useState<Customer>();
-    const [currentScreen, setCurrentScreen] = useState<string>();
     const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>();
     const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -229,13 +228,11 @@ const PageContainer = () => {
     };
 
     useEffect(() => {
-        console.log(localStorage.getItem(CURRENT_USER_ROLE));
-        console.log(localStorage.getItem(ACCESS_TOKEN));
-        setCurrentScreen(window.location.href)
         if (isAuthenticated()) {
             if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.CUSTOMER) {
                 getCurrentCustomerInfo()
                     .then((resCustomer: Customer) => {
+                        console.log(resCustomer)
                         setCurrentCustomer(resCustomer);
                     })
                     .catch((err: ExceptionResponse) => {
@@ -261,7 +258,7 @@ const PageContainer = () => {
         } else {
             setIsShow(true);
         }
-    }, []);
+    }, [window.location.href]);
 
     if (isShow) {
         if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.ENTERPRISE_MANAGER) {
@@ -272,7 +269,7 @@ const PageContainer = () => {
                         <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
                         <Box sx={{display: 'flex'}}>
                             {
-                                !isCurrentScreenIsLoginOrRegisterPage(currentScreen) && (
+                                !isCurrentScreenIsLoginOrRegisterPage(window.location.href) && (
                                     <React.Fragment>
                                         <AdminAppBar open={open} toggleDrawer={toggleDrawer}
                                                      userRole={UserRole.ENTERPRISE_MANAGER}/>
@@ -352,7 +349,7 @@ const PageContainer = () => {
                         <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
                         <Box sx={{display: 'flex'}}>
                             {
-                                !isCurrentScreenIsLoginOrRegisterPage(currentScreen) && (
+                                !isCurrentScreenIsLoginOrRegisterPage(window.location.href) && (
                                     <React.Fragment>
                                         <AdminAppBar open={open} toggleDrawer={toggleDrawer} userRole={UserRole.ADMIN}/>
                                         <AdminDrawer open={open} toggleDrawer={toggleDrawer}
@@ -391,7 +388,7 @@ const PageContainer = () => {
                                                                   component={AdminEnterpriseManagementPage} exact/>
                                                     <PrivateRoute
                                                         path={AdminRouter.enterpriseCooperationRequestManagement}
-                                                        component={AdminEnterpriseCooperationRequestManagementPage}
+                                                        component={AdminEnterpriseRegisterRequestManagementPage}
                                                         exact/>
                                                     <PrivateRoute path={AdminRouter.productCollectionPage}
                                                                   component={AdminProductCollectionPage}
@@ -403,7 +400,9 @@ const PageContainer = () => {
                                                         path={AdminRouter.productCollectionPage + "/*.:productId"}
                                                         component={AdminProductDetailPage}/>
                                                     <PrivateRoute path={AdminRouter.newProductPage}
-                                                                  component={AdminNewProductPage} exact/>
+                                                                  component={AdminCreateOrUpdateProductPage} exact/>
+                                                    <PrivateRoute path={AdminRouter.editProductPage + "/*.:productId"}
+                                                                  component={AdminCreateOrUpdateProductPage} exact/>
                                                 </Switch>
                                             </Box>
                                         </Grid>
@@ -421,19 +420,20 @@ const PageContainer = () => {
                 <BrowserRouter>
                     <ThemeProvider theme={theme}>
                         <CssBaseline/>
-                        <Route path={CustomerRouter.registerPage} component={CustomerRegisterPage}/>
-                        <Route path={CustomerRouter.loginPage} component={CustomerLoginPage}/>
-                        <Route path={EnterpriseRouter.registerPage} component={EnterpriseRegisterPage}/>
-                        <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
-                        <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
+                        <Route
+                            path={[CustomerRouter.homePage, CustomerRouter.productCollectionPage, CustomerRouter.productDetailPage + "/*",
+                                CustomerRouter.cartPage, CustomerRouter.checkoutPage, CustomerRouter.dashBoardPage + "/*"]}
+                            exact
+                            component={() => (<CustomerHomeHeader currentCustomer={currentCustomer}/>)}/>
+
+                        <Switch>
+                            <Route path={CustomerRouter.registerPage} component={CustomerRegisterPage}/>
+                            <Route path={CustomerRouter.loginPage} component={CustomerLoginPage}/>
+                            <Route path={EnterpriseRouter.registerPage} component={EnterpriseRegisterPage}/>
+                            <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
+                            <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
+                        </Switch>
                         <Box>
-                            {
-                                !isCurrentScreenIsLoginOrRegisterPage(currentScreen) && (
-                                    <React.Fragment>
-                                        <CustomerHomeHeader currentCustomer={currentCustomer}/>
-                                    </React.Fragment>
-                                )
-                            }
                             <Container maxWidth="lg" sx={{marginBottom: "24px"}}>
                                 <Switch>
                                     <Route path={CustomerRouter.homePage} component={CustomerHomeContentPage}
@@ -447,7 +447,7 @@ const PageContainer = () => {
                                            exact/>
                                     <Route path={CustomerRouter.checkoutSuccess}
                                            component={CustomerCheckoutSuccessPage}/>
-                                    <PrivateRoute path={CustomerRouter.dashBoardPage}
+                                    <PrivateRoute path={CustomerRouter.dashBoardPage} currentCustomer={currentCustomer}
                                                   component={CustomerDashboardPage}/>
                                 </Switch>
                             </Container>

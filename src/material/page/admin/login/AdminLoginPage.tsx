@@ -1,149 +1,138 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {useTranslation} from "react-i18next";
-import {useHistory} from "react-router-dom";
-import {UserRole} from "../../../model/enums/UserRole";
-import {AuthenticationRequest} from '../../../model/request/AuthenticationRequest';
-import {authenticate} from "../../../service/auth.service";
-import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
+import * as React from "react";
+import {useState} from "react";
+import {Box, InputAdornment, Stack} from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import {CustomerLoginHeader} from "../../common/customer/CustomerLoginHeader";
+import {handleUserAuthenticate} from "../../../service/auth.service";
+import Button from "@mui/material/Button";
+import PageSpinner from "../../common/share/PageSpinner";
 import {AdminRouter} from "../../../config/router";
+import IconButton from "@mui/material/IconButton";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
+import {AuthenticationRequest} from "../../../model/request/AuthenticationRequest";
+import {isBlank, isNotBlank} from "../../../util/string.util";
+import {ErrorText} from "../../common/share/ErrorText";
+import {UserRole} from "../../../model/enums/UserRole";
+import {AuthenticationResponse} from "../../../model/AuthenticationResponse";
 
-function Copyright(props: any) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
+interface Props {
 }
 
-const theme = createTheme();
+const initialError: AuthenticationRequest = {
+    password: undefined,
+    email: undefined,
+}
 
-export default function EnterpriseLoginPage() {
+const AdminLoginPage: React.FC<Props> = () => {
 
-    const [t] = useTranslation('common');
-    const history = useHistory();
+    const [isShow, setIsShow] = useState<boolean>(true);
 
+    // form field
+    const [data, setData] = useState<AuthenticationRequest>({
+        role: UserRole.ADMIN
+    });
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // form error display
+    const [errors, setErrors] = useState<AuthenticationRequest>(initialError);
+
+    // form password display
+    const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+
+    const onSubmit = () => {
+        handleUserAuthenticate(data)
+            .then((res: AuthenticationResponse) => {
+                window.location.pathname = AdminRouter.dashboardPage
+            }).catch((err: ExceptionResponse) => {
+            console.log(err);
+            if (err.status == 401) {
+                setErrors(prev => ({...prev, password: "Email hoặc Password không chính xác"}))
+            } else {
+            }
+        })
+    }
+
+    const handleClickShowPassword = () => setIsShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        let authenticationRequest: AuthenticationRequest = {
-            email: data.get('email'),
-            password: data.get('password'),
-            role: UserRole.ADMIN
-        }
-        //TODO: validate form
-        authenticate(authenticationRequest)
-            .then((token: string) => {
-                history.push(AdminRouter.dashboardPage)
-            })
-            .catch((err: ExceptionResponse) => {
-                console.log(err);
-            });
     };
 
-    // TODO: if already login -> redirect /
-    return (
-        <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{height: '100vh'}}>
-                <CssBaseline/>
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+    if (isShow) {
+        return (
+            <Box>
+                <CustomerLoginHeader title={"Admin"}/>
+                <Stack direction={"row"} p={"40px 194px"} justifyContent={"space-content"}
+                       alignItems={"center"} bgcolor={"#fff"}>
+                    <Stack spacing={1} style={{width: "48%"}}>
+                        <Typography variant={"h4"} color={"var(--bluebreak-600)"}>Admin Dashboard</Typography>
+                        <img style={{width: "400px", margin: "24px 0", display: "block"}}
+                             src={"https://timviec365.vn/pictures/images_10_2021/cac-ky-nang-cua-hr-administrator.jpg"}/>
+                    </Stack>
                     <Box
-                        sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                            <LockOutlinedIcon/>
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            {t('customer-login-page.headline')}
-                        </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 1}}>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary"/>}
-                                label="Remember me"
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{mt: 3, mb: 2}}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="src/material/page/customer/login/CustomerLoginPage#" variant="body2">
-                                        Forgot password?
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link href="src/material/page/customer/login/CustomerLoginPage#" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
-                                </Grid>
+                        style={{
+                            width: "48%",
+                            marginLeft: "auto",
+                            backgroundColor: "#fff",
+                            padding: "32px",
+                            borderRadius: "8px",
+                            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.03)",
+                            border: "1px solid var(--neutralgray-400)"
+                        }}>
+                        <Typography variant={"h6"} mb={3}>Đăng nhập</Typography>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} style={{position: "relative"}}>
+                                <TextField
+                                    value={data.email}
+                                    onChange={(e) => setData(prev => ({...prev, email: e.target.value}))}
+                                    fullWidth
+                                    placeholder={"Email"} type={"email"}/>
                             </Grid>
-                            <Copyright sx={{mt: 5}}/>
-                        </Box>
+                            <Grid item xs={12} style={{position: "relative"}}>
+                                <TextField
+                                    value={data.password}
+                                    fullWidth
+                                    onChange={(e) => setData(prev => ({...prev, password: e.target.value}))}
+                                    type={isShowPassword ? "text" : "password"}
+                                    InputProps={{
+                                        endAdornment:
+                                            <InputAdornment position={"end"}>
+                                                <IconButton
+                                                    disableRipple
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {isShowPassword ? <VisibilityOff/> : <Visibility/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                    }}
+                                    placeholder={"Mật khẩu"}/>
+                                <ErrorText text={errors.password}
+                                           style={{
+                                               position: "absolute",
+                                               bottom: "-22px",
+                                               fontSize: "13px",
+                                               color: isNotBlank(errors.password) ? "var(--red-600)" : "transparent"
+                                           }}/>
+                            </Grid>
+                            <Grid item xs={12} mt={2}>
+                                <Button onClick={() => onSubmit()} variant={"contained"} size={"large"}
+                                        disabled={isBlank(data.password) || isBlank(data.email)}
+                                        fullWidth>ĐĂNG NHẬP</Button>
+                            </Grid>
+                        </Grid>
                     </Box>
-                </Grid>
-            </Grid>
-        </ThemeProvider>
-    );
+                </Stack>
+            </Box>
+        )
+    } else {
+        return (
+            <PageSpinner/>
+        )
+    }
 }
+
+export default AdminLoginPage;
