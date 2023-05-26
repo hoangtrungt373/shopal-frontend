@@ -9,12 +9,13 @@ export interface AdminCreateOrUpdateProductRequest {
     content?: string,
     inputDate?: string,
     expirationDate: string,
-    initialCash: string,
+    initialCash: number,
     productType: ProductType,
     catalogId: number,
     catalogName?: string,
     tags?: string[],
-    files?: any[],
+    uploadImgUrls?: any[],
+    existsImgUrls?: string[],
     productDescriptionUrl?: string,
     productStatus: ProductStatus
 }

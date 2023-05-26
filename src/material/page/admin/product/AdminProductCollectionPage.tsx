@@ -7,7 +7,7 @@ import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import {Product} from "../../../model/Product";
 import {useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
-import {AdminRouter, AssetPath, EnterpriseRouter} from "../../../config/router";
+import {AdminRouter, AssetPath} from "../../../config/router";
 import Typography from "@mui/material/Typography";
 import {createSeoLink, formatVndMoney} from "../../../util/display.util";
 import {getProductByCriteria} from "../../../service/product.service";
@@ -413,7 +413,7 @@ const ProductList: React.FC<Props> = ({products}) => {
                 <GridActionsCellItem
                     label="Edit"
                     showInMenu
-                    onClick={() => history.push(EnterpriseRouter.productCollectionPage + "/" + createSeoLink(params.row.productName) + "." + params.id)}
+                    onClick={() => history.push(AdminRouter.editProductPage + "/" + createSeoLink(params.row.productName) + "." + params.id)}
                 />,
             ],
         },

@@ -4,6 +4,13 @@
   },
   "customer-login-page": {
     "headline": "Đăng nhập"
+  },
+  "admin-create-or-update-product-page": {
+    "headline": "Add Product",
+    "sub-header": "Add Product",
+    "input": {
+      "product-name": "Product Name"
+    }
   }
 }
 

@@ -12,7 +12,7 @@ import {ProductImage} from "../../../model/ProductImage";
 import {AdminRouter, AssetPath} from "../../../config/router";
 import ImageGallery from 'react-image-gallery';
 import {Enterprise} from "../../../model/Enterprise";
-import {formatDateTime, formatRating, formatVndMoney} from "../../../util/display.util";
+import {createSeoLink, formatDateTime, formatRating, formatVndMoney} from "../../../util/display.util";
 import {ProductStatus} from "../../../model/enums/ProductStatus";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
@@ -250,8 +250,7 @@ const ProductInfo: React.FC<Props> = ({
             divider={<Divider orientation="vertical" flexItem/>}
             spacing={2}>
             <Box sx={{width: "40%"}}>
-                <ImageGallery items={images ? images : []}
-                              showFullscreenButton={false} showPlayButton={false}/>
+                <ImageGallery items={images ? images : []} showPlayButton={false}/>
             </Box>
             <Box sx={{
                 width: "60%",
@@ -361,7 +360,8 @@ const ProductInfo: React.FC<Props> = ({
                         }
                     </Box>
                 </Box>
-                <Button variant={"contained"} style={{width: "20%"}}>Edit</Button>
+                <Button variant={"contained"} style={{width: "20%"}}
+                        href={AdminRouter.editProductPage + "/" + createSeoLink(productDetail.productName + "." + productDetail.id)}>Edit</Button>
             </Box>
         </Stack>
     )

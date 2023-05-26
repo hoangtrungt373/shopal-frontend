@@ -36,6 +36,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import {ErrorText} from "../../common/share/ErrorText";
 import {addProductReviewByCurrentCustomer} from "../../../service/product.service";
 import AlertDialog from "../../common/share/AlertDialog";
+import {isNotNull} from "../../../util/object.util";
 
 interface Props {
     children?: React.ReactNode;
@@ -292,7 +293,7 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
                                            rows={8}/>
                                 <Box sx={{display: "flex", gap: 2}}>
                                     {
-                                        imgUrls.filter(x => x != undefined).map((imgUrl, index) => (
+                                        imgUrls.filter(x => isNotNull(x)).map((imgUrl, index) => (
                                             <Box sx={{position: "relative"}} className={"img-upload-block"}>
                                                 <img
                                                     src={URL.createObjectURL(imgUrl)}

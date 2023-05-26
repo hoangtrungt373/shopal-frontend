@@ -398,11 +398,12 @@ const PageContainer = () => {
                                                                   exact/>
                                                     <PrivateRoute
                                                         path={AdminRouter.productCollectionPage + "/*.:productId"}
-                                                        component={AdminProductDetailPage}/>
+                                                        component={AdminProductDetailPage} exact/>
                                                     <PrivateRoute path={AdminRouter.newProductPage}
                                                                   component={AdminCreateOrUpdateProductPage} exact/>
-                                                    <PrivateRoute path={AdminRouter.editProductPage + "/*.:productId"}
-                                                                  component={AdminCreateOrUpdateProductPage} exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.editProductPage + "/*.:productId"}
+                                                        component={AdminCreateOrUpdateProductPage} exact/>
                                                 </Switch>
                                             </Box>
                                         </Grid>

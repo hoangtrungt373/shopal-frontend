@@ -1,36 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="optimize admin order history page">
-      <change afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerLoginHeader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/util/string.util.ts" afterDir="false" />
+    <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="optimize register login page">
+      <change afterPath="$PROJECT_DIR$/src/material/util/filter.util.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/util/object.util.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/config/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/config/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/AbstractModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/AbstractModel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/admin/EnterpriseCooperationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/admin/EnterpriseRegisterRequestAnn.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/enterprise/EnterpriseRegisterRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/enterprise/EnterpriseRegisterRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/enums/Gender.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/enums/Gender.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/request/AuthenticationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/AuthenticationRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/lang/vn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/lang/vn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/admin/cooperationrequestmanagement/AdminEnterpriseCooperationRequestManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/enterpriseregistermanagement/AdminEnterpriseRegisterRequestManagementPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/admin/login/AdminLoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/login/AdminLoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/common/customer/CustomerHomeHeader.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/accountinfo/CustomerAccountInfoPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/accountinfo/CustomerAccountInfoPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/dashboard/CustomerDashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/dashboard/CustomerDashboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/login/CustomerLoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/login/CustomerLoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/resiter/CustomerRegisterPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/resiter/CustomerRegisterPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/updatephonenumber/CustomerUpdatePhoneNumberPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/updatephonenumber/CustomerUpdatePhoneNumberPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/register/EnterpriseRegisterPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/register/EnterpriseRegisterPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/service/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/service/enterprise.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/enterprise.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminCreateOrUpdateProductPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminCreateOrUpdateProductPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/service/product.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/product.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/util/display.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/util/display.util.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,15 +34,23 @@
     <setting file="file://$PROJECT_DIR$/node_modules/@mui/material/TextField/TextField.d.ts" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/node_modules/@mui/material/Typography/Typography.d.ts" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/node_modules/@mui/system/Box/Box.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/index.css" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/config/constants.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/config/router.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/model/AbstractModel.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/model/Product.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/model/enterprise/EnterpriseAccounting.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/model/enums/PaymentStatus.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/model/enums/UserRole.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/PageContainer.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/page/admin/newproduct/AdminCreateOrUpdateProductPage.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/common/share/PrivateRoute.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/customer/checkout/CustomerOrderCheckoutPage.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.scss" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/customer/productdetail/CustomerProductDetailPage.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/enterprise/accounting/EnterpriseAccountingPage.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/material/page/enterprise/accountingdetail/EnterpriseAccountingDetailPage.tsx" root0="FORCE_HIGHLIGHTING" />
@@ -217,7 +211,10 @@
       <workItem from="1684554575650" duration="27319000" />
       <workItem from="1684648938739" duration="6253000" />
       <workItem from="1684723158263" duration="223000" />
-      <workItem from="1684823693524" duration="310000" />
+      <workItem from="1684823693524" duration="6239000" />
+      <workItem from="1684897163174" duration="13492000" />
+      <workItem from="1684983012623" duration="4084000" />
+      <workItem from="1685034978271" duration="124000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1681829427393</created>
@@ -275,7 +272,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684480376782</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="optimize register login page">
+      <created>1684824282804</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1684824282804</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,7 +306,8 @@
     <MESSAGE value="add customer management, customer detail screen" />
     <MESSAGE value="optimize admin product collection page" />
     <MESSAGE value="optimize admin order history page" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimize admin order history page" />
+    <MESSAGE value="optimize register login page" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimize register login page" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

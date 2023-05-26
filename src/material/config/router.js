@@ -58,5 +58,6 @@ export const AdminRouter = {
     productCollectionPage: "/admin/dashboard/products",
     purchaseOrderManagement: "/admin/dashboard/orders",
     newProductPage: "/admin/dashboard/products/new",
-    editProductPage: "/admin/dashboard/products/edit",
+    // try to optimize to products/edit
+    editProductPage: "/admin/dashboard/products-edit",
 }

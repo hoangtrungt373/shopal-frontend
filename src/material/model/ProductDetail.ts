@@ -9,7 +9,7 @@ import {ProductReview} from "./ProductReview";
 
 export interface ProductDetail extends AbstractModel {
     productName: string;
-    sku?: number;
+    sku?: string;
     quantityInStock: number;
     productDescriptionUrl?: string;
     productStatus: ProductStatus,
@@ -26,6 +26,7 @@ export interface ProductDetail extends AbstractModel {
     initialCash: number,
     exchangeAblePoints: ProductPoint[];
     imageUrls: ProductImage[];
+    files: any[],
     reviews: ProductReview[]
 }
 

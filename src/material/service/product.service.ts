@@ -14,11 +14,19 @@ export const getProductDetail = async (productId: number) => {
     try {
         const result: AxiosResponse = await axiosClient.get<ProductDetail>(`/product/get-detail/${productId}`);
         const product = result.data;
+
         await fetch(`${AssetPath.productContentUrl}${product.productDescriptionUrl}`)
-            .then((r) => r.text())
-            .then(text => {
-                product.content = text
-            })
+            .then((res) => res.text())
+            .then((text) => {
+                product.content = text;
+                product.files = [];
+            });
+
+        await fetchAllImg(product.imageUrls.map(x => x.imageUrl))
+            .then((files: File[]) => {
+                product.files = [...files];
+            });
+
         return product;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);
@@ -66,7 +74,7 @@ export const createOrUpdateProduct = async (request: AdminCreateOrUpdateProductR
     try {
         const formData = new FormData();
         formData.append('dto', new Blob([JSON.stringify(request)], {type: 'application/json'}));
-        request.files.forEach((file, index) => {
+        request.uploadImgUrls.forEach((file, index) => {
             formData.append("images", file);
         })
         const result: AxiosResponse = await axiosClient.post<CreateOrUpdateProductResponse>(`/product/current-admin/create-or-update-product`, formData);
@@ -88,4 +96,28 @@ export const addProductReviewByCurrentCustomer = async (request: CustomerProduct
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);
     }
+}
+
+
+export const fetchAllImg = async (fileNames: string[]) => {
+    let list = [];
+    let metadata = {
+        type: 'image/webp'
+    };
+
+    let files: File[] = [];
+    fileNames.forEach(function (fileName, i) {
+        list.push(
+            fetch(`${AssetPath.productImgUrl}${fileName}`)
+                .then(res => res.blob())
+                .then((data: any) => {
+                    files.push(new File([data], fileName, metadata));
+                }));
+    });
+
+    return Promise
+        .all(list)
+        .then(function () {
+            return files;
+        });
 }
