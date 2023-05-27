@@ -1,6 +1,6 @@
 import {OrderStatus} from "../enums/OrderStatus";
 
-export interface EnterpriseUpdateOrderStatusRequest {
+export interface UpdateOrderStatusRequest {
     purchaseOrderId: number,
     newOrderStatus: OrderStatus,
     deliveryDate: Date

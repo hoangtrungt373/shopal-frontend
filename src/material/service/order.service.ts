@@ -8,7 +8,7 @@ import {EnterprisePurchaseOrder} from "../model/enterprise/EnterprisePurchaseOrd
 import {
     EnterprisePurchaseOrderSearchCriteriaRequest
 } from "../model/request/EnterprisePurchaseOrderSearchCriteriaRequest";
-import {EnterpriseUpdateOrderStatusRequest} from "../model/request/EnterpriseUpdateOrderStatusRequest";
+import {UpdateOrderStatusRequest} from "../model/request/UpdateOrderStatusRequest";
 import {CustomerPurchaseOrderCancelRequest} from "../model/customer/CustomerPurchaseOrderCancelRequest";
 import {PurchaseOrder} from "../model/PurchaseOrder";
 import {PurchaseOrderSearchCriteriaRequest} from "../model/request/PurchaseOrderSearchCriteriaRequest";
@@ -49,9 +49,9 @@ export const getPurchaseOrderByCriteria = async (criteria: PurchaseOrderSearchCr
     }
 }
 
-export const updatePurchaseOrderStatusForCurrentEnterprise = async (request: EnterpriseUpdateOrderStatusRequest) => {
+export const updatePurchaseOrderStatus = async (request: UpdateOrderStatusRequest) => {
     try {
-        const result: AxiosResponse = await axiosClient.post<string>(`/order/current-enterprise/customer-order/update-order-status`, request);
+        const result: AxiosResponse = await axiosClient.post<string>(`/order/update-order-status`, request);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

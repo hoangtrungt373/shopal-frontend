@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="optimize register login page">
-      <change afterPath="$PROJECT_DIR$/src/material/util/filter.util.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/material/util/object.util.ts" afterDir="false" />
+    <list default="true" id="053426a9-f1c7-4cef-bc18-55446e414e16" name="Changes" comment="optimize new product feature">
+      <change afterPath="$PROJECT_DIR$/src/material/model/admin/AbstractAnn.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/admin/CreateOrUpdateContractRequestAnn.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/model/enums/ContractChangeRequestStatus.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/admin/contractrequestmanagement/AdminCooperationContractRequestManagementPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/material/page/enterprise/customerregistermanagement/EnterpriseCustomerRegisterManagementPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/config/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/config/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/lang/vn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/lang/vn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/ProductDetail.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/AdminCreateOrUpdateProductRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/Enterprise.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/Enterprise.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/admin/EnterpriseRegisterRequestAnn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/admin/EnterpriseRegisterRequestAnn.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/enterprise/EnterpriseCooperationContract.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/CooperationContract.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/request/CooperationContractChangeRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/model/request/EnterpriseCooperationContractSearchCriteriaRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/model/request/CooperationContractSearchCriteriaRequest.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/PageContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminCreateOrUpdateProductPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/newproduct/AdminCreateOrUpdateProductPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/product/AdminProductCollectionPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/admin/productdetail/AdminProductDetailPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/orderhistory/CustomerPurchaseOrderHistoryPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/service/product.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/product.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/customer/customerproductcollection/CustomerProductCollectionPage.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/cooperationcontractmanagement/EnterpriseCooperationContractManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/customerdetail/EnterpriseCustomerMembershipDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/customerdetail/EnterpriseCustomerMembershipDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/customermanagement/EnterpriseCustomerMembershipManagementPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/customermembershipmanagement/EnterpriseCustomerMembershipManagementPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/login/EnterpriseLoginPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/page/enterprise/product/EnterpriseProductCollectionPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/contract.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/contract.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/service/membership.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/service/membership.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/util/filter.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/util/filter.util.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,37 +76,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/TTG/Documents/GitHub/shopal-frontend/src/material/page/admin/login&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;google.protobuf.language&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\TTG\\Documents\\GitHub\\shopal-frontend\\node_modules\\typescript\\lib&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/TTG/Documents/GitHub/shopal-frontend/src/material/model/enums",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "google.protobuf.language",
+    "ts.external.directory.path": "C:\\Users\\TTG\\Documents\\GitHub\\shopal-frontend\\node_modules\\typescript\\lib"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\model\enums" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\contractrequestmanagement" />
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\enterprise\customerregistermanagement" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\login" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\enterprise\login" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\enterprise\register" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\customer\login" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\customer" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\model" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\share\productreview" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\enterprise\customerdetail" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\customer\updatephonenumber" />
       <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\admin\cooperationrequestmanagement" />
-      <recent name="C:\Users\TTG\Documents\GitHub\shopal-frontend\src\material\page\common\admin" />
     </key>
   </component>
   <component name="RunManager">
@@ -215,6 +223,8 @@
       <workItem from="1684897163174" duration="13492000" />
       <workItem from="1684983012623" duration="4084000" />
       <workItem from="1685034978271" duration="124000" />
+      <workItem from="1685080710366" duration="18299000" />
+      <workItem from="1685156275343" duration="12195000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1681829427393</created>
@@ -279,11 +289,29 @@
       <option name="project" value="LOCAL" />
       <updated>1684824282804</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="optimize new product feature">
+      <created>1685080974886</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685080974886</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -307,7 +335,8 @@
     <MESSAGE value="optimize admin product collection page" />
     <MESSAGE value="optimize admin order history page" />
     <MESSAGE value="optimize register login page" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimize register login page" />
+    <MESSAGE value="optimize new product feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimize new product feature" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

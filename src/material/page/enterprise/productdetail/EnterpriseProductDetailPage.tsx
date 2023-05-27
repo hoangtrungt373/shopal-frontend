@@ -6,7 +6,7 @@ import {
     handleRequestSellingProductForCurrentEnterprise
 } from "../../../service/product.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
-import {Box, Chip, Rating, Stack} from "@mui/material";
+import {Alert, Box, Chip, Rating, Stack} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PageSpinner from "../../common/share/PageSpinner";
 import {ProductDetail} from "../../../model/ProductDetail";
@@ -20,16 +20,18 @@ import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import {formatVndMoney} from "../../../util/display.util";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
-import AlertDialog from "../../common/share/AlertDialog";
 import {ProductStatus} from "../../../model/enums/ProductStatus";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import PageHeader from "../../common/share/PageHeader";
+import {isNotNull} from "../../../util/object.util";
+import {ProductDetailInfo} from "../../admin/productdetail/AdminProductDetailPage";
 
 interface Props {
     productDetail?: ProductDetail
     currentEnterprise?: Enterprise
     onRequestSelling?: Function
     onRequestCancel?: Function
+    showAlert?: any
 }
 
 interface RouteParams {
@@ -54,7 +56,8 @@ const ProductInfo: React.FC<Props> = ({
                                           productDetail,
                                           currentEnterprise,
                                           onRequestCancel,
-                                          onRequestSelling
+                                          onRequestSelling,
+                                          showAlert
                                       }) => {
 
     const [images, setImages] = useState<Image[]>();
@@ -162,7 +165,13 @@ const ProductInfo: React.FC<Props> = ({
                 <Box sx={{display: "flex", alignItems: "center"}}>
                     <Box sx={{display: "flex", alignItems: "center", width: "50%"}}>
                         <Typography style={{width: "150px"}}>Point Exchange: </Typography>
-                        <Typography>{Math.round(productDetail.initialCash / currentEnterprise.contract.cashPerPoint)}</Typography>
+                        {
+                            isNotNull(currentEnterprise.contract) ? (
+                                <Typography>{Math.round(productDetail.initialCash / currentEnterprise.contract.cashPerPoint)}</Typography>
+                            ) : (
+                                null
+                            )
+                        }
                         <Avatar alt="img"
                                 src={AssetPath.enterpriseLogoUrl + currentEnterprise.logoUrl}
                                 sx={{width: 15, height: 15, marginLeft: 0.5}}/>
@@ -235,7 +244,7 @@ const ProductInfo: React.FC<Props> = ({
                 {
                     isCooperated ? (
                         <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                            <Button variant={"outlined"} fullWidth disabled={true} size={"large"}>Cooperating</Button>
+                            <Button variant={"outlined"} fullWidth disabled={true} size={"large"}>Is Selling</Button>
                             <Button variant="text" size={"small"} color="error"
                                     style={{textDecoration: "underline"}}
                                     onClick={() => onRequestCancel()}>Cancel</Button>
@@ -245,6 +254,11 @@ const ProductInfo: React.FC<Props> = ({
                             <Button variant={"contained"} fullWidth size={"large"} onClick={() => onRequestSelling()}>Request
                                 selling</Button>
                         </Box>
+                    )
+                }
+                {
+                    showAlert.open && (
+                        <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
                     )
                 }
             </Box>
@@ -261,13 +275,8 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
     const [isShow, setIsShow] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState({
         open: false,
-        title: "",
         content: null,
-        showDeniedBtn: true,
-        acceptText: "Accept",
-        deniedText: "Denied",
-        handleDenied: null,
-        handleAccept: null
+        severity: null
     });
     const history = useHistory();
 
@@ -301,100 +310,60 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
     }, [params.productId]);
 
     const handleRequestSelling = () => {
-        setShowAlert(prevState1 => ({
-            ...prevState1,
-            open: true,
-            title: "Request selling this product?",
-            handleAccept: async () => {
-                handleRequestSellingProductForCurrentEnterprise(params.productId)
-                    .then(() => {
-                        getProductDetail(params.productId)
-                            .then((productDetailRes: ProductDetail) => {
-                                setProductDetail(productDetailRes);
-                            })
-                            .catch((err: ExceptionResponse) => {
-                            })
-                    }).catch((err: ExceptionResponse) => {
-                    if (err.status == 409) {
-                        setShowAlert(prevState2 => ({
-                            ...prevState2,
-                            title: err.errorMessage,
-                            showDeniedBtn: false,
-                            acceptText: "OK, got it",
-                            handleAccept: () => {
-                                setShowAlert(prevState3 => ({...prevState3, open: false}));
-                            },
-                        }));
-                    } else {
-                        console.log(err);
-                    }
-                }).finally(() => {
-                    setShowAlert(prevState2 => ({...prevState2, open: false}));
-                });
-            },
-            handleDenied: () => {
-                setShowAlert(prevState2 => ({...prevState2, open: false}));
-            },
-        }));
-
+        handleRequestSellingProductForCurrentEnterprise(params.productId)
+            .then((res: string) => {
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: res,
+                    severity: "success"
+                }));
+            }).catch((err: ExceptionResponse) => {
+            if (err.status == 409) {
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: err.errorMessage,
+                    severity: "error"
+                }));
+            } else {
+                console.log(err);
+            }
+        })
     }
 
     const handleRequestCancel = () => {
-        setShowAlert(prevState1 => ({
-            ...prevState1,
-            open: true,
-            title: "Cancel selling this product?",
-            handleAccept: async () => {
-                handleRequestCancellingProductForCurrentEnterprise(params.productId)
-                    .then(() => {
-                        getProductDetail(params.productId)
-                            .then((productDetailRes: ProductDetail) => {
-                                setProductDetail(productDetailRes);
-                            })
-                            .catch((err: ExceptionResponse) => {
-                            })
-                    }).catch((err: ExceptionResponse) => {
-                    if (err.status == 409) {
-                        setShowAlert(prevState2 => ({
-                            ...prevState2,
-                            title: err.errorMessage,
-                            showDeniedBtn: false,
-                            acceptText: "OK, got it",
-                            handleAccept: () => {
-                                setShowAlert(prevState3 => ({...prevState3, open: false}));
-                            },
-                        }));
-                    } else {
-                        console.log(err);
-                    }
-                }).finally(() => {
-                    setShowAlert(prevState2 => ({...prevState2, open: false}));
-                });
-            },
-            handleDenied: () => {
-                setShowAlert(prevState2 => ({...prevState2, open: false}));
-            },
-        }));
-    }
-
-    const DisplayAlert = () => {
-        if (showAlert.open) {
-            return (
-                <AlertDialog content={showAlert.content} isShowContent={true} isShowDeniedBtn={showAlert.showDeniedBtn}
-                             isShowAcceptBtn={true}
-                             deniedText={showAlert.deniedText} acceptText={showAlert.acceptText}
-                             handleAccept={showAlert.handleAccept} handleDenied={showAlert.handleDenied}
-                             isOpen={showAlert.open} title={showAlert.title}/>
-            )
-        } else {
-            return null;
-        }
+        handleRequestCancellingProductForCurrentEnterprise(params.productId)
+            .then((res: string) => {
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: res,
+                    severity: "success"
+                }));
+                getProductDetail(params.productId)
+                    .then((productDetailRes: ProductDetail) => {
+                        setProductDetail(productDetailRes);
+                    })
+                    .catch((err: ExceptionResponse) => {
+                    })
+            }).catch((err: ExceptionResponse) => {
+            if (err.status == 409) {
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: err.errorMessage,
+                    severity: "error"
+                }));
+            } else {
+                console.log(err);
+            }
+        })
     }
 
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column"}}>
-                <DisplayAlert/>
+            <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Product Detail"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <Typography className={"page-sub-header"}>Product Detail: #{productDetail.id}</Typography>
@@ -402,12 +371,14 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
                     {
                         currentEnterprise && (
                             <ProductInfo productDetail={productDetail} currentEnterprise={currentEnterprise}
+                                         showAlert={showAlert}
                                          onRequestCancel={() => handleRequestCancel()}
                                          onRequestSelling={() => handleRequestSelling()}/>
                         )
                     }
+                    <ProductDetailInfo productDetail={productDetail}/>
                 </Box>
-            </Box>
+            </Stack>
         )
             ;
     } else {

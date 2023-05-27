@@ -215,11 +215,23 @@ const EnterpriseRegisterPage: React.FC<Props> = () => {
                                             size={"small"}
                                             placeholder={"https://www.circlek.com.vn/vi/"}/>
                                     </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography gutterBottom>Mã số thuế</Typography>
+                                        <TextField
+                                            value={data.taxId}
+                                            onChange={(e) => setData(prev => ({
+                                                ...prev,
+                                                taxId: e.target.value
+                                            }))}
+                                            fullWidth
+                                            size={"small"}
+                                            placeholder={"261513380"}/>
+                                    </Grid>
                                     <Grid item xs={12}
                                           sx={{display: "flex", gap: 2, alignItems: "center", position: "relative"}}>
                                         <Button onClick={() => moveToVerifyEmail()} variant={"contained"}
                                                 disabled={isBlank(data.enterpriseWebsite) || isBlank(data.enterpriseName) || isBlank(data.enterpriseAddress) ||
-                                                    isBlank(data.phoneNumber) || isBlank(data.workEmail) || isBlank(data.position) || isBlank(data.fullName)}
+                                                    isBlank(data.phoneNumber) || isBlank(data.workEmail) || isBlank(data.position) || isBlank(data.fullName) || isBlank(data.taxId)}
                                         >Liên hệ ngay</Button>
                                         <Typography>Đã có tài khoản doanh nghiệp? <Link
                                             to={EnterpriseRouter.loginPage}

@@ -51,6 +51,7 @@ const EnterpriseLoginPage: React.FC<Props> = () => {
             if (err.status == 401) {
                 setErrors(prev => ({...prev, password: "Email hoặc Password không chính xác"}))
             } else {
+                console.log(err);
             }
         })
     }

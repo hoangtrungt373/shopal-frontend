@@ -33,6 +33,15 @@ export const getAllEnterpriseRegisterRequest = async () => {
     }
 }
 
+export const handleAcceptEnterpriseCooperationRequest = async (request: EnterpriseRegisterRequestAnn) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<String>(`/enterprise/register/accept`, request);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
 export const handleReceiveEnterpriseRegisterRequest = async (request: EnterpriseRegisterRequest) => {
     try {
         const result: AxiosResponse = await axiosClient.post<String>(`/enterprise/register/receive`, request);
@@ -45,6 +54,19 @@ export const handleReceiveEnterpriseRegisterRequest = async (request: Enterprise
 export const getCurrentEnterpriseInfo = async () => {
     try {
         const result: AxiosResponse = await axiosClient.get<Enterprise>(`/enterprise/current-enterprise/info`);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+
+export const updateCurrentEnterpriseInfo = async (request: Enterprise) => {
+    try {
+        const formData = new FormData();
+        formData.append('dto', new Blob([JSON.stringify(request)], {type: 'application/json'}));
+        formData.append("uploadLogoUrl", request.uploadLogoUrl);
+        const result: AxiosResponse = await axiosClient.post<string>(`/enterprise/update`, formData);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

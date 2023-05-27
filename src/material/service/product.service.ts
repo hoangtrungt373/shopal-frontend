@@ -8,6 +8,7 @@ import {AdminCreateOrUpdateProductRequest} from "../model/request/AdminCreateOrU
 import {AssetPath} from "../config/router";
 import {CustomerProductReviewRequest} from "../model/customer/CustomerProductReviewRequest";
 import {CreateOrUpdateProductResponse} from "../model/admin/CreateOrUpdateProductResponse";
+import {EnterpriseProductSellingRequestAnn} from "../model/admin/EnterpriseProductSellingRequestAnn";
 
 
 export const getProductDetail = async (productId: number) => {
@@ -54,7 +55,7 @@ export const countProductByCriteria = async (criteria: ProductSearchCriteriaRequ
 
 export const handleRequestSellingProductForCurrentEnterprise = async (productId: number) => {
     try {
-        const result: AxiosResponse = await axiosClient.get<String>(`/product/current-enterprise/request-selling/${productId}`);
+        const result: AxiosResponse = await axiosClient.get<String>(`/product/current-enterprise/request-selling/receive/${productId}`);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);
@@ -92,6 +93,24 @@ export const addProductReviewByCurrentCustomer = async (request: CustomerProduct
             formData.append("images", file);
         })
         const result: AxiosResponse = await axiosClient.post<string>(`/product/current-customer/add-product-review`, formData);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const getAllEnterpriseProductSellingRequestAnn = async () => {
+    try {
+        const result: AxiosResponse = await axiosClient.get<EnterpriseProductSellingRequestAnn[]>(`/product/get-all-request-selling`);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const handleAcceptRequestSellingProduct = async (request: EnterpriseProductSellingRequestAnn) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<String>(`/product/request-selling/accept`, request);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

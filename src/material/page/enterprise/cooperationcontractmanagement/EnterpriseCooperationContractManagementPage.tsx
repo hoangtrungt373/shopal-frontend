@@ -4,27 +4,41 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PageSpinner from "../../common/share/PageSpinner";
 import {Enterprise} from "../../../model/Enterprise";
-import {getCurrentEnterpriseInfo} from "../../../service/enterprise.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
-import {EnterpriseCooperationContract} from "../../../model/enterprise/EnterpriseCooperationContract";
-import {getCooperationContractForCurrentEnterpriseByCriteria} from "../../../service/contract.service";
+import {CooperationContract} from "../../../model/CooperationContract";
+import {getCooperationContractByCriteria, handleReceiveCreateOrUpdateContract} from "../../../service/contract.service";
 import {
-    EnterpriseCooperationContractSearchCriteriaRequest
-} from "../../../model/request/EnterpriseCooperationContractSearchCriteriaRequest";
-import {useHistory} from "react-router-dom";
+    CooperationContractSearchCriteriaRequest
+} from "../../../model/request/CooperationContractSearchCriteriaRequest";
+import {Link, useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef} from "@mui/x-data-grid-premium";
-import {Chip, MenuItem} from "@mui/material";
+import {Alert, Chip, MenuItem, Stack, Tooltip} from "@mui/material";
 import {ContractStatus} from "../../../model/enums/ContractStatus";
 import {useForm} from "react-hook-form";
 import {OrderStatus} from "../../../model/enums/OrderStatus";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import PageHeader from "../../common/share/PageHeader";
+import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
+import {isNotNull} from "../../../util/object.util";
+import {Product} from "../../../model/Product";
+import {getProductByCriteria} from "../../../service/product.service";
+import {AssetPath, EnterpriseRouter} from "../../../config/router";
+import {createSeoLink, formatVndMoney} from "../../../util/display.util";
+import Avatar from "@mui/material/Avatar";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import {contractStatusOptions} from "../../../util/filter.util";
 
 interface Props {
-    enterpriseCooperationContracts?: EnterpriseCooperationContract[],
+    cooperationContracts?: CooperationContract[],
     currentEnterprise?: Enterprise,
     onSearchContract?: Function,
-    enterpriseCooperationContractSearchCriteriaRequest?: EnterpriseCooperationContractSearchCriteriaRequest
+    cooperationContractSearchCriteriaRequest?: CooperationContractSearchCriteriaRequest,
+    products?: Product[],
+    updateCashPerPoint?: number
+    onClickEdit?: Function
 }
 
 interface ContractStatusStep {
@@ -32,7 +46,50 @@ interface ContractStatusStep {
     value: ContractStatus
 }
 
-const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContracts}) => {
+
+const breadCrumbItems: BreadcrumbItem[] = [
+    {
+        title: "Contract",
+        isLasted: true
+    },
+]
+
+
+interface ChipStyle {
+    chipBgColor: string,
+    chipTextColor: string,
+}
+
+const getChipStyle = (status: ContractStatus) => {
+    let chipBgColor = null;
+    let chipTextColor = "#212121";
+    switch (status) {
+        case ContractStatus.PENDING: {
+            chipBgColor = "#8A909D";
+            chipTextColor = "#fff";
+            break;
+        }
+        case ContractStatus.ACTIVE: {
+            chipBgColor = "#13CAE1";
+            chipTextColor = "#fff";
+            break;
+        }
+        case ContractStatus.INACTIVE: {
+            chipBgColor = "#F44336";
+            chipTextColor = "#fff";
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    return {
+        chipBgColor,
+        chipTextColor
+    }
+}
+
+const RequestList: React.FC<Props> = ({cooperationContracts, onClickEdit}) => {
 
     const history = useHistory();
 
@@ -46,22 +103,34 @@ const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContract
         {
             field: 'startDate',
             headerName: 'Start Date',
-            flex: 0.5
+            flex: 0.5,
+            renderCell(params: GridCellParams) {
+
+                return (
+                    <Typography>{params.row.startDate.slice(0, 10)}</Typography>
+                );
+            }
         },
         {
             field: 'endDate',
             headerName: 'End Date',
-            flex: 0.5
-        },
-        {
-            field: 'cashPerPoint',
-            headerName: 'Cash Per Point',
-            flex: 0.5
+            flex: 0.5,
+            renderCell(params: GridCellParams) {
+
+                return (
+                    <Typography>{params.row.endDate.slice(0, 10)}</Typography>
+                );
+            }
         },
         {
             field: 'commissionRate',
             headerName: 'Commission Rate',
-            flex: 0.5
+            flex: 0.5,
+        },
+        {
+            field: 'cashPerPoint',
+            headerName: 'Cash Per Point',
+            flex: 0.5,
         },
         {
             field: 'status',
@@ -69,33 +138,12 @@ const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContract
             flex: 0.5,
             renderCell(params: GridCellParams) {
 
-                let contractStatus: ContractStatus = params.row.contractStatus;
-                let chipBgColor = null;
-                let chipTextColor = "#212121";
-                switch (contractStatus) {
-                    case ContractStatus.PENDING: {
-                        chipBgColor = "#8A909D";
-                        chipTextColor = "#fff";
-                        break;
-                    }
-                    case ContractStatus.ACTIVE: {
-                        chipBgColor = "#29CC97";
-                        chipTextColor = "#fff";
-                        break;
-                    }
-                    case ContractStatus.INACTIVE: {
-                        chipBgColor = "#F44336";
-                        chipTextColor = "#fff";
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
+                let requestStatus: ContractStatus = params.row.contractStatus;
+                let chipStyle: ChipStyle = getChipStyle(requestStatus);
 
                 return (
                     <Chip label={params.row.contractStatusDescription} size={"small"}
-                          style={{backgroundColor: chipBgColor, color: chipTextColor}}/>
+                          style={{backgroundColor: chipStyle.chipBgColor, color: chipStyle.chipTextColor}}/>
                 );
             }
         },
@@ -106,8 +154,9 @@ const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContract
             flex: 0.3,
             getActions: (params) => [
                 <GridActionsCellItem
-                    label="Request change"
+                    label="Edit"
                     showInMenu
+                    onClick={() => onClickEdit(params.id)}
                 />,
             ],
         },
@@ -116,17 +165,18 @@ const CooperationContractList: React.FC<Props> = ({enterpriseCooperationContract
     return (
         <Box sx={{width: '100%'}}>
             <DataGridPremium
-                rows={enterpriseCooperationContracts}
+                rows={cooperationContracts}
                 columns={columns}
                 pageSizeOptions={[5]}
                 disableRowSelectionOnClick
                 initialState={{
                     columns: {
                         columnVisibilityModel: {
-                            id: false
+                            id: false,
                         },
                     },
                 }}
+                checkboxSelectionVisibleOnly={true}
             />
         </Box>
     )
@@ -140,7 +190,7 @@ const EnterpriseCooperationContractSearch: React.FC<Props> = ({onSearchContract}
         setValue,
         handleSubmit,
         formState: {errors}
-    } = useForm<EnterpriseCooperationContractSearchCriteriaRequest>();
+    } = useForm<CooperationContractSearchCriteriaRequest>();
 
     const contractStatusList: ContractStatusStep[] = [
         {
@@ -162,7 +212,7 @@ const EnterpriseCooperationContractSearch: React.FC<Props> = ({onSearchContract}
     ];
 
     const onSubmit = handleSubmit(data => {
-        let criteria: EnterpriseCooperationContractSearchCriteriaRequest = {
+        let criteria: CooperationContractSearchCriteriaRequest = {
             startDate: data.startDate,
             endDate: data.endDate,
             contractStatus: data.contractStatus == ContractStatus.ALL ? null : data.contractStatus
@@ -202,59 +252,294 @@ const EnterpriseCooperationContractSearch: React.FC<Props> = ({onSearchContract}
     )
 }
 
+const ProductSellingList = ({products, updateCashPerPoint, currentEnterprise}) => {
 
-const EnterpriseCooperationContractManagementPage: React.FC<Props> = () => {
+    const ProductPoint = ({point}) => {
+        return (
+            <Box sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2
+            }}>
+                <Box sx={{
+                    display: "flex",
+                    gap: 0.5,
+                    alignItems: "center"
+                }}>
+                    <Typography fontWeight={"bold"}
+                                color={"#FF424E"}>{point}</Typography>
+                    <Tooltip
+                        title={currentEnterprise.enterpriseName}>
+                        <Avatar alt="img"
+                                src={AssetPath.enterpriseLogoUrl + currentEnterprise.logoUrl}
+                                sx={{width: 15, height: 15}}/>
+                    </Tooltip>
+                </Box>
+            </Box>
+        )
+    }
 
-    const [enterpriseCooperationContracts, setEnterpriseCooperationContracts] = useState<EnterpriseCooperationContract[]>();
+    return (
+        <React.Fragment>
+            <Grid container spacing={2}>
+                {
+                    products.map((product, index) => (
+                        <Grid item xs={3}>
+                            <Link
+                                to={EnterpriseRouter.productDetailPage + "/" + createSeoLink(product.productName) + "." + product.id}
+                                key={index} style={{textDecoration: "none"}}>
+                                <Stack direction={"row"} spacing={2} className={"cart-item"} p={1}
+                                       alignItems={"center"}
+                                       style={{
+                                           border: "1px solid var(--neutralgray-500)",
+                                           borderRadius: "8px"
+                                       }}>
+                                    <img src={AssetPath.productImgUrl + product.mainImgUrl}
+                                         style={{width: "50px", height: "50px"}}/>
+                                    <Box style={{display: "flex", flexDirection: "column", gap: "8px"}}
+                                         className={"product-card"}>
+                                        <Box sx={{height: "32px"}}>
+                                            <Typography className={"product-name"}>{product.productName}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography
+                                                fontWeight={"bold"}>{formatVndMoney(product.initialCash)}</Typography>
+                                        </Box>
+                                        {
+                                            product.exchangeAblePoints.filter(x => x.enterprise.id == currentEnterprise.id).map((productPoint, index) => (
+                                                <Box sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: 1
+                                                }}>
+                                                    <ProductPoint point={productPoint.pointExchange}/>
+                                                    {
+                                                        isNotNull(updateCashPerPoint) && (
+                                                            <ArrowForwardIcon style={{
+                                                                fontSize: "16px",
+                                                                position: "relative",
+                                                                bottom: 1
+                                                            }}/>
+                                                        )
+                                                    }
+                                                    {
+                                                        isNotNull(updateCashPerPoint) && (
+                                                            <ProductPoint
+                                                                point={Math.round((product.initialCash / updateCashPerPoint))}/>
+                                                        )
+                                                    }
+                                                </Box>
+                                            ))
+                                        }
+                                    </Box>
+                                </Stack>
+                            </Link>
+                        </Grid>
+                    ))
+                }
+            </Grid>
+        </React.Fragment>
+    )
+}
+
+
+const EnterpriseCooperationContractManagementPage: React.FC<Props> = ({currentEnterprise}) => {
+
+    const [cooperationContracts, setCooperationContracts] = useState<CooperationContract[]>();
+    const [selectedContract, setSelectedContract] = useState<CooperationContract>();
     const [isShow, setIsShow] = useState<boolean>(false);
-    const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>(null);
+    const [products, setProducts] = useState<Product[]>();
+
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        reset,
+        getValues,
+        formState: {errors}
+    } = useForm<CooperationContract>();
+    const [selectedContractStatus, setSelectedContractStatus] = useState<ContractStatus>(ContractStatus.PENDING);
+
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [updateCashPerPoint, setUpdateCashPerPoint] = useState<number>(null);
+    const [showAlert, setShowAlert] = useState({
+        open: false,
+        content: null,
+        severity: null
+    });
+
+    const onSubmit = handleSubmit(data => {
+        handleReceiveCreateOrUpdateContract({
+            id: data.id,
+            enterprise: currentEnterprise,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            commissionRate: data.commissionRate,
+            cashPerPoint: data.cashPerPoint,
+            contractStatus: selectedContractStatus
+        }).then((res: string) => {
+            setShowAlert(prevState4 => ({
+                ...prevState4,
+                open: true,
+                content: res,
+                severity: "success"
+            }));
+        }).catch((err: ExceptionResponse) => {
+            if (err.status == 409) {
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: err.errorMessage,
+                    severity: "error"
+                }));
+            }
+        })
+    });
 
     useEffect(() => {
-        let criteria: EnterpriseCooperationContractSearchCriteriaRequest = {
+        let criteria: CooperationContractSearchCriteriaRequest = {
             startDate: null,
             endDate: null,
-            contractStatus: null
+            contractStatus: null,
+            enterpriseId: currentEnterprise.id
         }
-        getCooperationContractForCurrentEnterpriseByCriteria(criteria)
-            .then((resEnterpriseCooperationContracts: EnterpriseCooperationContract[]) => {
-                setEnterpriseCooperationContracts(resEnterpriseCooperationContracts);
-                getCurrentEnterpriseInfo()
-                    .then((resEnterprise: Enterprise) => {
-                        setCurrentEnterprise(resEnterprise);
-                    }).catch((err: ExceptionResponse) => {
+        getCooperationContractByCriteria(criteria)
+            .then((resCooperationContracts: CooperationContract[]) => {
+                setCooperationContracts(resCooperationContracts);
+                // if (resCooperationContracts.length > 0) {
+                //     let newItem: CooperationContract = resCooperationContracts[0];
+                //     setFormValue(newItem);
+                //     setSelectedContract(newItem);
+                //     setSelectedContractStatus(newItem.contractStatus)
+                // }
+                getProductByCriteria({
+                    catalogIdList: [],
+                    enterpriseIdList: [currentEnterprise.id]
+                }).then((resProducts: Product[]) => {
+                    setProducts(resProducts);
+                }).catch((err: ExceptionResponse) => {
                     console.log(err);
-                });
+                }).finally(() => {
+                    setIsShow(true);
+                })
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
             })
-            .finally(() => {
-                setIsShow(true);
-            });
     }, []);
 
-    const handleSearchContract = (criteria: EnterpriseCooperationContractSearchCriteriaRequest) => {
-        getCooperationContractForCurrentEnterpriseByCriteria(criteria)
-            .then((resEnterpriseCoopeartionContracts: EnterpriseCooperationContract[]) => {
-                setEnterpriseCooperationContracts(resEnterpriseCoopeartionContracts);
+    const setFormValue = (newItem: CooperationContract) => {
+        setValue("id", newItem.id);
+        setValue("contractStatus", newItem.contractStatus);
+        setValue("startDate", newItem.startDate);
+        setValue("endDate", newItem.startDate);
+        setValue("cashPerPoint", newItem.cashPerPoint);
+        setValue("commissionRate", newItem.commissionRate);
+    }
+
+    const handleSearchContract = (criteria: CooperationContractSearchCriteriaRequest) => {
+        getCooperationContractByCriteria(criteria)
+            .then((resEnterpriseCoopeartionContracts: CooperationContract[]) => {
+                setCooperationContracts(resEnterpriseCoopeartionContracts);
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
             })
     }
 
+    const handleClickEdit = (id: number) => {
+        let newItem: CooperationContract = cooperationContracts.find(x => x.id == id);
+        setFormValue(newItem);
+        setSelectedContract(newItem);
+        setSelectedContractStatus(newItem.contractStatus);
+        setIsEdit(true);
+    }
+
+
     if (isShow) {
         return (
-            <Box
-                sx={{display: "flex", flexDirection: "column", gap: 2, backgroundColor: "#fff", p: 2, borderRadius: 2}}>
-                <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                    <Typography variant={"h6"} fontWeight={"bold"}>Cooperation contract</Typography>
-                    <Button variant={"outlined"}>Request new</Button>
+            <Stack spacing={2}>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Cooperation Contract"}/>
+                <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
+                     className={"content-box"}>
+                    {
+                        cooperationContracts.length > 0 ? (
+                            <RequestList cooperationContracts={cooperationContracts}
+                                         onClickEdit={(id: number) => handleClickEdit(id)}/>
+                        ) : (
+                            <Typography>You don't have any contracts!</Typography>
+                        )
+                    }
+
                 </Box>
-                <EnterpriseCooperationContractSearch
-                    onSearchContract={(criteria: EnterpriseCooperationContractSearchCriteriaRequest) => handleSearchContract(criteria)}/>
-                <CooperationContractList enterpriseCooperationContracts={enterpriseCooperationContracts}/>
-            </Box>
+                <form className={"content-box"} onSubmit={onSubmit}
+                      style={{display: "flex", gap: "16px", flexDirection: "column", width: "100%"}}>
+                    <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                        <Typography
+                            className={"page-sub-header"}>{isEdit ? "Contract: #" + selectedContract.id : "New Contract"}</Typography>
+                        <Button variant={"contained"}
+                                type={"submit"}>{!isEdit ? "Request create" : 'Request change'}</Button>
+                    </Box>
+                    <Divider/>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <Typography gutterBottom>Start Date</Typography>
+                            <TextField {...register("startDate")} fullWidth size={"small"} disabled={isEdit}
+                                       type={"date"}
+                                       placeholder={"Start Date"}/>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography gutterBottom>End Date</Typography>
+                            <TextField {...register("endDate")} fullWidth size={"small"} type={"date"}/>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography gutterBottom>Commission Rate</Typography>
+                            <TextField {...register("commissionRate")} fullWidth size={"small"}
+                                       type={"number"}/>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography gutterBottom>Cash Per Point</Typography>
+                            <TextField {...register("cashPerPoint")} fullWidth size={"small"}
+                                       onChange={(e: any) => setUpdateCashPerPoint(Number.parseInt(e.target.value))}
+                                       type={"number"}/>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography gutterBottom fontWeight={"bold"}>Status</Typography>
+                            <TextField
+                                select
+                                value={selectedContractStatus}
+                                disabled={selectedContractStatus != ContractStatus.PENDING}
+                                onChange={(e) => setSelectedContractStatus(e.target.value as ContractStatus)}
+                                size={"small"}
+                                sx={{width: "100%"}}
+                            >
+                                {contractStatusOptions.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                    </Grid>
+                    {
+                        showAlert.open && (
+                            <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
+                        )
+                    }
+                </form>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <Typography className={"page-sub-header"}>Current Products Selling</Typography>
+                    <Divider/>
+                    {
+                        products && products.length > 0 ? (
+                            <ProductSellingList products={products} updateCashPerPoint={updateCashPerPoint}
+                                                currentEnterprise={currentEnterprise}/>
+                        ) : (
+                            <Typography>You are still not selling any product yet!</Typography>
+                        )
+                    }
+                </Box>
+            </Stack>
         )
     } else {
         return (

@@ -4,7 +4,7 @@ import {Box, Step, StepConnector, stepConnectorClasses, StepIconProps, StepLabel
 import {Link, useParams} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import {AdminRouter, AssetPath, EnterpriseRouter} from "../../../config/router";
+import {AdminRouter, AssetPath} from "../../../config/router";
 import PageSpinner from "../../common/share/PageSpinner";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {getPurchaseOrderByCriteria, updatePurchaseOrderStatus} from "../../../service/order.service";
@@ -139,7 +139,7 @@ const ProductSummary: React.FC<Props> = ({purchaseOrder}) => {
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Link style={{width: "100%"}}
-                                          to={EnterpriseRouter.productDetailPage + "/" + createSeoLink(purchaseProduct.product.productName) + "." + purchaseProduct.product.id}
+                                          to={AdminRouter.productDetailPage + "/" + createSeoLink(purchaseProduct.product.productName) + "." + purchaseProduct.product.id}
                                           className={"productName"}>{purchaseProduct.product.productName}</Link>
                                 </Grid>
                                 <Grid item xs={1}>
@@ -429,7 +429,7 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
             <Stepper alternativeLabel activeStep={currentOrderStep} connector={<ColorlibConnector/>}>
                 {steps.map((step, index) => (
                     <Step key={index}>
-                        <StepLabel StepIconComponent={ColorlibStepIcon}>
+                        <StepLabel StepIconComponent={ColorlibStepIcon} onClick={() => changeOrderStatus(step)}>
                             {step.label}
                         </StepLabel>
                     </Step>
@@ -439,7 +439,7 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
     )
 }
 
-const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
+const AdminPurchaseOrderDetailPage: React.FC<Props> = () => {
 
     const params: RouteParams = useParams()
     const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>();
@@ -536,4 +536,4 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
     }
 }
 
-export default EnterprisePurchaseOrderDetailPage;
+export default AdminPurchaseOrderDetailPage;

@@ -11,7 +11,6 @@ export const formatVndMoney = (price: number) => {
 
 export const isCurrentScreenIsLoginOrRegisterPage = (currentScreen: string) => {
     let loginRegisterPages: string[] = [EnterpriseRouter.loginPage, EnterpriseRouter.registerPage, AdminRouter.loginPage, CustomerRouter.registerPage, CustomerRouter.loginPage];
-    console.log(currentScreen, loginRegisterPages)
     for (let page of loginRegisterPages) {
         if (currentScreen.includes(page)) {
             return true;

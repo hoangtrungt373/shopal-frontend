@@ -1,8 +1,7 @@
 import {EnterpriseRegisterRequestStatus} from "../enums/EnterpriseRegisterRequestStatus";
-import {Enterprise} from "../Enterprise";
-import {AbstractModel} from "../AbstractModel";
+import {AbstractAnn} from "./AbstractAnn";
 
-export interface EnterpriseRegisterRequestAnn extends AbstractModel {
+export interface EnterpriseRegisterRequestAnn extends AbstractAnn {
     fullName: string;
     position: string;
     workEmail: string;
@@ -13,6 +12,6 @@ export interface EnterpriseRegisterRequestAnn extends AbstractModel {
     registerRequestStatus: EnterpriseRegisterRequestStatus;
     registerRequestStatusDescription: string;
     registerDate: string;
+    taxId: string,
     verificationDate: string;
-    enterprise: Enterprise;
 }

@@ -12,7 +12,7 @@ import {useForm} from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router-dom";
-import {AssetPath, EnterpriseRouter} from "../../../config/router";
+import {AdminRouter, AssetPath} from "../../../config/router";
 import {createSeoLink, formatVndMoney} from "../../../util/display.util";
 import Avatar from "@mui/material/Avatar";
 import PageHeader from "../../common/share/PageHeader";
@@ -266,7 +266,7 @@ const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
                 <GridActionsCellItem
                     label="Detail"
                     showInMenu
-                    onClick={() => history.push(EnterpriseRouter.purchaseOrderManagement + "/" + createSeoLink(params.row.customerFullName + "-" + params.row.customerContactEmail) + "." + params.id)}
+                    onClick={() => history.push(AdminRouter.purchaseOrderDetailPage + "/" + createSeoLink(params.row.customer.fullName + "-" + params.row.customer.contactEmail) + "." + params.id)}
                 />,
             ],
         },

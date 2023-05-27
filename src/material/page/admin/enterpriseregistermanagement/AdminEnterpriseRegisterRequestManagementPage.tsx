@@ -1,12 +1,15 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {Box, Chip, Stack} from "@mui/material";
+import {Alert, Box, Chip, Stack} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
 import {EnterpriseRegisterRequestAnn} from "../../../model/admin/EnterpriseRegisterRequestAnn";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {useHistory} from "react-router-dom";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef} from "@mui/x-data-grid-premium";
-import {getAllEnterpriseRegisterRequest} from "../../../service/enterprise.service";
+import {
+    getAllEnterpriseRegisterRequest,
+    handleAcceptEnterpriseCooperationRequest
+} from "../../../service/enterprise.service";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import {EnterpriseRegisterRequestStatus} from "../../../model/enums/EnterpriseRegisterRequestStatus";
@@ -25,7 +28,7 @@ interface Props {
 
 const breadCrumbItems: BreadcrumbItem[] = [
     {
-        title: "Yêu cầu hợp tác",
+        title: "Cooperation Request",
         isLasted: true
     }
 ]
@@ -82,12 +85,12 @@ const RequestList: React.FC<Props> = ({requests, onClickDetail}) => {
         },
         {
             field: 'enterpriseName',
-            headerName: 'Doanh nghiệp',
+            headerName: 'Enterprise',
             flex: 0.5,
         },
         {
             field: 'registerDate',
-            headerName: 'Ngày đăng ký',
+            headerName: 'Register Date',
             flex: 0.5,
             renderCell(params: GridCellParams) {
 
@@ -98,7 +101,7 @@ const RequestList: React.FC<Props> = ({requests, onClickDetail}) => {
         },
         {
             field: 'status',
-            headerName: 'Trạng thái',
+            headerName: 'Status',
             flex: 0.5,
             renderCell(params: GridCellParams) {
 
@@ -160,6 +163,11 @@ const AdminEnterpriseRegisterRequestManagementPage: React.FC<Props> = ({}) => {
         getValues,
         formState: {errors}
     } = useForm<EnterpriseRegisterRequestAnn>();
+    const [showAlert, setShowAlert] = useState({
+        open: false,
+        content: null,
+        severity: null
+    });
 
     useEffect(() => {
         getAllEnterpriseRegisterRequest()
@@ -193,14 +201,39 @@ const AdminEnterpriseRegisterRequestManagementPage: React.FC<Props> = ({}) => {
     }
 
     const onSubmit = handleSubmit(data => {
-        console.log(data)
+        handleAcceptEnterpriseCooperationRequest(selectedRequest)
+            .then((res: string) => {
+                let updateSelectedRequest: EnterpriseRegisterRequestAnn = selectedRequest;
+                updateSelectedRequest.registerRequestStatus = EnterpriseRegisterRequestStatus.ACCEPT;
+                setSelectedRequest(updateSelectedRequest);
+
+                let updateEnterpriseRegisterRequests = [...enterpriseRegisterRequests];
+                updateEnterpriseRegisterRequests.find(x => x.id == updateSelectedRequest.id).registerRequestStatus = EnterpriseRegisterRequestStatus.ACCEPT;
+                setEnterpriseRegisterRequests([...updateEnterpriseRegisterRequests])
+
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: res,
+                    severity: "success"
+                }));
+            }).catch((err: ExceptionResponse) => {
+            if (err.status == 409) {
+                setShowAlert(prevState4 => ({
+                    ...prevState4,
+                    open: true,
+                    content: err.errorMessage,
+                    severity: "error"
+                }));
+            }
+        })
     });
 
 
     if (isShow) {
         return (
             <Stack spacing={2}>
-                <PageHeader breadCrumbItems={breadCrumbItems} title={"Yêu cầu hợp tác"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Cooperation Request"}/>
                 <Stack direction="row" spacing={2}>
                     <Box sx={{width: "50%", display: "flex", flexDirection: "column", gap: 2}}
                          className={"content-box"}>
@@ -216,61 +249,80 @@ const AdminEnterpriseRegisterRequestManagementPage: React.FC<Props> = ({}) => {
                         <form onSubmit={onSubmit}>
                             <Grid container spacing={2}>
                                 <Grid item xs={6}>
-                                    <Typography gutterBottom>Họ và tên </Typography>
+                                    <Typography gutterBottom>Full Name</Typography>
                                     <TextField
                                         {...register("fullName")}
-                                        fullWidth
+                                        fullWidth disabled={true}
                                         size={"small"}/>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography gutterBottom>Chức vụ</Typography>
+                                    <Typography gutterBottom>Position</Typography>
                                     <TextField
                                         {...register("position")}
-                                        fullWidth
+                                        fullWidth disabled={true}
                                         size={"small"}/>
                                 </Grid>
                                 <Grid item xs={8} style={{position: "relative"}}>
-                                    <Typography gutterBottom>Email công ty</Typography>
+                                    <Typography gutterBottom>Email</Typography>
                                     <TextField
                                         {...register("workEmail")}
-                                        fullWidth
+                                        fullWidth disabled={true}
                                         size={"small"}
                                         type={"email"}/>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <Typography gutterBottom>Số điện thoại</Typography>
+                                    <Typography gutterBottom>Phone Number</Typography>
                                     <TextField
                                         {...register("phoneNumber")}
-                                        fullWidth
+                                        fullWidth disabled={true}
                                         size={"small"}/>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography gutterBottom>Địa chỉ công ty</Typography>
+                                    <Typography gutterBottom>Address</Typography>
                                     <TextField
-                                        fullWidth
+                                        fullWidth disabled={true}
                                         {...register("enterpriseAddress")}
                                         size={"small"}/>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography gutterBottom>Tên công ty</Typography>
+                                    <Typography gutterBottom>Enterprise Name</Typography>
                                     <TextField
                                         {...register("enterpriseName")}
-                                        fullWidth
+                                        fullWidth disabled={true}
                                         size={"small"}/>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography gutterBottom>Địa chỉ website</Typography>
+                                    <Typography gutterBottom>Wensite</Typography>
                                     <TextField
                                         {...register("enterpriseWebsite")}
                                         fullWidth
                                         size={"small"}/>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <Button type={"submit"} variant={"contained"} fullWidth>Chấp nhận</Button>
+                                <Grid item xs={12}>
+                                    <Typography gutterBottom>Tax ID</Typography>
+                                    <TextField
+                                        {...register("taxId")}
+                                        fullWidth disabled={true}
+                                        size={"small"}/>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button type={"submit"} variant={"outlined"} fullWidth>Yêu cầu thêm thông
-                                        tin</Button>
+                                    <Button type={"submit"} variant={"contained"}
+                                            color={selectedRequest.registerRequestStatus == EnterpriseRegisterRequestStatus.RECEIVED ? "primary" : "success"}
+                                            fullWidth
+                                            disabled={selectedRequest.registerRequestStatus == EnterpriseRegisterRequestStatus.ACCEPT}
+                                    >{selectedRequest.registerRequestStatus == EnterpriseRegisterRequestStatus.RECEIVED ? "Accept" : "Accepted"}</Button>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Button variant={"outlined"} fullWidth
+                                            disabled={selectedRequest.registerRequestStatus == EnterpriseRegisterRequestStatus.ACCEPT}
+                                    >Request more info</Button>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    {
+                                        showAlert.open && (
+                                            <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
+                                        )
+                                    }
                                 </Grid>
                             </Grid>
                         </form>

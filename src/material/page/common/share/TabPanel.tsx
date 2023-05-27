@@ -1,8 +1,9 @@
 import {Box, Typography} from "@mui/material";
 import {TabPanelProps} from "../../../model/common/TabPanelProps";
+import {isNotNull} from "../../../util/object.util";
 
 export function TabPanel(props: TabPanelProps) {
-    const {children, value, index, ...other} = props;
+    const {children, value, index, padding, ...other} = props;
 
     return (
         <div
@@ -13,7 +14,7 @@ export function TabPanel(props: TabPanelProps) {
             {...other}
         >
             {value === index && (
-                <Box sx={{p: 3}}>
+                <Box sx={{p: isNotNull(padding) ? padding : 3}}>
                     <Typography>{children}</Typography>
                 </Box>
             )}

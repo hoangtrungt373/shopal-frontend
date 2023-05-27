@@ -367,7 +367,7 @@ const ProductInfo: React.FC<Props> = ({
     )
 }
 
-const ProductDetailInfo: React.FC<Props> = ({productDetail}) => {
+export const ProductDetailInfo: React.FC<Props> = ({productDetail}) => {
 
     const [value, setValue] = React.useState(0);
 

@@ -1,8 +1,15 @@
 import {AbstractModel} from "./AbstractModel";
-import {EnterpriseCooperationContract} from "./enterprise/EnterpriseCooperationContract";
+import {CooperationContract} from "./CooperationContract";
 
 export interface Enterprise extends AbstractModel {
     enterpriseName: string;
     logoUrl: string;
-    contract: EnterpriseCooperationContract
+    uploadLogoUrl: any,
+    phoneNumber: string,
+    address: string,
+    websiteUrl: string,
+    joinDate: string,
+    contract: CooperationContract,
+    contactEmail: string,
+    taxId: string
 }

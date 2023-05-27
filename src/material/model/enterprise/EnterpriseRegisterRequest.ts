@@ -6,6 +6,8 @@ export interface EnterpriseRegisterRequest {
     enterpriseAddress?: string,
     enterpriseName?: string;
     enterpriseWebsite?: string
+    taxId?: string,
+    contactEmail?: string,
     guiOtp?: string,
     serverOtp?: string
 }

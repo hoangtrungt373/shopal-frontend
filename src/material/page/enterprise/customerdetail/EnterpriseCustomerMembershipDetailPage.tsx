@@ -69,7 +69,7 @@ const EnterpriseCustomerMembershipDetailPage: React.FC<Props> = ({currentEnterpr
             <Box sx={{display: "flex", flexDirection: "column"}}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Customer Detail"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                    <Typography className={"page-sub-header"}>Customer Detail: #{customerAllInfo.id}</Typography>
+                    <Typography className={"page-sub-header"}>Customer: #{customerAllInfo.id}</Typography>
                     <Divider style={{marginLeft: "-16px", marginRight: "-16px"}}/>
                     <Stack
                         direction="row"

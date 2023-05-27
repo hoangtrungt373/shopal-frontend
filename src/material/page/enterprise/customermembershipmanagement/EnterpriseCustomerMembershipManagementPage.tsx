@@ -181,7 +181,7 @@ const CustomerAllInfoTable: React.FC<Props> = ({customerAllInfos, currentEnterpr
                 <GridActionsCellItem
                     label="Detail"
                     showInMenu
-                    onClick={() => history.push(EnterpriseRouter.customerMembershipManagementPage + "/" + createSeoLink(params.row.fullName + "-" + params.row.contactEmail) + "." + params.id)}
+                    onClick={() => history.push(EnterpriseRouter.customerMembershipDetailPage + "/" + createSeoLink(params.row.fullName + "-" + params.row.contactEmail) + "." + params.id)}
                 />,
             ],
         },
@@ -259,7 +259,8 @@ const EnterpriseCustomerMembershipManagementPage: React.FC<Props> = ({currentEnt
                         onSearchCustomer={(criteria: CustomerSearchCriteriaRequest) => handleSearchCustomer(criteria)}/>
                 </Box>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                    <CustomerAllInfoTable customerAllInfos={customerAllInfos} currentEnterprise={currentEnterprise}/>
+                    <CustomerAllInfoTable customerAllInfos={customerAllInfos}
+                                          currentEnterprise={currentEnterprise}/>
                 </Box>
             </Stack>
         );

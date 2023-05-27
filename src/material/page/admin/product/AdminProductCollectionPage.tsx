@@ -408,7 +408,7 @@ const ProductList: React.FC<Props> = ({products}) => {
                 <GridActionsCellItem
                     label="Detail"
                     showInMenu
-                    onClick={() => history.push(AdminRouter.productCollectionPage + "/" + createSeoLink(params.row.productName) + "." + params.id)}
+                    onClick={() => history.push(AdminRouter.productDetailPage + "/" + createSeoLink(params.row.productName) + "." + params.id)}
                 />,
                 <GridActionsCellItem
                     label="Edit"

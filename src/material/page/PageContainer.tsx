@@ -33,7 +33,6 @@ import EnterpriseCooperationContractManagementPage
 import Toolbar from "@mui/material/Toolbar";
 import EnterpriseAccountingPage from "./enterprise/accounting/EnterpriseAccountingPage";
 import EnterpriseAccountingDetailPage from "./enterprise/accountingdetail/EnterpriseAccountingDetailPage";
-import EnterprisePurchaseOrderDetailPage from "./enterprise/orderdetail/EnterprisePurchaseOrderDetailPage";
 import EnterpriseProductCollectionPage from "./enterprise/product/EnterpriseProductCollectionPage";
 import EnterpriseProductDetailPage from "./enterprise/productdetail/EnterpriseProductDetailPage";
 import AdminCreateOrUpdateProductPage from "./admin/newproduct/AdminCreateOrUpdateProductPage";
@@ -59,16 +58,28 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import GroupIcon from '@mui/icons-material/Group';
 import AdminEnterpriseManagementPage from "./admin/enterprises/AdminEnterpriseManagementPage";
-import AdminEnterpriseRegisterRequestManagementPage
-    from "./admin/enterpriseregistermanagement/AdminEnterpriseRegisterRequestManagementPage";
 import '../../theme.scss'
 import EnterpriseDashboardPage from "./enterprise/dashboard/EnterpriseDashboardPage";
 import AdminCustomerManagementPage from "./admin/customermanagement/AdminCustomerManagementPage";
 import AdminCustomerDetailPage from "./admin/customerdetail/AdminCustomerDetailPage";
 import EnterpriseCustomerMembershipManagementPage
-    from './enterprise/customermanagement/EnterpriseCustomerMembershipManagementPage';
+    from './enterprise/customermembershipmanagement/EnterpriseCustomerMembershipManagementPage';
 import {getCurrentEnterpriseInfo} from "../service/enterprise.service";
 import EnterpriseCustomerMembershipDetailPage from "./enterprise/customerdetail/EnterpriseCustomerMembershipDetailPage";
+import EnterpriseCustomerRegisterManagementPage
+    from "./enterprise/customerregistermanagement/EnterpriseCustomerRegisterManagementPage";
+import AdminPurchaseOrderDetailPage from "./admin/orderdetail/AdminPurchaseOrderDetailPage";
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import EnterpriseNotificationPage from "./enterprise/notification/EnterpriseNotificationPage";
+import EnterprisePurchaseOrderDetailPage from "./enterprise/orderdetail/EnterprisePurchaseOrderDetailPage";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import EnterpriseProfilePage from "./enterprise/profile/EnterpriseProfilePage";
+import AdminEnterpriseRegisterRequestManagementPage
+    from "./admin/enterpriseregistermanagement/AdminEnterpriseRegisterRequestManagementPage";
+import AdminCooperationContractRequestManagementPage
+    from "./admin/contractrequestmanagement/AdminCooperationContractRequestManagementPage";
+import AdminProductSellingRequestManagementPage
+    from './admin/requestsellingproductmanagement/AdminProductSellingRequestManagementPage';
 
 const theme = createTheme({
     typography: {
@@ -128,7 +139,7 @@ const adminListItems: SideBarListItem[] = [
         subItems: [
             {
                 title: "Cooperation Requests",
-                url: AdminRouter.enterpriseCooperationRequestManagement,
+                url: AdminRouter.enterpriseRegisterRequestManagement,
             },
             {
                 title: "Enterprise List",
@@ -152,18 +163,31 @@ const adminListItems: SideBarListItem[] = [
             {
                 title: "Product List",
                 url: AdminRouter.productCollectionPage,
+            },
+            {
+                title: "Request sell",
+                url: AdminRouter.requestSellingProductManagement,
             }
         ]
     },
     {
         title: "ORDERS",
         icon: <ShoppingCartIcon/>,
-        url: AdminRouter.purchaseOrderManagement
+        url: AdminRouter.purchaseOrderManagementPage
     },
     {
         title: "CONTRACTS",
         icon: <LocalOfferIcon/>,
-        url: "*"
+        subItems: [
+            {
+                title: "Contract Request",
+                url: AdminRouter.cooperationContractRequestManagement,
+            },
+            {
+                title: "Contract List",
+                url: AdminRouter.enterpriseManagement,
+            }
+        ]
     },
     {
         title: "ACCOUNTINGS",
@@ -180,6 +204,11 @@ const enterpriseListItems: SideBarListItem[] = [
         icon: <DashboardIcon/>,
     },
     {
+        title: "PROFILE",
+        url: EnterpriseRouter.profilePage,
+        icon: <AccountBoxIcon/>,
+    },
+    {
         title: "CUSTOMERS",
         icon: <GroupIcon/>,
         subItems: [
@@ -189,7 +218,7 @@ const enterpriseListItems: SideBarListItem[] = [
             },
             {
                 title: "Register Customers",
-                url: "*",
+                url: EnterpriseRouter.customerRegisterManagementPage
             }
         ]
     },
@@ -213,6 +242,11 @@ const enterpriseListItems: SideBarListItem[] = [
         url: EnterpriseRouter.accounting,
         icon: <ReceiptIcon/>
     },
+    {
+        title: "NOTIFICATIONS",
+        url: EnterpriseRouter.notificationPage,
+        icon: <NotificationsNoneIcon/>
+    },
 
 ]
 
@@ -232,7 +266,6 @@ const PageContainer = () => {
             if (localStorage.getItem(CURRENT_USER_ROLE) == UserRole.CUSTOMER) {
                 getCurrentCustomerInfo()
                     .then((resCustomer: Customer) => {
-                        console.log(resCustomer)
                         setCurrentCustomer(resCustomer);
                     })
                     .catch((err: ExceptionResponse) => {
@@ -268,16 +301,23 @@ const PageContainer = () => {
                         <CssBaseline/>
                         <Route path={EnterpriseRouter.loginPage} component={EnterpriseLoginPage}/>
                         <Box sx={{display: 'flex'}}>
-                            {
-                                !isCurrentScreenIsLoginOrRegisterPage(window.location.href) && (
-                                    <React.Fragment>
-                                        <AdminAppBar open={open} toggleDrawer={toggleDrawer}
-                                                     userRole={UserRole.ENTERPRISE_MANAGER}/>
-                                        <AdminDrawer open={open} toggleDrawer={toggleDrawer}
-                                                     content={<MainSideBarListItem items={enterpriseListItems}/>}/>
-                                    </React.Fragment>
-                                )
-                            }
+                            <Route
+                                path={[EnterpriseRouter.dashboardPage, EnterpriseRouter.customerRegisterManagementPage, EnterpriseRouter.customerMembershipManagementPage,
+                                    EnterpriseRouter.customerMembershipDetailPage + "/*", EnterpriseRouter.purchaseOrderManagement,
+                                    EnterpriseRouter.productCollectionPage, EnterpriseRouter.productDetailPage + "/*", EnterpriseRouter.cooperationContractManagement, EnterpriseRouter.accounting + "/*",
+                                    EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage]}
+                                exact
+                                component={() => (<AdminAppBar open={open} toggleDrawer={toggleDrawer}
+                                                               userRole={UserRole.ENTERPRISE_MANAGER}/>)}/>
+                            <Route
+                                path={[EnterpriseRouter.dashboardPage, EnterpriseRouter.customerRegisterManagementPage, EnterpriseRouter.customerMembershipManagementPage,
+                                    EnterpriseRouter.customerMembershipDetailPage + "/*", EnterpriseRouter.purchaseOrderManagement,
+                                    EnterpriseRouter.productCollectionPage, EnterpriseRouter.productDetailPage + "/*", EnterpriseRouter.cooperationContractManagement, EnterpriseRouter.accounting + "/*",
+                                    EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage]}
+                                exact
+                                component={() => (<AdminDrawer open={open} toggleDrawer={toggleDrawer}
+                                                               content={<MainSideBarListItem
+                                                                   items={enterpriseListItems}/>}/>)}/>
                             <Box
                                 component="main"
                                 sx={{
@@ -295,35 +335,50 @@ const PageContainer = () => {
                                                 <Switch>
                                                     <PrivateRoute path={EnterpriseRouter.dashboardPage}
                                                                   component={EnterpriseDashboardPage} exact/>
+                                                    <PrivateRoute path={EnterpriseRouter.profilePage}
+                                                                  currentEnterprise={currentEnterprise}
+                                                                  component={EnterpriseProfilePage} exact/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.customerMembershipManagementPage}
                                                         component={EnterpriseCustomerMembershipManagementPage} exact
                                                         currentEnterprise={currentEnterprise}/>
                                                     <PrivateRoute
-                                                        path={EnterpriseRouter.customerMembershipManagementPage + "/*.:customerId"}
+                                                        path={EnterpriseRouter.customerRegisterManagementPage}
+                                                        component={EnterpriseCustomerRegisterManagementPage} exact
+                                                        currentEnterprise={currentEnterprise}/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.customerMembershipDetailPage + "/*.:customerId"}
                                                         component={EnterpriseCustomerMembershipDetailPage} exact
                                                         currentEnterprise={currentEnterprise}/>
                                                     <PrivateRoute path={EnterpriseRouter.purchaseOrderManagement}
                                                                   component={EnterprisePurchaseOrderManagementPage}
+                                                                  currentEnterprise={currentEnterprise}
                                                                   exact/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.purchaseOrderDetailPage + "/*.:purchaseOrderId"}
+                                                        component={EnterprisePurchaseOrderDetailPage}
+                                                        currentEnterprise={currentEnterprise}
+                                                        exact/>
                                                     <PrivateRoute path={EnterpriseRouter.productCollectionPage}
                                                                   component={EnterpriseProductCollectionPage}
                                                                   exact/>
                                                     <PrivateRoute
-                                                        path={EnterpriseRouter.productCollectionPage + "/*.:productId"}
+                                                        path={EnterpriseRouter.productDetailPage + "/*.:productId"}
                                                         component={EnterpriseProductDetailPage} exact/>
-                                                    <PrivateRoute
-                                                        path={EnterpriseRouter.purchaseOrderManagement + "/*.:purchaseOrderId"}
-                                                        component={EnterprisePurchaseOrderDetailPage}/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.cooperationContractManagement}
                                                         component={EnterpriseCooperationContractManagementPage}
+                                                        currentEnterprise={currentEnterprise}
                                                         exact/>
                                                     <PrivateRoute path={EnterpriseRouter.accounting}
                                                                   component={EnterpriseAccountingPage} exact/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.accounting + "/*.:accountingId"}
                                                         component={EnterpriseAccountingDetailPage}/>
+                                                    <PrivateRoute
+                                                        path={EnterpriseRouter.notificationPage}
+                                                        component={EnterpriseNotificationPage}
+                                                        currentEnterprise={currentEnterprise}/>
                                                 </Switch>
                                             </Box>
                                         </Grid>
@@ -387,17 +442,28 @@ const PageContainer = () => {
                                                     <PrivateRoute path={AdminRouter.enterpriseManagement}
                                                                   component={AdminEnterpriseManagementPage} exact/>
                                                     <PrivateRoute
-                                                        path={AdminRouter.enterpriseCooperationRequestManagement}
-                                                        component={AdminEnterpriseRegisterRequestManagementPage}
+                                                        path={AdminRouter.enterpriseRegisterRequestManagement}
+                                                        component={AdminEnterpriseRegisterRequestManagementPage} exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.cooperationContractRequestManagement}
+                                                        component={AdminCooperationContractRequestManagementPage}
+                                                        exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.requestSellingProductManagement}
+                                                        component={AdminProductSellingRequestManagementPage}
                                                         exact/>
                                                     <PrivateRoute path={AdminRouter.productCollectionPage}
                                                                   component={AdminProductCollectionPage}
                                                                   exact/>
-                                                    <PrivateRoute path={AdminRouter.purchaseOrderManagement}
+                                                    <PrivateRoute path={AdminRouter.purchaseOrderManagementPage}
                                                                   component={AdminPurchaseOrderManagementPage}
                                                                   exact/>
                                                     <PrivateRoute
-                                                        path={AdminRouter.productCollectionPage + "/*.:productId"}
+                                                        path={AdminRouter.purchaseOrderDetailPage + "/*.:purchaseOrderId"}
+                                                        component={AdminPurchaseOrderDetailPage}
+                                                        exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.productDetailPage + "/*.:productId"}
                                                         component={AdminProductDetailPage} exact/>
                                                     <PrivateRoute path={AdminRouter.newProductPage}
                                                                   component={AdminCreateOrUpdateProductPage} exact/>
