@@ -13,6 +13,8 @@ export interface PurchaseOrder extends AbstractModel {
     orderStatus: string,
     orderStatusDescription: string,
     deliveryDate: string,
+    cancelDate: string,
+    cancelCode: string,
     orderTotalCash: number
     purchaseProducts: PurchaseOrderDetail[];
 }

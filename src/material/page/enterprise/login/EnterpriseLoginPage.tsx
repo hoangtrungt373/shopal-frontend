@@ -48,7 +48,7 @@ const EnterpriseLoginPage: React.FC<Props> = () => {
                 window.location.pathname = EnterpriseRouter.dashboardPage
             }).catch((err: ExceptionResponse) => {
             console.log(err);
-            if (err.status == 401) {
+            if (err.status == 401 || err.status == 409) {
                 setErrors(prev => ({...prev, password: "Email hoặc Password không chính xác"}))
             } else {
                 console.log(err);

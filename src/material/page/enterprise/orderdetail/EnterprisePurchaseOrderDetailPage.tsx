@@ -21,6 +21,8 @@ import {createSeoLink, formatVndMoney} from "../../../util/display.util";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
 import PageHeader from "../../common/share/PageHeader";
 import {PurchaseOrder} from "../../../model/PurchaseOrder";
+import {cancelReasonOptions} from "../../customer/orderhistory/CustomerPurchaseOrderHistoryPage";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface RouteParams {
     purchaseOrderId: any;
@@ -263,10 +265,14 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
                 setCurrentOrderStep(3);
                 break;
             }
+            case OrderStatus.CANCELLED: {
+                setCurrentOrderStep(2);
+                break;
+            }
         }
     }, [purchaseOrder])
 
-    const steps: OrderStatusStep[] = [
+    const orderStatusSteps: OrderStatusStep[] = [
         {
             label: "Open",
             value: OrderStatus.OPEN
@@ -282,6 +288,17 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
         {
             label: "Delivered",
             value: OrderStatus.DELIVERED
+        },
+    ];
+
+    const orderStatusCancelSteps: OrderStatusStep[] = [
+        {
+            label: "Open",
+            value: OrderStatus.OPEN
+        },
+        {
+            label: "Cancelled",
+            value: OrderStatus.CANCELLED
         },
     ];
 
@@ -329,7 +346,7 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
         }),
     }));
 
-    function ColorlibStepIcon(props: StepIconProps) {
+    function OrderColorlibStepIcon(props: StepIconProps) {
         const {active, completed, className} = props;
 
         const icons: { [index: string]: React.ReactElement } = {
@@ -337,6 +354,21 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
             2: <LoopOutlinedIcon/>,
             3: <LocalShippingOutlinedIcon/>,
             4: <HailOutlinedIcon/>,
+        };
+
+        return (
+            <ColorlibStepIconRoot ownerState={{completed, active}} className={className}>
+                {icons[String(props.icon)]}
+            </ColorlibStepIconRoot>
+        );
+    }
+
+    function OrderCancelColorlibStepIcon(props: StepIconProps) {
+        const {active, completed, className} = props;
+
+        const icons: { [index: string]: React.ReactElement } = {
+            1: <ShoppingCartOutlinedIcon/>,
+            2: <CancelIcon/>,
         };
 
         return (
@@ -426,15 +458,31 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
                 <Typography align={"center"}>Status: Checking Quality</Typography>
                 <Typography align={"center"}>Expected Date: DEC 09, 2021</Typography>
             </Box>
-            <Stepper alternativeLabel activeStep={currentOrderStep} connector={<ColorlibConnector/>}>
-                {steps.map((step, index) => (
-                    <Step key={index}>
-                        <StepLabel StepIconComponent={ColorlibStepIcon}>
-                            {step.label}
-                        </StepLabel>
-                    </Step>
-                ))}
-            </Stepper>
+            {
+                OrderStatus.CANCELLED != purchaseOrder.orderStatus ? (
+                    <Stepper alternativeLabel activeStep={currentOrderStep} connector={<ColorlibConnector/>}>
+                        {orderStatusSteps.map((step, index) => (
+                            <Step key={index}>
+                                <StepLabel StepIconComponent={OrderColorlibStepIcon}
+                                           onClick={() => changeOrderStatus(step)}>
+                                    {step.label}
+                                </StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                ) : (
+                    <Stepper alternativeLabel activeStep={currentOrderStep} connector={<ColorlibConnector/>}>
+                        {orderStatusCancelSteps.map((step, index) => (
+                            <Step key={index}>
+                                <StepLabel StepIconComponent={OrderCancelColorlibStepIcon}
+                                           onClick={() => changeOrderStatus(step)}>
+                                    {step.label}
+                                </StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                )
+            }
         </Box>
     )
 }
@@ -519,6 +567,17 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
                                 <Box sx={{display: "flex", flexDirection: "column"}}>
                                     <Typography>Order Date: {purchaseOrder.orderDate}</Typography>
                                     <Typography>Delivery Date: {purchaseOrder.deliveryDate}</Typography>
+                                    {
+                                        OrderStatus.CANCELLED == purchaseOrder.orderStatus ? (
+                                            <Typography>Cancel Date: {purchaseOrder.cancelDate}</Typography>
+                                        ) : null
+                                    }
+                                    {
+                                        OrderStatus.CANCELLED == purchaseOrder.orderStatus ? (
+                                            <Typography>Cancel
+                                                Reason: {cancelReasonOptions.find(x => x.code == purchaseOrder.cancelCode).description}</Typography>
+                                        ) : null
+                                    }
                                 </Box>
                             }/>
                         </Grid>

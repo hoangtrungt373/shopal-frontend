@@ -17,7 +17,7 @@ export const CustomerLoginHeader: React.FC<Props> = ({title}) => {
             <Stack direction={"row"} spacing={3} alignItems={"center"}>
                 <Box>
                     <Link to={CustomerRouter.homePage}><img src={AssetPath.webLogoUrl} alt={"img"}
-                                                            width={"70px"}/></Link>
+                                                            width={"140px"}/></Link>
                 </Box>
                 <Typography fontSize={"24px"} fontWeight={500} align={"left"}>{title}</Typography>
                 <Link to={"#"} style={{

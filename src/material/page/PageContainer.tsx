@@ -80,6 +80,7 @@ import AdminCooperationContractRequestManagementPage
     from "./admin/contractrequestmanagement/AdminCooperationContractRequestManagementPage";
 import AdminProductSellingRequestManagementPage
     from './admin/requestsellingproductmanagement/AdminProductSellingRequestManagementPage';
+import {CustomerCheckoutHeader} from "./common/customer/CustomerCheckoutHeader";
 
 const theme = createTheme({
     typography: {
@@ -308,6 +309,7 @@ const PageContainer = () => {
                                     EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage]}
                                 exact
                                 component={() => (<AdminAppBar open={open} toggleDrawer={toggleDrawer}
+                                                               currentEnterprise={currentEnterprise}
                                                                userRole={UserRole.ENTERPRISE_MANAGER}/>)}/>
                             <Route
                                 path={[EnterpriseRouter.dashboardPage, EnterpriseRouter.customerRegisterManagementPage, EnterpriseRouter.customerMembershipManagementPage,
@@ -406,7 +408,8 @@ const PageContainer = () => {
                             {
                                 !isCurrentScreenIsLoginOrRegisterPage(window.location.href) && (
                                     <React.Fragment>
-                                        <AdminAppBar open={open} toggleDrawer={toggleDrawer} userRole={UserRole.ADMIN}/>
+                                        <AdminAppBar open={open} toggleDrawer={toggleDrawer} userRole={UserRole.ADMIN}
+                                                     currentEnterprise={null}/>
                                         <AdminDrawer open={open} toggleDrawer={toggleDrawer}
                                                      content={<MainSideBarListItem items={adminListItems}/>}/>
                                     </React.Fragment>
@@ -489,9 +492,14 @@ const PageContainer = () => {
                         <CssBaseline/>
                         <Route
                             path={[CustomerRouter.homePage, CustomerRouter.productCollectionPage, CustomerRouter.productDetailPage + "/*",
-                                CustomerRouter.cartPage, CustomerRouter.checkoutPage, CustomerRouter.dashBoardPage + "/*"]}
+                                CustomerRouter.cartPage, CustomerRouter.dashBoardPage, CustomerRouter.membershipPage, CustomerRouter.purchasedOrderHistory,
+                                CustomerRouter.updateEmailPage, CustomerRouter.updatePhoneNumberPage]}
                             exact
                             component={() => (<CustomerHomeHeader currentCustomer={currentCustomer}/>)}/>
+                        <Route
+                            path={[CustomerRouter.checkoutPage, CustomerRouter.checkoutSuccess]}
+                            exact
+                            component={() => (<CustomerCheckoutHeader/>)}/>
 
                         <Switch>
                             <Route path={CustomerRouter.registerPage} component={CustomerRegisterPage}/>

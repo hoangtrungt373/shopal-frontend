@@ -16,16 +16,17 @@ export const CartEmpty: React.FC<Props> = ({}) => {
             width: "100%",
             backgroundColor: "#fff",
             borderRadius: 2,
-            height: "300px",
+            height: "500px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 2
+            gap: 2,
+            padding: "24px"
         }}>
-            <img src={AssetPath.cartEmptyImg} alt={"cart-empty"} width={"200px"}/>
-            <Typography>{isAuthenticated() ? "There is no item in your cart" : "Please login to add item in your cart"}</Typography>
-            <Link to={"/"}><Button variant="contained" size={"small"} color={"secondary"}>Continue
+            <img src={AssetPath.cartEmptyImg} alt={"cart-empty"} width={"300px"}/>
+            <Typography>{isAuthenticated() ? "Bạn không có sản phẩm nào trong giỏ hàng" : "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng"}</Typography>
+            <Link to={"/"}><Button variant="contained" color={"secondary"}>Continue
                 shopping</Button></Link>
         </Box>
     )

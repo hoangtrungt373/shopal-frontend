@@ -22,6 +22,5 @@ export function groupProductCartsByEnterprise(productCarts: ProductCart[]) {
             productCartGroupByEnterprises.push(productCartGroupByEnterprise);
         }
     })
-    console.log(productCartGroupByEnterprises)
     return productCartGroupByEnterprises;
 }

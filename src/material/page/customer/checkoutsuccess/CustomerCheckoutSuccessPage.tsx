@@ -33,7 +33,8 @@ export const CustomerCheckoutSuccessPage: React.FC<Props> = () => {
         }}>
             <img src={AssetPath.orderSuccessImg} alt={"cart-empty"} width={"300px"}/>
             <Typography>Bạn đã đặt hàng thành công. <Link to={CustomerRouter.purchasedOrderHistory}
-                                                          style={{fontSize: "16px !important"}}>Nhấp vào đây để vào
+                                                          style={{fontSize: "16px", color: "var(--bluebreak-600)"}}>Nhấp
+                vào đây để vào
                 trang quản lý đơn hàng</Link></Typography>
         </Box>
     );

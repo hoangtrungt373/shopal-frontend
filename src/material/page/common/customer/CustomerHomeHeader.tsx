@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import {isAuthenticated} from "../../../util/auth.util";
 import {Customer} from "../../../model/Customer";
 import './CustomerHomeHeader.scss'
-import {InputBase, Stack} from "@mui/material";
+import {Badge, InputBase, Stack} from "@mui/material";
 import {logout} from "../../../service/auth.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {ProductSearchPath} from "../../../model/request/ProductSearchPath";
@@ -17,7 +17,9 @@ import {ShoppingCartOutlined} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import SearchIcon from '@mui/icons-material/Search';
-import {isCurrentScreenIsLoginOrRegisterPage, removeExtensionEmail} from "../../../util/display.util";
+import {removeExtensionEmail} from "../../../util/display.util";
+import {getCurrentCustomerCart} from "../../../service/cart.service";
+import {Cart} from "../../../model/Cart";
 
 interface Props {
     currentCustomer?: Customer,
@@ -27,7 +29,7 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
 
     const [isShow, setIsShow] = useState<boolean>(false);
     const [keyword, setKeyword] = useState<string>();
-
+    const [amountProductCart, setAmountProductCart] = useState<number>(0);
     const history = useHistory();
 
     const handleChange = (e) => {
@@ -60,7 +62,20 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
     }
 
     useEffect(() => {
-        setIsShow(!isCurrentScreenIsLoginOrRegisterPage(window.location.href));
+        if (isAuthenticated()) {
+            getCurrentCustomerCart()
+                .then((cartRes: Cart) => {
+                    setAmountProductCart(cartRes.productCarts.length)
+                })
+                .catch((err: ExceptionResponse) => {
+                    console.log(err);
+                }).finally(() => {
+                setIsShow(true);
+            });
+        } else {
+            setAmountProductCart(0);
+            setIsShow(true)
+        }
     }, [window.location.href])
 
     return (
@@ -103,7 +118,7 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
             <Stack direction={"row"} spacing={2} alignItems={"center"}>
                 <Box width={"13%"}>
                     <Link to={CustomerRouter.homePage}><img src={AssetPath.webLogoUrl} alt={"img"}
-                                                            width={"70px"}/></Link>
+                                                            width={"140px"}/></Link>
                 </Box>
                 <Box
                     sx={{
@@ -126,9 +141,15 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
                             onClick={() => searchProductByKeyword()}>Tìm kiếm</Button>
                 </Box>
                 <Box width={"13%"}>
-                    <Link to={CustomerRouter.cartPage} className={"cart-icon"}>
-                        <ShoppingCartOutlined style={{color: "var(--bluebreak-600)", fontSize: "24px"}}/>
-                    </Link>
+                    {
+                        isShow && (
+                            <Link to={CustomerRouter.cartPage} className={"cart-icon"}>
+                                <Badge badgeContent={amountProductCart} color="primary">
+                                    <ShoppingCartOutlined style={{color: "var(--bluebreak-600)", fontSize: "24px"}}/>
+                                </Badge>
+                            </Link>
+                        )
+                    }
                 </Box>
             </Stack>
         </Stack>

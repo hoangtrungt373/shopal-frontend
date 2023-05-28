@@ -7,12 +7,13 @@ interface Props {
     title: string,
     logoUrl: string,
     height: number,
-    width: number
+    width: number,
+    style?: any
 }
 
-export const EnterpriseLogo: React.FC<Props> = ({title, logoUrl, height, width}) => {
+export const EnterpriseLogo: React.FC<Props> = ({title, logoUrl, height, width, style}) => {
     return (
-        <Tooltip title={title}>
+        <Tooltip title={title} style={style}>
             <Avatar alt="img"
                     src={AssetPath.enterpriseLogoUrl + logoUrl}
                     sx={{width: width, height: height}}/>

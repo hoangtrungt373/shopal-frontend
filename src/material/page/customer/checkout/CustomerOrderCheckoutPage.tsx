@@ -26,6 +26,8 @@ import PageSpinner from "../../common/share/PageSpinner";
 import AlertDialog from "../../common/share/AlertDialog";
 import {EnterpriseLogo} from "../../common/share/EnterpriseLogo";
 import {CartEmpty} from "../../common/share/CartEmpty";
+import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
+import PageHeader from "../../common/share/PageHeader";
 
 interface Props {
     productCartGroupByEnterprises?: ProductCartGroupByEnterprise[];
@@ -292,7 +294,7 @@ const CustomerOrderCheckoutPage: React.FC<Props> = ({location}) => {
         } else {
             setIsShow(true)
         }
-
+        document.title = "Thanh toán";
     }, [location]);
 
     async function placeOrder() {
@@ -317,7 +319,7 @@ const CustomerOrderCheckoutPage: React.FC<Props> = ({location}) => {
                     setShowAlert(prevState1 => ({
                         ...prevState1,
                         open: true,
-                        title: err.errorMessage,
+                        title: "Một vái sản phẩm trong giỏ hàng đã thay đổi, vui lòng thử lại",
                         acceptText: "OK, got it",
                         handleAccept: () => {
                             setShowAlert(prevState2 => ({...prevState2, open: false}));
@@ -341,8 +343,16 @@ const CustomerOrderCheckoutPage: React.FC<Props> = ({location}) => {
         }
     }
 
+    const breadCrumbItems: BreadcrumbItem[] = [
+        {
+            title: "Thanh toán",
+            isLasted: true
+        }
+    ]
+
     return (
         <Box>
+            <PageHeader breadCrumbItems={breadCrumbItems} title={"Thanh toán"}/>
             <DisplayAlert/>
             {
                 isShow ? (
@@ -362,8 +372,8 @@ const CustomerOrderCheckoutPage: React.FC<Props> = ({location}) => {
                                                     <CheckoutTotalPoint
                                                         productCartGroupByEnterprises={productCartGroupByEnterprises}/>
                                                     <Button variant={"contained"} size={"large"} fullWidth
+                                                            color={"error"}
                                                             disabled={!currentCustomer.fullName || !currentCustomer.phoneNumber || !currentCustomer.address}
-                                                            style={{backgroundColor: "#FF424E"}}
                                                             onClick={() => placeOrder()}>Đặt hàng</Button>
                                                 </Box>
                                             )

@@ -57,6 +57,10 @@ export const orderStatusOptions: AbstractFilter[] = [
         label: "Delivered",
         value: OrderStatus.DELIVERED
     },
+    {
+        label: "Cancelled",
+        value: OrderStatus.CANCELLED
+    },
 ];
 
 const PurchaseOrderSearch: React.FC<Props> = ({onSearchPurchaseOrder}) => {
@@ -238,6 +242,7 @@ const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
                     }
                     case OrderStatus.CANCELLED: {
                         chipBgColor = "#F44336";
+                        chipTextColor = "#fff";
                         break;
                     }
                     default: {

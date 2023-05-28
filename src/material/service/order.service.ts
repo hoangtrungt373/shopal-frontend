@@ -9,7 +9,7 @@ import {
     EnterprisePurchaseOrderSearchCriteriaRequest
 } from "../model/request/EnterprisePurchaseOrderSearchCriteriaRequest";
 import {UpdateOrderStatusRequest} from "../model/request/UpdateOrderStatusRequest";
-import {CustomerPurchaseOrderCancelRequest} from "../model/customer/CustomerPurchaseOrderCancelRequest";
+import {PurchaseOrderCancelRequest} from "../model/customer/PurchaseOrderCancelRequest";
 import {PurchaseOrder} from "../model/PurchaseOrder";
 import {PurchaseOrderSearchCriteriaRequest} from "../model/request/PurchaseOrderSearchCriteriaRequest";
 
@@ -58,7 +58,7 @@ export const updatePurchaseOrderStatus = async (request: UpdateOrderStatusReques
     }
 }
 
-export const cancelOrderForCurrentCustomer = async (request: CustomerPurchaseOrderCancelRequest) => {
+export const cancelOrderForCurrentCustomer = async (request: PurchaseOrderCancelRequest) => {
     try {
         const result: AxiosResponse = await axiosClient.post<string>(`/order/current-customer/cancel-order`, request);
         return result.data;

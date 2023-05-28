@@ -2,11 +2,14 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {CustomerPurchaseOrder} from "../../../model/customer/CustomerPurchaseOrder";
-import {getAllOrderStatus, getAllPurchaseOrderForCurrentCustomer} from "../../../service/order.service";
+import {
+    cancelOrderForCurrentCustomer,
+    getAllOrderStatus,
+    getPurchaseOrderByCriteria
+} from "../../../service/order.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {OrderStatus} from "../../../model/enums/OrderStatus";
-import {InputAdornment, Rating, Tabs} from "@mui/material";
+import {FormControl, FormControlLabel, InputAdornment, Radio, RadioGroup, Rating, Tabs} from "@mui/material";
 import Tab from "@mui/material/Tab";
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import Divider from "@mui/material/Divider";
@@ -18,14 +21,12 @@ import {Link} from "react-router-dom";
 import {TabPanel} from "../../common/share/TabPanel";
 import {a11yProps} from "../../common/share/a11yProps";
 import {useForm} from "react-hook-form";
-import {CustomerSearchOrderCriteriaRequest} from "../../../model/request/CustomerSearchOrderCriteriaRequest";
 import TextField from "@mui/material/TextField";
 import SearchIcon from '@mui/icons-material/Search';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import {CustomerPurchaseProduct} from "../../../model/customer/CustomerPurchaseProduct";
 import {CustomerProductReviewRequest} from "../../../model/customer/CustomerProductReviewRequest";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,14 +37,21 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import {ErrorText} from "../../common/share/ErrorText";
 import {addProductReviewByCurrentCustomer} from "../../../service/product.service";
 import AlertDialog from "../../common/share/AlertDialog";
-import {isNotNull} from "../../../util/object.util";
+import {isNotNull, isNull} from "../../../util/object.util";
+import {PurchaseOrder} from "../../../model/PurchaseOrder";
+import {PurchaseOrderDetail} from "../../../model/PurchaseOrderDetail";
+import {PurchaseOrderSearchCriteriaRequest} from "../../../model/request/PurchaseOrderSearchCriteriaRequest";
+import {Customer} from "../../../model/Customer";
+import {formatDateTime} from "../../../util/display.util";
+import {PurchaseOrderCancelRequest} from "../../../model/customer/PurchaseOrderCancelRequest";
 
 interface Props {
     children?: React.ReactNode;
     index?: number;
     value?: number;
-    customerPurchaseOrders?: CustomerPurchaseOrder[],
-    selectedOrder?: CustomerPurchaseOrder
+    purchaseOrders?: PurchaseOrder[],
+    selectedOrder?: PurchaseOrder,
+    customer?: Customer
 }
 
 export interface RatingOption {
@@ -51,6 +59,30 @@ export interface RatingOption {
     description: string,
     placeholder: string
 }
+
+export interface CancelReason {
+    code: string,
+    description: string
+}
+
+export const cancelReasonOptions: CancelReason[] = [
+    {
+        code: "CAC01",
+        description: "Tôi muốn cập nhật số điện thoại, địa chỉ đặt hàng",
+    },
+    {
+        code: "CAC02",
+        description: "Người bán không trả lời thắc mắc, yêu cầu của tôi",
+    },
+    {
+        code: "CAC03",
+        description: "Thay đổi đơn hàng (màu sắc, kích thước, thêm mã giảm giá,...)"
+    },
+    {
+        code: "CAC04",
+        description: "Tôi không có nhu cầu mua nữa"
+    }
+]
 
 const ratingOptions: RatingOption[] = [
     {
@@ -85,11 +117,14 @@ const ratingOptions: RatingOption[] = [
     },
 ]
 
-const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
+const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
 
     /*TODO: move to order detail page*/
-    const [selectedPurchaseProduct, setSelectedPurchaseProduct] = useState<CustomerPurchaseProduct>();
+    const [selectedPurchaseProduct, setSelectedPurchaseProduct] = useState<PurchaseOrderDetail>();
     const [openFormReview, setOpenFormReview] = useState(false);
+    const [openFormCancel, setOpenFormCancel] = useState(false);
+    const [cancelCode, setCancelCode] = useState<string>(null);
+    const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState<PurchaseOrder>();
     const {
         register,
         reset,
@@ -102,30 +137,33 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
     const [ratingHover, setRatingHover] = useState(-1);
     const [imgUrls, setImgUrls] = useState<any[]>([]);
     const [isShowRatingError, setIsShowRatingError] = useState<boolean>(false);
-    const [showAlertReview, setShowAlertReview] = useState({
+    const [showAlert, setShowAlert] = useState({
         open: false,
         title: null,
         content: null,
         acceptText: null,
-        handleAccept: null
-    });
-    /*TODO: handle cancel order*/
-    const [showAlertCancel, setShowAlertCancel] = useState({
-        open: false,
-        title: "Hủy bỏ đơn hàng này",
-        content: null,
-        acceptText: null,
-        handleAccept: null
+        handleAccept: () => {
+            setShowAlert(prevState2 => ({
+                ...prevState2,
+                open: false
+            }));
+        },
+        handleDenied: () => {
+            setShowAlert(prevState2 => ({
+                ...prevState2,
+                open: false
+            }));
+        }
     });
 
-    const onSubmit = handleSubmit(data => {
+    const onSubmitReview = handleSubmit(data => {
         if (ratingValue == null || ratingValue.rating == 0) {
             setIsShowRatingError(true);
         } else {
             setIsShowRatingError(false);
             let reqImgUrls: any[] = [...imgUrls.filter(x => x != undefined)];
             let request: CustomerProductReviewRequest = {
-                purchaseOrderDetailId: selectedPurchaseProduct.purchaseOrderDetailId,
+                purchaseOrderDetailId: selectedPurchaseProduct.id,
                 content: data.content,
                 rating: ratingValue.rating,
                 imgUrls: [...reqImgUrls]
@@ -133,7 +171,7 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
             addProductReviewByCurrentCustomer(request)
                 .then((res: string) => {
                     setOpenFormReview(false);
-                    setShowAlertReview(prevState1 => ({
+                    setShowAlert(prevState1 => ({
                         ...prevState1,
                         open: true,
                         title: "Cảm ơn bạn đã đánh giá",
@@ -142,8 +180,8 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
                             sắm tốt hơn</Typography>,
                         acceptText: "OK",
                     }))
-                    customerPurchaseOrders.forEach(customerPurchaseOrder => {
-                        customerPurchaseOrder.purchaseProducts.find(x => x.purchaseOrderDetailId == selectedPurchaseProduct.purchaseOrderDetailId).isReview = true;
+                    purchaseOrders.forEach(purchaseOrder => {
+                        purchaseOrder.purchaseProducts.find(x => x.id == selectedPurchaseProduct.id).isReview = true;
                     })
                 }).catch((err: ExceptionResponse) => {
                 console.log(err);
@@ -159,11 +197,19 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
         setOpenFormReview(false);
     };
 
+    const handleClickOpenFormCancel = () => {
+        setOpenFormCancel(true);
+    };
+
+    const handleCloseFormCancel = () => {
+        setOpenFormCancel(false);
+    };
+
     function getRatingLevelText(value: number) {
         return `${value} Star${value !== 1 ? 's' : ''}, ${ratingOptions.find(x => x.rating == value).description}`;
     }
 
-    const handleOpenReviewForm = (purchaseProduct: CustomerPurchaseProduct) => {
+    const handleOpenReviewForm = (purchaseProduct: PurchaseOrderDetail) => {
         handleClickOpenFormReview();
         reset();
         setImgUrls([]);
@@ -172,10 +218,45 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
         setReviewPlaceHolder(ratingOptions[0].placeholder);
         setIsShowRatingError(false);
         setSelectedPurchaseProduct(purchaseProduct);
-        setShowAlertReview(prevState1 => ({
+        setShowAlert(prevState1 => ({
             ...prevState1,
             open: false
         }));
+    }
+
+    const handleOpenCancelForm = (purchaseOrder: PurchaseOrder) => {
+        handleClickOpenFormCancel();
+        setSelectedPurchaseOrder(purchaseOrder);
+        setShowAlert(prevState1 => ({
+            ...prevState1,
+            open: false
+        }));
+    }
+
+    const handleCancelOrder = () => {
+        let request: PurchaseOrderCancelRequest = {
+            cancelCode: cancelCode,
+            customerId: selectedPurchaseOrder.customer.id,
+            purchaseOrderId: selectedPurchaseOrder.id
+        }
+        cancelOrderForCurrentCustomer(request)
+            .then((res: string) => {
+                setOpenFormCancel(false);
+                setShowAlert(prevState1 => ({
+                    ...prevState1,
+                    open: true,
+                    title: "Bạn đã hủy đơn hàng thành công",
+                    content: <Typography>Chúng tôi sẽ tiến hành hoàn số điểm mà bạn đã dùng để thanh toán, vui lòng đợi
+                        trong giây lát</Typography>,
+                    acceptText: "OK",
+                }));
+                purchaseOrders.find(x => x.id == selectedPurchaseOrder.id).orderStatus = OrderStatus.CANCELLED;
+                purchaseOrders.forEach(purchaseOrder => {
+                    purchaseOrder.purchaseProducts.find(x => x.id == selectedPurchaseProduct.id).isReview = true;
+                })
+            }).catch((err: ExceptionResponse) => {
+            console.log(err);
+        })
     }
 
     const handleSetImg = (e) => {
@@ -192,14 +273,14 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
     }
 
     const DisplayReviewAlert = () => {
-        if (showAlertReview.open) {
+        if (showAlert.open) {
             return (
                 <AlertDialog
-                    isOpen={showAlertReview.open} title={showAlertReview.title} content={showAlertReview.content}
+                    isOpen={showAlert.open} title={showAlert.title} content={showAlert.content}
                     isShowAcceptBtn={true}
                     isShowContent={true}
-                    handleAccept={showAlertReview.handleAccept}
-                    acceptText={showAlertReview.acceptText}/>
+                    handleAccept={showAlert.handleAccept}
+                    acceptText={showAlert.acceptText}/>
             )
         } else {
             return null;
@@ -207,18 +288,18 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
     }
 
     /*TODO: handle cancel*/
-    if (customerPurchaseOrders.length > 0) {
+    if (purchaseOrders.length > 0) {
         return (
             <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
                 <DisplayReviewAlert/>
-                <form onSubmit={onSubmit} style={{width: "100%"}}>
+                <form onSubmit={onSubmitReview} style={{width: "100%"}}>
                     <Dialog open={openFormReview} onClose={handleCloseFormReview}>
                         <DialogTitle sx={{m: 0, p: 2}}>
                             {
                                 selectedPurchaseProduct && (
                                     <Box sx={{display: "flex", gap: 2, width: "70%"}}>
 
-                                        <img src={`${AssetPath.productImgUrl}${selectedPurchaseProduct.mainImgUrl}`}
+                                        <img src={`${AssetPath.productImgUrl}${selectedPurchaseProduct.product.mainImgUrl}`}
                                              alt={"img"}
                                              style={{
                                                  width: "60px",
@@ -226,7 +307,8 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
                                                  display: "block",
                                              }}/>
                                         <Box sx={{display: "flex", gap: 0.5, flexDirection: "column"}}>
-                                            <Typography fontSize={"14px"}>{selectedPurchaseProduct.productName}</Typography>
+                                            <Typography
+                                                fontSize={"14px"}>{selectedPurchaseProduct.product.productName}</Typography>
                                         </Box>
                                     </Box>
                                 )
@@ -288,8 +370,8 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
                                 </Box>
                             </DialogContentText>
                             <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                                <TextField {...register("content")} fullWidth multiline
-                                           placeholder={reviewPlaceHolder}
+                                <TextField {...register("content")} multiline fullWidth
+                                           placeholder={reviewPlaceHolder} style={{minWidth: "30px"}}
                                            rows={8}/>
                                 <Box sx={{display: "flex", gap: 2}}>
                                     {
@@ -324,100 +406,143 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
                                         <input hidden accept="image/*" type="file" multiple
                                                onChange={handleSetImg}/>
                                     </Button>
-                                    <Button variant={"contained"} type={"submit"} onClick={onSubmit}
+                                    <Button variant={"contained"} type={"submit"} onClick={onSubmitReview}
                                             style={{width: "50%"}}>Gửi đánh giá</Button>
                                 </Box>
                             </Box>
                         </DialogContent>
                     </Dialog>
                 </form>
-                {
-                    customerPurchaseOrders.map((customerPurchaseOrder, index1) => (
+                <Dialog open={openFormCancel} onClose={handleCloseFormCancel}>
+                    <DialogTitle sx={{m: 0, p: 2}}>
+                        <Typography>Lí do hủy</Typography>
+                    </DialogTitle>
+                    <DialogContent sx={{p: "16px"}}>
+                        <FormControl>
+                            <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue={cancelReasonOptions[0].code}
+                                name="radio-buttons-group"
+                                value={cancelCode}
+                                onChange={(e) => setCancelCode(e.target.value as string)}
+                            >
+                                {
+                                    cancelReasonOptions.map((cancelReason) => (
+                                        <FormControlLabel value={cancelReason.code} control={<Radio/>}
+                                                          label={cancelReason.description}/>
+
+                                    ))
+                                }
+                            </RadioGroup>
+                        </FormControl>
+                        <Box sx={{display: "flex", flexDirection: "column", gap: 2, mt: "80px"}}>
+                            <Box sx={{display: "flex", justifyContent: "space-between", gap: 2}}>
+                                <Button variant={"text"} onClick={handleCloseFormCancel}
+                                        style={{width: "50%"}}>Không phải bây giờ</Button>
+                                <Button variant={"contained"} color={"error"} disabled={isNull(cancelCode)}
+                                        onClick={() => handleCancelOrder()}
+                                        style={{width: "50%"}}>Hủy đơn hàng</Button>
+                            </Box>
+                        </Box>
+                    </DialogContent>
+                </Dialog>{
+                purchaseOrders.map((purchaseOrder, index1) => (
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                        backgroundColor: "#fff",
+                        p: 2,
+                        borderRadius: 2
+                    }}
+                         key={index1}>
+                        <Box sx={{
+                            display: "flex", alignItems: "center", gap: 1,
+                            color: purchaseOrder.orderStatus == OrderStatus.CANCELLED ? "var(--red-600)" : "var(--polargreen-700)"
+                        }}>
+                            <Typography style={{color: "black"}}>Order # {purchaseOrder.id}</Typography>
+                            <LocalShippingOutlinedIcon/>
+                            <Typography>{purchaseOrder.orderStatusDescription}</Typography>
+                            <Typography style={{
+                                marginLeft: "auto",
+                                textAlign: "right",
+                                color: "black"
+                            }}>Ngày đặt hàng: {formatDateTime(purchaseOrder.orderDate)}</Typography>
+                        </Box>
+                        <Divider/>
+                        {
+                            purchaseOrder.purchaseProducts.map((purchaseProduct, index2) => (
+                                <Box>
+                                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                                        <Box sx={{display: "flex", gap: 2}}>
+                                            <img
+                                                src={`${AssetPath.productImgUrl}${purchaseProduct.product.mainImgUrl}`}
+                                                alt={"img"}
+                                                style={{
+                                                    width: "80px",
+                                                    height: "80px",
+                                                    display: "block",
+                                                }}/>
+                                            <Box sx={{display: "flex", gap: 1, flexDirection: "column"}}>
+                                                <Typography>{purchaseProduct.product.productName}</Typography>
+                                                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                                                    <Typography>x{purchaseProduct.amount}</Typography>
+                                                    {
+                                                        purchaseOrder.orderStatus == OrderStatus.DELIVERED && !purchaseProduct.isReview && (
+                                                            <Button variant={"outlined"}
+                                                                    onClick={() => handleOpenReviewForm(purchaseProduct)}
+                                                                    style={{textTransform: "initial"}}
+                                                                    size={"small"}>Review</Button>
+                                                        )
+                                                    }
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                        <Box sx={{
+                                            display: "flex",
+                                            gap: 0.5,
+                                            alignItems: "center",
+                                        }}>
+                                            <Typography>{purchaseProduct.pointExchange}</Typography>
+                                            <Avatar alt="img"
+                                                    src={AssetPath.enterpriseLogoUrl + purchaseOrder.enterprise.logoUrl}
+                                                    sx={{width: 15, height: 15}}/>
+                                        </Box>
+                                    </Box>
+                                    <Divider sx={{marginTop: 2}}/>
+                                </Box>
+
+                            ))
+                        }
                         <Box sx={{
                             display: "flex",
                             flexDirection: "column",
                             gap: 2,
-                            backgroundColor: "#fff",
-                            p: 2,
-                            borderRadius: 2
-                        }}
-                             key={index1}>
-                            <Box sx={{display: "flex", alignItems: "center", gap: 1, color: "var(--polargreen-700)"}}>
-                                <LocalShippingOutlinedIcon/>
-                                <Typography>{customerPurchaseOrder.orderStatusDescription}</Typography>
+                            marginLeft: "auto",
+                            alignItems: "flex-end"
+                        }}>
+                            <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
+                                <Typography
+                                    fontSize={"16px"}>Total: {purchaseOrder.orderTotalPointExchange}</Typography>
+                                <Avatar alt="img"
+                                        src={AssetPath.enterpriseLogoUrl + purchaseOrder.enterprise.logoUrl}
+                                        sx={{width: 20, height: 20}}/>
                             </Box>
-                            <Divider/>
-                            {
-                                customerPurchaseOrder.purchaseProducts.map((purchaseProduct, index2) => (
-                                    <Box>
-                                        <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                                            <Box sx={{display: "flex", gap: 2}}>
-                                                <img src={`${AssetPath.productImgUrl}${purchaseProduct.mainImgUrl}`}
-                                                     alt={"img"}
-                                                     style={{
-                                                         width: "80px",
-                                                         height: "80px",
-                                                         display: "block",
-                                                     }}/>
-                                                <Box sx={{display: "flex", gap: 1, flexDirection: "column"}}>
-                                                    <Typography>{purchaseProduct.productName}</Typography>
-                                                    <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                                                        <Typography>x{purchaseProduct.amount}</Typography>
-                                                        {
-                                                            customerPurchaseOrder.orderStatus == OrderStatus.DELIVERED && !purchaseProduct.isReview && (
-                                                                <Button variant={"outlined"}
-                                                                        onClick={() => handleOpenReviewForm(purchaseProduct)}
-                                                                        style={{textTransform: "initial"}}
-                                                                        size={"small"}>Review</Button>
-                                                            )
-                                                        }
-                                                    </Box>
-                                                </Box>
-                                            </Box>
-                                            <Box sx={{
-                                                display: "flex",
-                                                gap: 0.5,
-                                                alignItems: "center",
-                                            }}>
-                                                <Typography>{purchaseProduct.pointExchange}</Typography>
-                                                <Avatar alt="img"
-                                                        src={AssetPath.enterpriseLogoUrl + customerPurchaseOrder.enterprise.logoUrl}
-                                                        sx={{width: 15, height: 15}}/>
-                                            </Box>
-                                        </Box>
-                                        <Divider sx={{marginTop: 2}}/>
-                                    </Box>
-
-                                ))
-                            }
-                            <Box sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 2,
-                                marginLeft: "auto",
-                                alignItems: "flex-end"
-                            }}>
-                                <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
-                                    <Typography
-                                        fontSize={"16px"}>Total: {customerPurchaseOrder.orderTotalPointExchange}</Typography>
-                                    <Avatar alt="img"
-                                            src={AssetPath.enterpriseLogoUrl + customerPurchaseOrder.enterprise.logoUrl}
-                                            sx={{width: 20, height: 20}}/>
-                                </Box>
-                                <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                                    {
-                                        customerPurchaseOrder.orderStatus == OrderStatus.OPEN && (
-                                            <Button variant={"outlined"} color={"error"}
-                                                    sx={{textTransform: "none"}}>Hủy đơn hàng</Button>
-                                        )
-                                    }
-                                    <Link to={"/"}><Button variant={"outlined"} sx={{textTransform: "none"}}>Xem chi
-                                        tiết</Button></Link>
-                                </Box>
+                            <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+                                {
+                                    purchaseOrder.orderStatus == OrderStatus.OPEN && (
+                                        <Button variant={"outlined"} color={"error"}
+                                                onClick={() => handleOpenCancelForm(purchaseOrder)}
+                                                sx={{textTransform: "none"}}>Hủy đơn hàng</Button>
+                                    )
+                                }
+                                <Link to={"/"}><Button variant={"outlined"} sx={{textTransform: "none"}}>Xem chi
+                                    tiết</Button></Link>
                             </Box>
                         </Box>
-                    ))
-                }
+                    </Box>
+                ))
+            }
             </Box>
         )
     } else {
@@ -441,9 +566,9 @@ const PurchaseOrderList: React.FC<Props> = ({customerPurchaseOrders}) => {
 
 }
 
-const CustomerPurchaseOrderHistoryPage: React.FC<Props> = () => {
+const CustomerPurchaseOrderHistoryPage: React.FC<Props> = ({customer}) => {
 
-    const [customerPurchaseOrders, setCustomerPurchaseOrders] = useState<CustomerPurchaseOrder[]>([]);
+    const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
     const [isShow, setIsShow] = useState<boolean>(false);
 
     const [orderStatusTab, setOrderStatusTab] = useState<number>(0);
@@ -453,12 +578,12 @@ const CustomerPurchaseOrderHistoryPage: React.FC<Props> = () => {
         getValues,
         handleSubmit,
         formState: {errors}
-    } = useForm<CustomerSearchOrderCriteriaRequest>();
+    } = useForm<PurchaseOrderSearchCriteriaRequest>();
 
     useEffect(() => {
-        getAllPurchaseOrderForCurrentCustomer()
-            .then((resCustomerPurchaseOrders: CustomerPurchaseOrder[]) => {
-                setCustomerPurchaseOrders(resCustomerPurchaseOrders);
+        getPurchaseOrderByCriteria({customerId: customer.id})
+            .then((resPurchaseOrders: PurchaseOrder[]) => {
+                setPurchaseOrders(resPurchaseOrders);
                 getAllOrderStatus()
                     .then((resOrderStatusList: OrderStatus[]) => {
                     })
@@ -470,7 +595,9 @@ const CustomerPurchaseOrderHistoryPage: React.FC<Props> = () => {
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
-            })
+            });
+
+        document.title = "Đơn mua";
     }, []);
 
     const handleChangeOrderStatusTab = (event: React.SyntheticEvent, newOrderStatusTabValue: number) => {
@@ -524,28 +651,28 @@ const CustomerPurchaseOrderHistoryPage: React.FC<Props> = () => {
             {
                 isShow ? (
                     <Box>
-                        <TabPanel value={orderStatusTab} index={0}>
-                            <PurchaseOrderList customerPurchaseOrders={customerPurchaseOrders}/>
+                        <TabPanel value={orderStatusTab} index={0} padding={0}>
+                            <PurchaseOrderList purchaseOrders={purchaseOrders}/>
                         </TabPanel>
-                        <TabPanel value={orderStatusTab} index={1}>
+                        <TabPanel value={orderStatusTab} index={1} padding={0}>
                             <PurchaseOrderList
-                                customerPurchaseOrders={customerPurchaseOrders.filter(x => x.orderStatus == OrderStatus.OPEN)}/>
+                                purchaseOrders={purchaseOrders.filter(x => x.orderStatus == OrderStatus.OPEN)}/>
                         </TabPanel>
-                        <TabPanel value={orderStatusTab} index={2}>
+                        <TabPanel value={orderStatusTab} index={2} padding={0}>
                             <PurchaseOrderList
-                                customerPurchaseOrders={customerPurchaseOrders.filter(x => x.orderStatus == OrderStatus.PROCESSING)}/>
+                                purchaseOrders={purchaseOrders.filter(x => x.orderStatus == OrderStatus.PROCESSING)}/>
                         </TabPanel>
-                        <TabPanel value={orderStatusTab} index={3}>
+                        <TabPanel value={orderStatusTab} index={3} padding={0}>
                             <PurchaseOrderList
-                                customerPurchaseOrders={customerPurchaseOrders.filter(x => x.orderStatus == OrderStatus.IN_TRANSIT)}/>
+                                purchaseOrders={purchaseOrders.filter(x => x.orderStatus == OrderStatus.IN_TRANSIT)}/>
                         </TabPanel>
-                        <TabPanel value={orderStatusTab} index={4}>
+                        <TabPanel value={orderStatusTab} index={4} padding={0}>
                             <PurchaseOrderList
-                                customerPurchaseOrders={customerPurchaseOrders.filter(x => x.orderStatus == OrderStatus.DELIVERED)}/>
+                                purchaseOrders={purchaseOrders.filter(x => x.orderStatus == OrderStatus.DELIVERED)}/>
                         </TabPanel>
-                        <TabPanel value={orderStatusTab} index={5}>
+                        <TabPanel value={orderStatusTab} index={5} padding={0}>
                             <PurchaseOrderList
-                                customerPurchaseOrders={customerPurchaseOrders.filter(x => x.orderStatus == OrderStatus.CANCELLED)}/>
+                                purchaseOrders={purchaseOrders.filter(x => x.orderStatus == OrderStatus.CANCELLED)}/>
                         </TabPanel>
                     </Box>
                 ) : (

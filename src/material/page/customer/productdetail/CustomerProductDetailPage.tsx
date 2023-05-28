@@ -4,7 +4,7 @@ import {ProductDetail} from "../../../model/ProductDetail";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {ButtonGroup, Grid, Rating, Stack, Tooltip} from '@mui/material';
+import {Alert, ButtonGroup, Grid, Rating, Stack, Tooltip} from '@mui/material';
 import ImageGallery from 'react-image-gallery';
 import {AssetPath, CustomerRouter} from '../../../config/router';
 import {ProductImage} from "../../../model/ProductImage";
@@ -18,7 +18,6 @@ import Avatar from "@mui/material/Avatar";
 import {UpdateProductCartRequest} from "../../../model/request/UpdateProductCartRequest";
 import {updateProductCartsForCurrentCustomer} from "../../../service/cart.service";
 import {Cart} from "../../../model/Cart";
-import AlertDialog from "../../common/share/AlertDialog";
 import PageSpinner from "../../common/share/PageSpinner";
 import Divider from "@mui/material/Divider";
 import {Product} from "../../../model/Product";
@@ -26,6 +25,8 @@ import ReactHtmlParser from 'react-html-parser';
 import {formatDateTime, formatRating} from "../../../util/display.util";
 import {getEnterpriseMembershipForCurrentCustomer} from "../../../service/membership.service";
 import {EnterpriseMembership} from "../../../model/customer/EnterpriseMembership";
+import {ProductPoint} from "../../../model/ProductPoint";
+import {isNotNull} from "../../../util/object.util";
 
 interface RouteParams {
     productId: any;
@@ -35,7 +36,8 @@ interface Props {
     productDetail?: ProductDetail,
     similarProducts?: Product[],
     onClickAddToCart?: Function,
-    onScrollToReview?: Function
+    onScrollToReview?: Function,
+    showAlert?: any
 }
 
 interface Image {
@@ -54,12 +56,24 @@ export interface ReviewOption {
     isHaveGallery?: boolean
 }
 
-const ProductInfo: React.FC<Props> = ({productDetail, onClickAddToCart, onScrollToReview}) => {
+const ProductInfo: React.FC<Props> = ({productDetail, onClickAddToCart, onScrollToReview, showAlert}) => {
 
     const [amount, setAmount] = useState<number>(1);
     const [selectProductPointId, setSelectProductPointId] = useState<number>();
     const [images, setImages] = useState<Image[]>();
+    const [show, setShow] = useState(true)
 
+    useEffect(() => {
+        setShow(true);
+        const timeId = setTimeout(() => {
+            // After 3 seconds set the show value to false
+            setShow(false)
+        }, 3000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+    }, [showAlert]);
 
     useEffect(() => {
         console.log(productDetail)
@@ -76,7 +90,12 @@ const ProductInfo: React.FC<Props> = ({productDetail, onClickAddToCart, onScroll
         });
         setImages(newImages);
         if (productDetail.exchangeAblePoints.filter(x => !x.disable).length > 0) {
-            setSelectProductPointId(productDetail.exchangeAblePoints.filter(x => !x.disable)[0].id)
+            let selectItem: ProductPoint = productDetail.exchangeAblePoints.find(x => x.id == selectProductPointId && !x.disable);
+            if (isNotNull(selectItem)) {
+                setSelectProductPointId(selectItem.id);
+            } else {
+                setSelectProductPointId(productDetail.exchangeAblePoints.filter(x => !x.disable)[0].id)
+            }
         }
     }, [productDetail]);
 
@@ -186,6 +205,11 @@ const ProductInfo: React.FC<Props> = ({productDetail, onClickAddToCart, onScroll
                     <Button variant="contained" size="large" sx={{width: "100%"}}
                             onClick={() => onClickAddToCart(amount, selectProductPointId, true)}>Mua ngay</Button>
                 </Box>
+                {
+                    showAlert.open && show && (
+                        <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
+                    )
+                }
             </Box>
         </Stack>
     )
@@ -381,7 +405,8 @@ const CustomerProductDetailPage: React.FC<Props> = () => {
 
     const [showAlert, setShowAlert] = useState({
         open: false,
-        title: "Thêm sản phẩm vào giỏ hàng thành công"
+        content: null,
+        severity: null
     });
 
     useEffect(() => {
@@ -441,9 +466,11 @@ const CustomerProductDetailPage: React.FC<Props> = () => {
                             pathname: CustomerRouter.cartPage
                         });
                     } else {
-                        setShowAlert(prevState1 => ({
-                            ...prevState1,
+                        setShowAlert(prevState4 => ({
+                            ...prevState4,
                             open: true,
+                            content: "Thêm sản phẩm vào giỏ hàng thành công",
+                            severity: "success"
                         }));
                     }
                 })
@@ -451,30 +478,19 @@ const CustomerProductDetailPage: React.FC<Props> = () => {
                     console.log(err);
                 });
         } else {
-            setShowAlert(prevState1 => ({
-                ...prevState1,
+            setShowAlert(prevState4 => ({
+                ...prevState4,
                 open: true,
-                title: "Please login to add item to cart"
+                content: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng",
+                severity: "warning"
             }));
-        }
-    }
-
-    const DisplayAlert = () => {
-        if (showAlert.open) {
-            return (
-                <AlertDialog
-                    isOpen={showAlert.open} title={showAlert.title}/>
-            )
-        } else {
-            return null;
         }
     }
 
     if (productDetail) {
         return (
             <Box sx={{display: "flex", flexDirection: "column", gap: 2}} className={"productDetailPage"}>
-                <DisplayAlert/>
-                <ProductInfo productDetail={productDetail}
+                <ProductInfo productDetail={productDetail} showAlert={showAlert}
                              onScrollToReview={() => ref.current?.scrollIntoView({behavior: 'smooth'})}
                              onClickAddToCart={(amount: number, selectProductPointId: number, isBoyNow: boolean) => handleAddToCart(amount, selectProductPointId, isBoyNow)}/>
                 <Grid container spacing={2}>

@@ -1,4 +1,4 @@
-import {Autocomplete, Box, Stack, Tooltip} from "@mui/material";
+import {Autocomplete, Box, LinearProgress, LinearProgressProps, Stack, Tooltip} from "@mui/material";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import PageSpinner from "../../common/share/PageSpinner";
 import Button from "@mui/material/Button";
 import {CustomerAllInfo} from "../../../model/admin/CustomerAllInfo";
-import {getCustomerAllInfoByCriteria} from "../../../service/customer.service";
+import {getCustomerAllInfoByCriteria, syncCustomerPoint} from "../../../service/customer.service";
 import {CustomerSearchCriteriaRequest} from "../../../model/request/CustomerSearchCriteriaRequest";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
@@ -21,6 +21,7 @@ import {AbstractFilter} from "../../../model/AbstractFilter";
 import Avatar from "@mui/material/Avatar";
 import {createSeoLink} from "../../../util/display.util";
 import {useHistory} from "react-router-dom";
+import {CustomerSyncInfoRequest} from "../../../model/request/CustomerSyncInfoRequest";
 
 interface Props {
     customerAllInfos?: CustomerAllInfo[],
@@ -248,6 +249,13 @@ const AdminCustomerManagementPage: React.FC<Props> = ({}) => {
     const [customerAllInfos, setCustomerAllInfos] = useState<CustomerAllInfo[]>([]);
     const [enterpriseFilters, setEnterpriseFilters] = useState<AbstractFilter[]>([]);
     const [isShow, setIsShow] = useState<boolean>(false);
+    const [sync, setSync] = useState<any>({
+        isSync: false,
+        isDone: false,
+        progress: 10,
+        label: "Sync customer info"
+    });
+    const [searchCriteria, setSearchCriteria] = useState<CustomerSearchCriteriaRequest>();
 
     useEffect(() => {
         let criteria: CustomerSearchCriteriaRequest = {}
@@ -274,6 +282,7 @@ const AdminCustomerManagementPage: React.FC<Props> = ({}) => {
     }, []);
 
     const handleSearchCustomer = async (criteria: CustomerSearchCriteriaRequest) => {
+        setSearchCriteria(criteria);
         getCustomerAllInfoByCriteria(criteria)
             .then((resCustomerAllInfos: CustomerAllInfo[]) => {
                 setCustomerAllInfos([...resCustomerAllInfos]);
@@ -283,10 +292,85 @@ const AdminCustomerManagementPage: React.FC<Props> = ({}) => {
             })
     }
 
+    const handleSync = () => {
+        let syncCustomerRequests: CustomerSyncInfoRequest[] = [];
+        customerAllInfos.forEach((customer) => {
+            customer.membershipPoints.forEach((membership) => {
+                syncCustomerRequests.push({
+                    customerId: customer.id,
+                    enterpriseId: membership.enterpriseId,
+                    membershipId: membership.membershipId
+                })
+            })
+        });
+        syncCustomerPoint(syncCustomerRequests)
+            .then((res: string) => {
+                console.log(res);
+            }).catch((err: ExceptionResponse) => {
+            console.log(err);
+        })
+        setSync(prevState1 => ({
+            ...prevState1,
+            isSync: true,
+            label: "Syncing..."
+        }));
+        const timer = setInterval(() => {
+            setSync(prevState2 => ({
+                ...prevState2,
+                label: prevState2.progress < 100 ? "Syncing..." : "Done",
+                progress: Math.min(prevState2.progress + Math.random() * 10, 100)
+            }));
+        }, 800);
+        return () => {
+            clearInterval(timer);
+        };
+    }
+
+    const LinearProgressWithLabel = (props: LinearProgressProps & { value: number }) => {
+
+
+        return (
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <Box sx={{width: '100%', mr: 1}}>
+                    <LinearProgress variant="determinate" {...props} />
+                </Box>
+                <Box sx={{minWidth: 35}}>
+                    {
+                        props.value < 100 ? (
+                            <Typography variant="body2" color="text.secondary">{`${Math.round(
+                                props.value,
+                            )}%`}</Typography>
+                        ) : (
+                            <Typography variant="body2" style={{color: "var(--bluebreak-600)"}}>{"Done"}</Typography>
+                        )
+                    }
+
+                </Box>
+            </Box>
+        );
+    }
+
+
     if (isShow) {
         return (
             <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Customer"}/>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <Grid container alignItems={"center"} spacing={2}>
+                        <Grid item xs={2}>
+                            <Button variant={"contained"} fullWidth onClick={() => handleSync()}
+                                    disabled={sync.isSync}
+                            >{sync.label}</Button>
+                        </Grid>
+                        <Grid item xs={10}>
+                            {
+                                sync.isSync && (
+                                    <LinearProgressWithLabel value={sync.progress}/>
+                                )
+                            }
+                        </Grid>
+                    </Grid>
+                </Box>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <CustomerSearch enterpriseFilters={enterpriseFilters}
                                     onSearchCustomer={(criteria: CustomerSearchCriteriaRequest) => handleSearchCustomer(criteria)}/>

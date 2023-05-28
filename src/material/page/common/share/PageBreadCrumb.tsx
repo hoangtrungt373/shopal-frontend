@@ -28,7 +28,7 @@ const PageBreadCrumb: React.FC<Props> = ({items}) => {
         }
         setHomeBreadcrumb({
             url: homeUrl,
-            title: "Home"
+            title: localStorage.getItem(CURRENT_USER_ROLE) == UserRole.CUSTOMER ? "Trang chủ" : "Home"
         })
     }, [items]);
 

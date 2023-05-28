@@ -139,7 +139,7 @@ const CustomerDashboardPage: React.FC<Props> = ({currentCustomer}) => {
                         <PrivateRoute path={CustomerRouter.membershipPage} component={CustomerMembershipPage}
                                       exact/>
                         <PrivateRoute path={CustomerRouter.purchasedOrderHistory}
-                                      component={CustomerPurchaseOrderHistoryPage} exact/>
+                                      component={CustomerPurchaseOrderHistoryPage} exact customer={currentCustomer}/>
                         <PrivateRoute
                             path={CustomerRouter.purchasedOrderHistory + "/*.:purchaseOrderId"}
                             component={CustomerPurchaseOrderDetailPage}/>

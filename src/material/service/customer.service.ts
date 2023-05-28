@@ -4,6 +4,7 @@ import {ExceptionResponse} from "../model/exception/ExceptionResponse";
 import {Customer} from "../model/Customer";
 import {CustomerSearchCriteriaRequest} from "../model/request/CustomerSearchCriteriaRequest";
 import {CustomerAllInfo} from "../model/admin/CustomerAllInfo";
+import {CustomerSyncInfoRequest} from "../model/request/CustomerSyncInfoRequest";
 
 export const getCurrentCustomerInfo = async () => {
     try {
@@ -38,6 +39,15 @@ export const updateCurrentCustomerInfo = async (request: Customer) => {
 export const getCustomerAllInfoByCriteria = async (request: CustomerSearchCriteriaRequest) => {
     try {
         const result: AxiosResponse = await axiosClient.post<CustomerAllInfo[]>(`/customer/get-all-info`, request);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const syncCustomerPoint = async (requests: CustomerSyncInfoRequest[]) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<string>(`/customer/customer-point-sync`, requests);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

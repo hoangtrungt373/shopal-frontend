@@ -22,6 +22,7 @@ import {AbstractFilter} from "../../../model/AbstractFilter";
 import {PurchaseOrderSearchCriteriaRequest} from "../../../model/request/PurchaseOrderSearchCriteriaRequest";
 import {CustomerSearchCriteriaRequest} from "../../../model/request/CustomerSearchCriteriaRequest";
 import {Enterprise} from "../../../model/Enterprise";
+import {orderStatusOptions} from "../../admin/ordermanagement/AdminPurchaseOrderManagementPage";
 
 
 interface Props {
@@ -37,29 +38,6 @@ const breadCrumbItems: BreadcrumbItem[] = [
         isLasted: true
     }
 ]
-
-export const orderStatusOptions: AbstractFilter[] = [
-    {
-        label: "All",
-        value: OrderStatus.ALL
-    },
-    {
-        label: "Open",
-        value: OrderStatus.OPEN
-    },
-    {
-        label: "Processing",
-        value: OrderStatus.PROCESSING
-    },
-    {
-        label: "In transit",
-        value: OrderStatus.IN_TRANSIT
-    },
-    {
-        label: "Delivered",
-        value: OrderStatus.DELIVERED
-    },
-];
 
 const PurchaseOrderSearch: React.FC<Props> = ({onSearchPurchaseOrder}) => {
 
@@ -240,6 +218,7 @@ const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
                     }
                     case OrderStatus.CANCELLED: {
                         chipBgColor = "#F44336";
+                        chipTextColor = "#fff";
                         break;
                     }
                     default: {
