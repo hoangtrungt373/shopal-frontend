@@ -231,6 +231,8 @@ const AdminChildCatalogManagementPage: React.FC<Props> = ({}) => {
             }).catch((err: ExceptionResponse) => {
             console.log(err);
         })
+        document.title = "Admin - Sub Categories";
+
     }, []);
 
     const onSubmit = handleSubmit(data => {

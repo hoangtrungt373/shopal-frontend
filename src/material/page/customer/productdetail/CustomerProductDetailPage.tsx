@@ -26,7 +26,8 @@ import {formatDateTime, formatRating} from "../../../util/display.util";
 import {getEnterpriseMembershipForCurrentCustomer} from "../../../service/membership.service";
 import {EnterpriseMembership} from "../../../model/customer/EnterpriseMembership";
 import {ProductPoint} from "../../../model/ProductPoint";
-import {isNotNull} from "../../../util/object.util";
+import {isNotNull, isNull} from "../../../util/object.util";
+import {ProductStatus} from "../../../model/enums/ProductStatus";
 
 interface RouteParams {
     productId: any;
@@ -145,7 +146,7 @@ const ProductInfo: React.FC<Props> = ({productDetail, onClickAddToCart, onScroll
                     <Box width={"85%"}>
                         <Grid container spacing={2}>
                             {
-                                productDetail.exchangeAblePoints.map((productPoint, index) => (
+                                productDetail.exchangeAblePoints.filter(x => x.active).map((productPoint, index) => (
                                     <Grid item xs={3} key={index}>
                                         <button disabled={productPoint.disable}
                                                 className={productPoint.id != selectProductPointId ? "point-description" : "point-description active"}
@@ -169,42 +170,57 @@ const ProductInfo: React.FC<Props> = ({productDetail, onClickAddToCart, onScroll
                         </Grid>
                     </Box>
                 </Box>
-                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}
-                     className={"btn-amount-group"}>
-                    <Typography width={"15%"} align={"left"}>Số lượng</Typography>
-                    <ButtonGroup variant="outlined" aria-label="outlined primary button group">
-                        <button onClick={() => setAmount(amount > 1 ? amount - 1 : amount)} className={"amount-btn"}>-
-                        </button>
-                        {/* TODO: handle 0 amount */}
-                        <input className={"amount-input"} id={"amount"} value={amount}
-                               onChange={event => {
-                                   let newAmount = parseInt(event.target.value);
-                                   if (Number.isNaN(newAmount)) {
-                                       setAmount(null)
-                                   } else if (newAmount > 0 && newAmount <= productDetail.quantityInStock) {
-                                       setAmount(newAmount)
-                                   }
-                                   //TODO right now can not modify first number, handle it later
-                               }}
-                               onBlur={() => {
-                                   if (amount == null) {
-                                       setAmount(1)
-                                   }
-                               }}></input>
-                        <button className={"amount-btn"}
-                                onClick={() => setAmount(amount < productDetail.quantityInStock ? amount + 1 : amount)}
-                        >+
-                        </button>
-                    </ButtonGroup>
-                    <Typography>{productDetail.quantityInStock - amount} Available</Typography>
-                </Box>
-                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Button variant="outlined" size="large"
-                            onClick={() => onClickAddToCart(amount, selectProductPointId, false)}
-                            sx={{width: "100%"}}>Thêm vào giỏ hàng</Button>
-                    <Button variant="contained" size="large" sx={{width: "100%"}}
-                            onClick={() => onClickAddToCart(amount, selectProductPointId, true)}>Mua ngay</Button>
-                </Box>
+                {
+                    productDetail.productStatus == ProductStatus.ACTIVE && productDetail.quantityInStock > 0 && (
+                        <Box sx={{display: "flex", gap: 2, alignItems: "center"}}
+                             className={"btn-amount-group"}>
+                            <Typography width={"15%"} align={"left"}>Số lượng</Typography>
+                            <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+                                <button onClick={() => setAmount(amount > 1 ? amount - 1 : amount)}
+                                        className={"amount-btn"}>-
+                                </button>
+                                {/* TODO: handle 0 amount */}
+                                <input className={"amount-input"} id={"amount"} value={amount}
+                                       onChange={event => {
+                                           let newAmount = parseInt(event.target.value);
+                                           if (Number.isNaN(newAmount)) {
+                                               setAmount(null)
+                                           } else if (newAmount > 0 && newAmount <= productDetail.quantityInStock) {
+                                               setAmount(newAmount)
+                                           }
+                                           //TODO right now can not modify first number, handle it later
+                                       }}
+                                       onBlur={() => {
+                                           if (amount == null) {
+                                               setAmount(1)
+                                           }
+                                       }}></input>
+                                <button className={"amount-btn"}
+                                        onClick={() => setAmount(amount < productDetail.quantityInStock ? amount + 1 : amount)}
+                                >+
+                                </button>
+                            </ButtonGroup>
+                            <Typography>{productDetail.quantityInStock - amount + 1} Available</Typography>
+                        </Box>
+                    )
+                }
+                {
+                    (productDetail.productStatus == ProductStatus.INACTIVE || productDetail.exchangeAblePoints.length == 0) ? (
+                        <Alert severity={"warning"}>{"Sản phẩm hiện thời không khả dụng"}</Alert>
+                    ) : productDetail.quantityInStock == 0 ? (
+                        <Alert severity={"warning"}>{"Sản phẩm đã bán hết"}</Alert>
+                    ) : (
+                        <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                            <Button variant="outlined" size="large"
+                                    onClick={() => onClickAddToCart(amount, selectProductPointId, false)}
+                                    sx={{width: "100%"}}>Thêm vào giỏ hàng</Button>
+                            <Button variant="contained" size="large" sx={{width: "100%"}}
+                                    onClick={() => onClickAddToCart(amount, selectProductPointId, true)}>Mua
+                                ngay</Button>
+                        </Box>
+                    )
+                }
+
                 {
                     showAlert.open && show && (
                         <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
@@ -418,8 +434,10 @@ const CustomerProductDetailPage: React.FC<Props> = () => {
                 if (isAuthenticated()) {
                     getEnterpriseMembershipForCurrentCustomer()
                         .then((resEnterpriseMemberships: EnterpriseMembership[]) => {
+                            console.log(resEnterpriseMemberships);
+                            console.log(productDetailRes.exchangeAblePoints)
                             productDetailRes.exchangeAblePoints.forEach(productPoint => {
-                                if (resEnterpriseMemberships.findIndex(x => x.enterprise.id == productPoint.enterprise.id) == -1) {
+                                if (isNull(resEnterpriseMemberships.find(x => x.enterprise.id == productPoint.enterprise.id))) {
                                     productPoint.disable = true;
                                 }
                             })

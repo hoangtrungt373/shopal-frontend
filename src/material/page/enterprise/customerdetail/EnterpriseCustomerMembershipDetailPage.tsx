@@ -37,6 +37,7 @@ const EnterpriseCustomerMembershipDetailPage: React.FC<Props> = ({currentEnterpr
             customerId: params.customerId,
             associateEnterpriseIds: [currentEnterprise.id]
         }
+        document.title = currentEnterprise.enterpriseName + " - Customer #" + params.customerId;
         getCustomerAllInfoByCriteria(criteria)
             .then((resCustomerAllInfos: CustomerAllInfo[]) => {
                 if (resCustomerAllInfos.length == 1) {

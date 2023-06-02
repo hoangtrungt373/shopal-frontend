@@ -28,6 +28,7 @@ import {Enterprise} from "../../../model/Enterprise";
 import {AbstractFilter} from "../../../model/AbstractFilter";
 import {getAllEnterprise} from "../../../service/enterprise.service";
 import {CustomerSearchCriteriaRequest} from "../../../model/request/CustomerSearchCriteriaRequest";
+import {UserRole} from "../../../model/enums/UserRole";
 
 
 interface Props {
@@ -342,7 +343,7 @@ const ProductList: React.FC<Props> = ({products}) => {
                 return (
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 0.5}}>
                         {
-                            params.row.exchangeAblePoints.map((productPoint, index) => (
+                            params.row.exchangeAblePoints.filter(x => x.active).map((productPoint, index) => (
                                 <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
                                     <Typography>{productPoint.pointExchange}</Typography>
                                     <Tooltip title={productPoint.enterprise.enterpriseName} key={index}>
@@ -459,7 +460,8 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
     const [isShow, setIsShow] = useState<boolean>(false);
 
     useEffect(() => {
-        getProductByCriteria({}).then((resProducts: Product[]) => {
+        document.title = "Admin - Products";
+        getProductByCriteria({userRole: UserRole.ADMIN}).then((resProducts: Product[]) => {
             setProducts(resProducts);
             getAllMainCatalog()
                 .then((resCatalogs: Catalog[]) => {
@@ -488,6 +490,7 @@ const AdminProductCollectionPage: React.FC<Props> = ({}) => {
 
     /*TODO: handle search*/
     const handleSearchProduct = async (criteria: ProductSearchCriteriaRequest) => {
+        criteria.userRole = UserRole.ADMIN;
         getProductByCriteria(formatCriteria(criteria))
             .then((resProducts: Product[]) => setProducts(resProducts))
             .catch((err: ExceptionResponse) => console.log(err));

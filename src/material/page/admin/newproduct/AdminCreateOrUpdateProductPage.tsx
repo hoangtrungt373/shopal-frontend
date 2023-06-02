@@ -86,6 +86,7 @@ const AdminCreateOrUpdateProductPage: React.FC<Props> = ({}) => {
     const [productDetail, setProductDetail] = useState<ProductDetail>();
 
     useEffect(() => {
+        document.title = "Admin - New Product";
         getAllMainCatalog()
             .then((resCatalogs: Catalog[]) => {
                 let newChildCatgalogs: Catalog[] = resCatalogs.filter(x => x.childCatalogs.length > 0).flatMap(x => x.childCatalogs);
@@ -162,6 +163,7 @@ const AdminCreateOrUpdateProductPage: React.FC<Props> = ({}) => {
                 initialCash: data.initialCash,
                 catalogId: selectedChildCatalog.id,
                 uploadImgUrls: [...reqImgUrls],
+                content: content,
                 productStatus: selectedProductStatus,
                 productType: selectedProductType
             }

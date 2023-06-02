@@ -10,7 +10,6 @@ import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import Typography from "@mui/material/Typography";
 import './AdminAppBar.scss'
 import {UserRole} from "../../../model/enums/UserRole";
-import {removeExtensionEmail} from "../../../util/display.util";
 import {Enterprise} from "../../../model/Enterprise";
 
 interface Props {
@@ -43,11 +42,11 @@ const AccountBlock: React.FC<Props> = ({userRole, currentEnterprise}) => {
                         // @ts-ignore
                         e.target.src = AssetPath.avatarDefaultImg
                     }}
-                         src={userRole == UserRole.ENTERPRISE_MANAGER ? `${AssetPath.enterpriseLogoUrl}${currentEnterprise.logoUrl}` : AssetPath.avatarDefaultImg}
+                         src={currentEnterprise && userRole == UserRole.ENTERPRISE_MANAGER ? `${AssetPath.enterpriseLogoUrl}${currentEnterprise.logoUrl}` : AssetPath.avatarDefaultImg}
                          style={{width: 40, height: 40, display: "block", borderRadius: "50%"}}/>
                     {
-                        userRole == UserRole.ENTERPRISE_MANAGER ? (
-                            <Typography>{removeExtensionEmail(currentEnterprise.contactEmail)}</Typography>
+                        currentEnterprise && userRole == UserRole.ENTERPRISE_MANAGER ? (
+                            <Typography>{currentEnterprise.enterpriseName}</Typography>
                         ) : (
                             <Typography>Admin</Typography>
                         )

@@ -279,6 +279,7 @@ const AdminCustomerManagementPage: React.FC<Props> = ({}) => {
             }).finally(() => {
             setIsShow(true);
         })
+        document.title = "Admin - Customers"
     }, []);
 
     const handleSearchCustomer = async (criteria: CustomerSearchCriteriaRequest) => {

@@ -90,7 +90,7 @@ export const CustomerHomeHeader: React.FC<Props> = ({currentCustomer}) => {
                     <Link to={EnterpriseRouter.registerPage}>Trở thành doanh nghiệp hợp tác Shopal</Link>
                 </Stack>
                 {
-                    isAuthenticated() ? (
+                    currentCustomer && isAuthenticated() ? (
                         <Stack direction={"row"} spacing={1} alignItems={"center"} className={"top-header dropdown"}
                                style={{textAlign: "right"}}>
                             <img alt="img" onError={(e) => {

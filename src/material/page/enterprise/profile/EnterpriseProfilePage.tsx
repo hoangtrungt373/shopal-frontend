@@ -50,6 +50,21 @@ const EnterpriseProfilePage: React.FC<Props> = ({currentEnterprise}) => {
         severity: null
     });
 
+    useEffect(() => {
+        const timeId = setTimeout(() => {
+            // After 3 seconds set the show value to false
+            setShowAlert(prevState4 => ({
+                ...prevState4,
+                open: false,
+            }));
+        }, 3000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+
+    }, [showAlert]);
+
     const onSubmit = handleSubmit(data => {
         data.uploadLogoUrl = uploadAvatar;
         updateCurrentEnterpriseInfo(data)
@@ -86,6 +101,7 @@ const EnterpriseProfilePage: React.FC<Props> = ({currentEnterprise}) => {
         setValue("contactEmail", currentEnterprise.contactEmail);
         setAvatarUrl(currentEnterprise.logoUrl);
         setIsShow(true)
+        document.title = currentEnterprise.enterpriseName + " - Profile";
     }, [currentEnterprise]);
 
     const handleUploadAvatar = (e) => {

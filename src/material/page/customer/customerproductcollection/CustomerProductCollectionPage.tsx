@@ -3,14 +3,14 @@ import {useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import {Catalog} from "../../../model/Catalog";
-import {getAllMainCatalog} from "../../../service/catalog.service";
+import {getCatalogByCriteria} from "../../../service/catalog.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import PageSpinner from "../../common/share/PageSpinner";
 import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import './CustomerProductCollectionPage.scss';
-import {Card, CardMedia, Pagination, Rating, Tooltip} from "@mui/material";
+import {Alert, Card, CardMedia, Pagination, Rating, Tooltip} from "@mui/material";
 import {Enterprise} from "../../../model/Enterprise";
 import {getAllEnterprise} from "../../../service/enterprise.service";
 import Button from "@mui/material/Button";
@@ -29,6 +29,7 @@ import {countProductByCriteria, getProductByCriteria} from "../../../service/pro
 import {createSeoLink} from "../../../util/display.util";
 import Avatar from "@mui/material/Avatar";
 import {DEFAULT_SEARCH_LIMIT} from "../../../config/constants";
+import {isNotNull, isNull} from "../../../util/object.util";
 
 interface Props {
     catalogs?: Catalog[],
@@ -91,7 +92,7 @@ const SearchCriteriaList: React.FC<Props> = ({
                     <Typography fontWeight={"bold"}>Danh mục sản phẩm</Typography>
                     {catalogs.map((catalog, index) => {
                         return (
-                            <Typography onClick={() => onClickCatalog(catalog.id)}
+                            <Typography onClick={() => onClickCatalog(catalog)}
                                         key={index}
                                         className={catalog.id == selectedCatalog ? "select-link active" : "select-link"}>{catalog.catalogName}</Typography>
                         );
@@ -101,14 +102,14 @@ const SearchCriteriaList: React.FC<Props> = ({
             <Divider/>
             <Box sx={{px: 2}}>
                 <Box style={{display: "flex", flexDirection: "column", gap: "12px"}}>
-                    <Typography fontWeight={"bold"}>Review</Typography>
+                    <Typography fontWeight={"bold"}>Đánh giá</Typography>
                     {[5, 4, 3].map((star) => {
                         return (
                             <Box sx={{display: "flex", alignItems: "center", ml: -0.5}}>
                                 <Rating name="read-only" value={star} readOnly sx={{mr: 1}} size="small"/>
                                 <Typography
                                     className={star == selectedRating ? "select-link active" : "select-link"}
-                                    onClick={() => onClickRating(star)}>from {star} star</Typography>
+                                    onClick={() => onClickRating(star)}>từ {star} sao</Typography>
                             </Box>
                         );
                     })}
@@ -116,7 +117,7 @@ const SearchCriteriaList: React.FC<Props> = ({
             </Box>
             <Divider/>
             <Box sx={{px: 2}}>
-                <Box style={{display: "flex", flexDirection: "column"}}>
+                <Box style={{display: "flex", flexDirection: "column", marginBottom: "8px"}}>
                     <Typography fontWeight={"bold"} style={{marginBottom: "8px"}}>Nhà cung cấp</Typography>
                     {enterprises.map((enterprise, index) => {
 
@@ -181,7 +182,7 @@ const ProductCollectionContent: React.FC<Props> = ({products}) => {
                         <Link
                             to={CustomerRouter.productDetailPage + "/" + createSeoLink(product.productName) + "." + product.id}
                             key={index} style={{textDecoration: "none"}}>
-                            <Card sx={{width: "100%"}} className={"cart-item"}>
+                            <Card sx={{width: "100%", height: "350px"}} className={"cart-item"}>
                                 <CardMedia
                                     sx={{height: 200, p: 5}}
                                     image={AssetPath.productImgUrl + product.mainImgUrl}
@@ -202,10 +203,11 @@ const ProductCollectionContent: React.FC<Props> = ({products}) => {
                                     </Box>
                                     <Grid container spacing={2}>
                                         {
-                                            product.exchangeAblePoints.map((productPoint, index) => (
-                                                <Grid item xs={3} key={index}>
+                                            product.exchangeAblePoints.filter(x => x.active).map((productPoint, index) => (
+                                                <Grid item xs={4} key={index}>
                                                     <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
                                                         <Typography fontWeight={"bold"}
+                                                                    style={{width: "30px", textAlign: "right"}}
                                                                     color={"#FF424E"}>{productPoint.pointExchange}</Typography>
                                                         <Tooltip title={productPoint.enterprise.enterpriseName}
                                                                  key={index}>
@@ -249,11 +251,12 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
             enterprise: [],
             rating: null,
             keyword: null,
+            subCatalog: null,
             page: 0
         }
         newProductSearchPath = getModelFromSearchParams(query, newProductSearchPath);
 
-        if (newProductSearchPath.catalog == null && newProductSearchPath.keyword == null && newProductSearchPath.enterprise == null) {
+        if (isNull(newProductSearchPath.catalog) && isNull(newProductSearchPath.keyword) && isNull(newProductSearchPath.enterprise) && isNull(newProductSearchPath.subCatalog)) {
             history.push(CustomerRouter.homePage)
         } else {
             if (newProductSearchPath.keyword != null) {
@@ -262,11 +265,16 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
             } else {
             }
         }
-        console.log(newProductSearchPath)
         setProductSearchPath(newProductSearchPath);
 
         let productSearchRequest: ProductSearchCriteriaRequest = productSearchPathToProductSearchCriteriaRequest(newProductSearchPath);
-        getAllMainCatalog()
+        console.log(newProductSearchPath);
+        getCatalogByCriteria({
+            productKeyword: newProductSearchPath.keyword,
+            childCatalogId: newProductSearchPath.subCatalog,
+            enterpriseIda: newProductSearchPath.enterprise,
+            parentCatalogId: newProductSearchPath.catalog
+        })
             .then((resCatalogs: Catalog[]) => {
                 setCatalogs(resCatalogs);
 
@@ -283,7 +291,9 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
                     })
                     .catch((err: ExceptionResponse) => {
                         console.log(err);
-                    });
+                    }).finally(() => {
+                    setIsShow(true);
+                })
 
                 countProductByCriteria(productSearchRequest)
                     .then((resTotal: number) => {
@@ -293,18 +303,23 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
                     .catch((err: ExceptionResponse) => {
                         console.log(err);
                     });
+
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
             })
-            .finally(() => {
-                setIsShow(true);
-            })
+
     }, [window.location.search]);
 
-    const handleClickCatalog = (catalogId: number) => {
+    const handleClickCatalog = (catalog: Catalog) => {
         let newProductSearchPath = productSearchPath;
-        newProductSearchPath.catalog = catalogId;
+        if (isNotNull(catalog.childCatalogs) && catalog.childCatalogs.length > 0) {
+            newProductSearchPath.catalog = catalog.id;
+            newProductSearchPath.subCatalog = null;
+        } else {
+            newProductSearchPath.subCatalog = catalog.id;
+            newProductSearchPath.catalog = null;
+        }
         refreshSearch(newProductSearchPath);
     }
 
@@ -338,15 +353,15 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
         history.push(CustomerRouter.productCollectionPage + createSearchQuery(productSearchPath));
     }
 
-    if (isShow) {
+    if (isShow && products) {
         return (
             <Box sx={{display: "flex", justifyContent: "space-between", gap: 2}} className={"productCollectionPage"}>
                 <Box width={"20%"}>
                     {
                         productSearchPath && (
-                            <SearchCriteriaList catalogs={catalogs.filter(x => x.id <= 5)} enterprises={enterprises}
-                                                selectedCatalog={productSearchPath.catalog}
-                                                onClickCatalog={(catalogId: number) => handleClickCatalog(catalogId)}
+                            <SearchCriteriaList catalogs={catalogs} enterprises={enterprises}
+                                                selectedCatalog={isNotNull(productSearchPath.catalog) ? productSearchPath.catalog : productSearchPath.subCatalog}
+                                                onClickCatalog={(catalog) => handleClickCatalog(catalog)}
                                                 selectedRating={productSearchPath.rating}
                                                 onClickRating={(star: number) => handleClickRating(star)}
                                                 selectedEnterprises={productSearchPath.enterprise}
@@ -354,14 +369,27 @@ const CustomerProductCollectionPage: React.FC<Props> = () => {
                         )
                     }
                 </Box>
-                <Box width={"80%"} sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                    <ProductCollectionHeader title={title} isTitleKeyword={true}/>
-                    <ProductCollectionContent products={products}/>
-                    <Pagination count={Math.ceil(total / DEFAULT_SEARCH_LIMIT)} color="primary" shape="rounded"
-                                onChange={(e, page: number) => handleChangePage(page)}
-                                sx={{margin: "32px auto 0px auto"}}/>
+                {
+                    products.length > 0 ? (
+                        <Box width={"80%"} sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                            <ProductCollectionHeader title={title} isTitleKeyword={true}/>
+                            <ProductCollectionContent products={products}/>
+                            <Pagination count={Math.ceil(total / DEFAULT_SEARCH_LIMIT)} color="primary" shape="rounded"
+                                        onChange={(e, page: number) => handleChangePage(page)}
+                                        sx={{margin: "32px auto 0px auto"}}/>
 
-                </Box>
+                        </Box>
+                    ) : (
+                        <Box width={"80%"} sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                            <Box className={"content-box"}>
+                                <Alert severity={"warning"}>Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của
+                                    bạn</Alert>
+                            </Box>
+
+                        </Box>
+                    )
+                }
+
             </Box>
         )
     } else {

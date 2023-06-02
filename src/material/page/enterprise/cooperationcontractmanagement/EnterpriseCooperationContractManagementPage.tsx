@@ -55,12 +55,12 @@ const breadCrumbItems: BreadcrumbItem[] = [
 ]
 
 
-interface ChipStyle {
+export interface ChipStyle {
     chipBgColor: string,
     chipTextColor: string,
 }
 
-const getChipStyle = (status: ContractStatus) => {
+export const getChipStyle = (status: ContractStatus) => {
     let chipBgColor = null;
     let chipTextColor = "#212121";
     switch (status) {
@@ -397,6 +397,21 @@ const EnterpriseCooperationContractManagementPage: React.FC<Props> = ({currentEn
     });
 
     useEffect(() => {
+        const timeId = setTimeout(() => {
+            // After 3 seconds set the show value to false
+            setShowAlert(prevState4 => ({
+                ...prevState4,
+                open: false,
+            }));
+        }, 3000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+
+    }, [showAlert]);
+
+    useEffect(() => {
         let criteria: CooperationContractSearchCriteriaRequest = {
             startDate: null,
             endDate: null,
@@ -426,13 +441,15 @@ const EnterpriseCooperationContractManagementPage: React.FC<Props> = ({currentEn
             .catch((err: ExceptionResponse) => {
                 console.log(err);
             })
+        document.title = currentEnterprise.enterpriseName + " - Contract";
+
     }, []);
 
     const setFormValue = (newItem: CooperationContract) => {
         setValue("id", newItem.id);
         setValue("contractStatus", newItem.contractStatus);
         setValue("startDate", newItem.startDate);
-        setValue("endDate", newItem.startDate);
+        setValue("endDate", newItem.endDate);
         setValue("cashPerPoint", newItem.cashPerPoint);
         setValue("commissionRate", newItem.commissionRate);
     }
@@ -449,10 +466,12 @@ const EnterpriseCooperationContractManagementPage: React.FC<Props> = ({currentEn
 
     const handleClickEdit = (id: number) => {
         let newItem: CooperationContract = cooperationContracts.find(x => x.id == id);
+        if (newItem.contractStatus != ContractStatus.INACTIVE) {
+            setIsEdit(true);
+        }
         setFormValue(newItem);
         setSelectedContract(newItem);
         setSelectedContractStatus(newItem.contractStatus);
-        setIsEdit(true);
     }
 
 
@@ -478,30 +497,35 @@ const EnterpriseCooperationContractManagementPage: React.FC<Props> = ({currentEn
                         <Typography
                             className={"page-sub-header"}>{isEdit ? "Contract: #" + selectedContract.id : "New Contract"}</Typography>
                         <Button variant={"contained"}
+                                disabled={selectedContractStatus == ContractStatus.INACTIVE}
                                 type={"submit"}>{!isEdit ? "Request create" : 'Request change'}</Button>
                     </Box>
                     <Divider/>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
                             <Typography gutterBottom>Start Date</Typography>
-                            <TextField {...register("startDate")} fullWidth size={"small"} disabled={isEdit}
+                            <TextField {...register("startDate")} fullWidth size={"small"}
+                                       disabled={selectedContractStatus != ContractStatus.PENDING}
                                        type={"date"}
                                        placeholder={"Start Date"}/>
                         </Grid>
                         <Grid item xs={3}>
                             <Typography gutterBottom>End Date</Typography>
-                            <TextField {...register("endDate")} fullWidth size={"small"} type={"date"}/>
+                            <TextField {...register("endDate")} fullWidth size={"small"}
+                                       disabled={selectedContractStatus == ContractStatus.INACTIVE}
+                                       type={"date"}/>
                         </Grid>
                         <Grid item xs={3}>
                             <Typography gutterBottom>Commission Rate</Typography>
-                            <TextField {...register("commissionRate")} fullWidth size={"small"}
-                                       type={"number"}/>
+                            <TextField {...register("commissionRate")}
+                                       disabled={selectedContractStatus == ContractStatus.INACTIVE}
+                                       fullWidth size={"small"}/>
                         </Grid>
                         <Grid item xs={3}>
                             <Typography gutterBottom>Cash Per Point</Typography>
                             <TextField {...register("cashPerPoint")} fullWidth size={"small"}
-                                       onChange={(e: any) => setUpdateCashPerPoint(Number.parseInt(e.target.value))}
-                                       type={"number"}/>
+                                       disabled={selectedContractStatus == ContractStatus.INACTIVE}
+                                       onChange={(e: any) => setUpdateCashPerPoint(Number.parseInt(e.target.value))}/>
                         </Grid>
                         <Grid item xs={3}>
                             <Typography gutterBottom fontWeight={"bold"}>Status</Typography>

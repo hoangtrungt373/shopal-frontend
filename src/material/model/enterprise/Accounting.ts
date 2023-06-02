@@ -1,7 +1,8 @@
 import {AbstractModel} from "../AbstractModel";
 import {PaymentStatus} from "../enums/PaymentStatus";
+import {Enterprise} from "../Enterprise";
 
-export interface EnterpriseAccounting extends AbstractModel {
+export interface Accounting extends AbstractModel {
     startDate: string;
     endDate: string;
     totalIncome: number;
@@ -12,4 +13,5 @@ export interface EnterpriseAccounting extends AbstractModel {
     paymentMethod: string;
     paymentMethodDescription: string;
     commissionRate: number;
+    enterprise: Enterprise
 }

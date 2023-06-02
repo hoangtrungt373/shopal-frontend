@@ -81,6 +81,9 @@ import AdminCooperationContractRequestManagementPage
 import AdminProductSellingRequestManagementPage
     from './admin/requestsellingproductmanagement/AdminProductSellingRequestManagementPage';
 import {CustomerCheckoutHeader} from "./common/customer/CustomerCheckoutHeader";
+import AdminCooperationContractManagementPage from "./admin/contractmanagement/AdminCooperationContractManagementPage";
+import AdminAccountingManagementPage from "./admin/accountingmanagement/AdminAccountingManagementPage";
+import {CustomerHomeFooter} from "./common/customer/CustomerHomeFooter";
 
 const theme = createTheme({
     typography: {
@@ -186,16 +189,15 @@ const adminListItems: SideBarListItem[] = [
             },
             {
                 title: "Contract List",
-                url: AdminRouter.enterpriseManagement,
+                url: AdminRouter.cooperationContractManagement,
             }
         ]
     },
     {
         title: "ACCOUNTINGS",
-        icon: <ReceiptIcon/>,
-        url: "*"
+        url: AdminRouter.accountingPage,
+        icon: <ReceiptIcon/>
     },
-
 ]
 
 const enterpriseListItems: SideBarListItem[] = [
@@ -306,7 +308,7 @@ const PageContainer = () => {
                                 path={[EnterpriseRouter.dashboardPage, EnterpriseRouter.customerRegisterManagementPage, EnterpriseRouter.customerMembershipManagementPage,
                                     EnterpriseRouter.customerMembershipDetailPage + "/*", EnterpriseRouter.purchaseOrderManagement,
                                     EnterpriseRouter.productCollectionPage, EnterpriseRouter.productDetailPage + "/*", EnterpriseRouter.cooperationContractManagement, EnterpriseRouter.accounting + "/*",
-                                    EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage]}
+                                    EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage, EnterpriseRouter.accounting]}
                                 exact
                                 component={() => (<AdminAppBar open={open} toggleDrawer={toggleDrawer}
                                                                currentEnterprise={currentEnterprise}
@@ -315,7 +317,7 @@ const PageContainer = () => {
                                 path={[EnterpriseRouter.dashboardPage, EnterpriseRouter.customerRegisterManagementPage, EnterpriseRouter.customerMembershipManagementPage,
                                     EnterpriseRouter.customerMembershipDetailPage + "/*", EnterpriseRouter.purchaseOrderManagement,
                                     EnterpriseRouter.productCollectionPage, EnterpriseRouter.productDetailPage + "/*", EnterpriseRouter.cooperationContractManagement, EnterpriseRouter.accounting + "/*",
-                                    EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage]}
+                                    EnterpriseRouter.notificationPage, EnterpriseRouter.purchaseOrderDetailPage + "/*", EnterpriseRouter.profilePage, EnterpriseRouter.accounting]}
                                 exact
                                 component={() => (<AdminDrawer open={open} toggleDrawer={toggleDrawer}
                                                                content={<MainSideBarListItem
@@ -363,20 +365,24 @@ const PageContainer = () => {
                                                         exact/>
                                                     <PrivateRoute path={EnterpriseRouter.productCollectionPage}
                                                                   component={EnterpriseProductCollectionPage}
+                                                                  currentEnterprise={currentEnterprise}
                                                                   exact/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.productDetailPage + "/*.:productId"}
-                                                        component={EnterpriseProductDetailPage} exact/>
+                                                        component={EnterpriseProductDetailPage}
+                                                        currentEnterprise={currentEnterprise} exact/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.cooperationContractManagement}
                                                         component={EnterpriseCooperationContractManagementPage}
                                                         currentEnterprise={currentEnterprise}
                                                         exact/>
                                                     <PrivateRoute path={EnterpriseRouter.accounting}
+                                                                  currentEnterprise={currentEnterprise}
                                                                   component={EnterpriseAccountingPage} exact/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.accounting + "/*.:accountingId"}
-                                                        component={EnterpriseAccountingDetailPage}/>
+                                                        component={EnterpriseAccountingDetailPage}
+                                                        currentEnterprise={currentEnterprise}/>
                                                     <PrivateRoute
                                                         path={EnterpriseRouter.notificationPage}
                                                         component={EnterpriseNotificationPage}
@@ -452,6 +458,10 @@ const PageContainer = () => {
                                                         component={AdminCooperationContractRequestManagementPage}
                                                         exact/>
                                                     <PrivateRoute
+                                                        path={AdminRouter.cooperationContractManagement}
+                                                        component={AdminCooperationContractManagementPage}
+                                                        exact/>
+                                                    <PrivateRoute
                                                         path={AdminRouter.requestSellingProductManagement}
                                                         component={AdminProductSellingRequestManagementPage}
                                                         exact/>
@@ -473,6 +483,9 @@ const PageContainer = () => {
                                                     <PrivateRoute
                                                         path={AdminRouter.editProductPage + "/*.:productId"}
                                                         component={AdminCreateOrUpdateProductPage} exact/>
+                                                    <PrivateRoute
+                                                        path={AdminRouter.accountingPage}
+                                                        component={AdminAccountingManagementPage} exact/>
                                                 </Switch>
                                             </Box>
                                         </Grid>
@@ -509,7 +522,7 @@ const PageContainer = () => {
                             <Route path={AdminRouter.loginPage} component={AdminLoginPage}/>
                         </Switch>
                         <Box>
-                            <Container maxWidth="lg" sx={{marginBottom: "24px"}}>
+                            <Container maxWidth="lg" sx={{marginBottom: "24px", minHeight: "500px"}}>
                                 <Switch>
                                     <Route path={CustomerRouter.homePage} component={CustomerHomeContentPage}
                                            exact/>
@@ -526,6 +539,7 @@ const PageContainer = () => {
                                                   component={CustomerDashboardPage}/>
                                 </Switch>
                             </Container>
+                            <CustomerHomeFooter/>
                         </Box>
                     </ThemeProvider>
                 </BrowserRouter>

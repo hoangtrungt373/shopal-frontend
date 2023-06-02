@@ -15,9 +15,28 @@ export const getCooperationContractByCriteria = async (criteria: CooperationCont
     }
 }
 
+
+export const syncContractStatus = async () => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<string>(`/contract/sync-status`);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
 export const handleReceiveCreateOrUpdateContract = async (request: CooperationContract) => {
     try {
         const result: AxiosResponse = await axiosClient.post<string>(`/contract/receive-create-or-update-contract-request`, request);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const cancelCreateOrUpdateContractAnn = async (annId: number) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<string>(`/contract/contract-request/cancel`, annId);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

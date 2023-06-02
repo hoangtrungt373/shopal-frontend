@@ -1,20 +1,30 @@
 import {AxiosResponse} from "axios";
 import axiosClient from "../config/axiosClient";
 import {ExceptionResponse} from "../model/exception/ExceptionResponse";
-import {EnterpriseAccounting} from "../model/enterprise/EnterpriseAccounting";
+import {Accounting} from "../model/enterprise/Accounting";
+import {AccountingSearchCriteriaRequest} from "../model/request/AccountingSearchCriteriaRequest";
 
-export const getAllAccountingForCurrentEnterprise = async () => {
+export const getAccountingByCriteria = async (criteria: AccountingSearchCriteriaRequest) => {
     try {
-        const result: AxiosResponse = await axiosClient.get<EnterpriseAccounting[]>(`/accounting/current-enterprise/accounting/get-all`);
+        const result: AxiosResponse = await axiosClient.post<Accounting[]>(`/accounting/get-by-criteria`, criteria);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);
     }
 }
 
-export const createNewUrlProcessPaymentAccountingForCurrentEnterprise = async (accountingId: number) => {
+export const calculateAccounting = async (criteria: AccountingSearchCriteriaRequest) => {
     try {
-        const result: AxiosResponse = await axiosClient.post<String>(`/accounting/current-enterprise/create-url-process-payment`, accountingId);
+        const result: AxiosResponse = await axiosClient.post<string>(`/accounting/calculate-accounting`, criteria);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const createNewUrlProcessPaymentAccountingForCurrentEnterprise = async (accounting: Accounting) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<String>(`/accounting/get-payment-url`, accounting);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

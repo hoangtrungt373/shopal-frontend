@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Enterprise} from "../../../model/Enterprise";
-import {Autocomplete, Box, Chip, Rating, Tooltip} from "@mui/material";
+import {Autocomplete, Box, Chip, MenuItem, Rating, Tooltip} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PageSpinner from "../../common/share/PageSpinner";
 import {Product} from "../../../model/Product";
@@ -25,12 +25,19 @@ import {GroupItems} from "../../../model/common/GroupItem";
 import Button from "@mui/material/Button";
 import {ProductType} from "../../../model/enums/ProductType";
 import Avatar from "@mui/material/Avatar";
+import {UserRole} from "../../../model/enums/UserRole";
+import {AbstractFilter} from "../../../model/AbstractFilter";
+import {CustomerSearchCriteriaRequest} from "../../../model/request/CustomerSearchCriteriaRequest";
+import {productStatusSearchOptions, productTypeSearchOptions} from "../../admin/product/AdminProductCollectionPage";
+import {getAllEnterprise} from "../../../service/enterprise.service";
 
 
 interface Props {
     products?: Product[],
     childCatalogs?: Catalog[]
-    onSearchProduct?: Function
+    onSearchProduct?: Function,
+    enterpriseFilters?: AbstractFilter[],
+    currentEnterprise?: Enterprise
 }
 
 const breadCrumbItems: BreadcrumbItem[] = [
@@ -40,25 +47,46 @@ const breadCrumbItems: BreadcrumbItem[] = [
     },
 ]
 
-const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
+const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs, enterpriseFilters}) => {
 
     const {
         register,
         setValue,
+        reset,
+        getValues,
         handleSubmit,
         formState: {errors}
     } = useForm<ProductSearchCriteriaRequest>();
-    const [selectedCatalog, setSelectedCatalog] = useState<number>(null);
+    const [selectedCatalog, setSelectedCatalog] = useState<Catalog>(null);
+    const [selectedEnterprises, setSelectedEnterprises] = useState<AbstractFilter[]>([]);
+    const [selectedProductType, setSelectedProductType] = useState<ProductType>(ProductType.ALL);
+    const [selectedProductStatus, setSelectedProductStatus] = useState<ProductStatus>(ProductStatus.ALL);
 
     const onSubmit = handleSubmit(data => {
         let criteria: ProductSearchCriteriaRequest = {
             keyword: data.keyword,
             sku: data.sku,
-            catalogIdList: selectedCatalog != null ? [selectedCatalog] : [],
-            enterpriseIdList: null
+            catalogIdList: selectedCatalog != null ? [selectedCatalog.id] : [],
+            enterpriseIdList: [...selectedEnterprises.map(x => x.value)],
+            productStatus: selectedProductStatus,
+            productType: selectedProductType
         }
         onSearchProduct(criteria);
     });
+
+    const handleChangeSelectedEnterprises = (e, value) => {
+        setSelectedEnterprises([...value])
+    }
+
+    const handleClearFilter = () => {
+        reset();
+        setSelectedEnterprises([]);
+        setSelectedCatalog(null);
+        setSelectedProductType(ProductType.ALL);
+        setSelectedProductStatus(ProductStatus.ALL);
+        let criteria: CustomerSearchCriteriaRequest = {}
+        onSearchProduct(criteria);
+    }
 
     return (
         <Box sx={{display: "flex", gap: 2}}>
@@ -66,11 +94,12 @@ const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
                         <Typography gutterBottom>Keyword</Typography>
-                        <TextField {...register("keyword")} fullWidth size={"small"}/>
+                        <TextField {...register("keyword")} fullWidth size={"small"}
+                                   placeholder={"Product name"}/>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <Typography gutterBottom>SKU</Typography>
-                        <TextField {...register("sku")} fullWidth size={"small"}/>
+                        <TextField {...register("sku")} fullWidth size={"small"} placeholder={"Product sku"}/>
                     </Grid>
                     <Grid item xs={3}>
                         <Typography gutterBottom>Category</Typography>
@@ -79,7 +108,8 @@ const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
                             options={childCatalogs}
                             groupBy={(catalog) => catalog.parentCatalogName}
                             getOptionLabel={(catalog) => catalog.catalogName}
-                            onChange={(e, value) => setSelectedCatalog(value.id)}
+                            value={selectedCatalog}
+                            onChange={(e, value) => setSelectedCatalog(value)}
                             sx={{width: "100%"}}
                             renderInput={(params) => <TextField {...params}
                                                                 size={"small"}/>}
@@ -92,8 +122,67 @@ const ProductSearch: React.FC<Props> = ({onSearchProduct, childCatalogs}) => {
                         />
                     </Grid>
                     <Grid item xs={2}>
+                        <Typography gutterBottom>Type</Typography>
+                        <TextField
+                            select
+                            defaultValue={ProductType.ALL}
+                            value={selectedProductType}
+                            onChange={(e) => setSelectedProductType(e.target.value as ProductType)}
+                            size={"small"}
+                            sx={{width: "100%"}}
+                        >
+                            {productTypeSearchOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography gutterBottom>
+                            Enterprise
+                        </Typography>
+                        <Autocomplete
+                            multiple
+                            id="tags-standard"
+                            options={enterpriseFilters}
+                            value={selectedEnterprises}
+                            onChange={handleChangeSelectedEnterprises}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    size={"small"}
+                                    placeholder="Associate Enterprises"
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom>Status</Typography>
+                        <TextField
+                            select
+                            defaultValue={ProductStatus.ALL}
+                            value={selectedProductStatus}
+                            onChange={(e) => {
+                                setSelectedProductStatus(e.target.value as ProductStatus);
+                            }} size={"small"}
+                            sx={{width: "100%"}}
+                        >
+                            {productStatusSearchOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={2}>
                         <Typography gutterBottom color={"#fff"}>empty</Typography>
                         <Button type={"submit"} variant={"contained"} fullWidth>Search</Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom color={"#fff"}>empty</Typography>
+                        <Button variant={"text"} color={"error"} onClick={() => handleClearFilter()}>Clear
+                            filter</Button>
                     </Grid>
                 </Grid>
             </form>
@@ -221,7 +310,7 @@ const ProductList: React.FC<Props> = ({products}) => {
                 return (
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 0.5}}>
                         {
-                            params.row.exchangeAblePoints.map((productPoint, index) => (
+                            params.row.exchangeAblePoints.filter(x => x.active).map((productPoint, index) => (
                                 <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
                                     <Typography>{productPoint.pointExchange}</Typography>
                                     <Tooltip title={productPoint.enterprise.enterpriseName} key={index}>
@@ -323,45 +412,75 @@ const ProductList: React.FC<Props> = ({products}) => {
     )
 }
 
-const EnterpriseProductCollectionPage: React.FC<Props> = ({}) => {
+const EnterpriseProductCollectionPage: React.FC<Props> = ({currentEnterprise}) => {
 
     const [products, setProducts] = useState<Product[]>();
     const [childCatalogs, setChildCatalogs] = useState<Catalog[]>([]);
     const [enterprises, setEnterprises] = useState<Enterprise[]>()
     const [isShow, setIsShow] = useState<boolean>(false);
+    const [enterpriseFilters, setEnterpriseFilters] = useState<AbstractFilter[]>([]);
 
     useEffect(() => {
         getProductByCriteria({
             catalogIdList: [],
-            enterpriseIdList: []
+            enterpriseIdList: [],
+            userRole: UserRole.ADMIN
         }).then((resProducts: Product[]) => {
             setProducts(resProducts);
             getAllMainCatalog()
                 .then((resCatalogs: Catalog[]) => {
                     let childCatalogs: Catalog[] = resCatalogs.filter(x => x.childCatalogs.length > 0).flatMap(x => x.childCatalogs);
                     setChildCatalogs(childCatalogs);
+
+                    getAllEnterprise()
+                        .then((resEnterprises: Enterprise[]) => {
+                            let items: AbstractFilter[] = [];
+                            resEnterprises.forEach((resEnterprise, index) => {
+                                items.push({
+                                    label: resEnterprise.enterpriseName,
+                                    value: resEnterprise.id
+                                })
+                            });
+                            setEnterpriseFilters([...items]);
+                        }).finally(() => {
+                        setIsShow(true);
+                    })
+
                 }).catch((err: ExceptionResponse) => {
                 console.log(err);
             })
-                .finally(() => {
-                    setIsShow(true);
-                })
         }).catch((err: ExceptionResponse) => {
             console.log(err);
         })
+        document.title = currentEnterprise.enterpriseName + " - Products";
+
     }, []);
 
     /*TODO: handle search*/
     const handleSearchProduct = (criteria: ProductSearchCriteriaRequest) => {
-
+        criteria.userRole = UserRole.ADMIN;
+        getProductByCriteria(formatCriteria(criteria))
+            .then((resProducts: Product[]) => setProducts(resProducts))
+            .catch((err: ExceptionResponse) => console.log(err));
     }
+
+    const formatCriteria = (criteria: ProductSearchCriteriaRequest) => {
+        if (criteria.productType == ProductType.ALL) {
+            criteria.productType = null;
+        }
+        if (criteria.productStatus == ProductStatus.ALL) {
+            criteria.productStatus = null;
+        }
+        return criteria;
+    }
+
 
     if (isShow) {
         return (
             <Box sx={{display: "flex", flexDirection: "column"}}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Product"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                    <ProductSearch childCatalogs={childCatalogs}
+                    <ProductSearch childCatalogs={childCatalogs} enterpriseFilters={enterpriseFilters}
                                    onSearchProduct={(criteria: ProductSearchCriteriaRequest) => handleSearchProduct(criteria)}/>
                     <ProductList products={products}/>
                 </Box>

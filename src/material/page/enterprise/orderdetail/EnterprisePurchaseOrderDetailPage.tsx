@@ -23,6 +23,7 @@ import PageHeader from "../../common/share/PageHeader";
 import {PurchaseOrder} from "../../../model/PurchaseOrder";
 import {cancelReasonOptions} from "../../customer/orderhistory/CustomerPurchaseOrderHistoryPage";
 import CancelIcon from "@mui/icons-material/Cancel";
+import {Enterprise} from "../../../model/Enterprise";
 
 interface RouteParams {
     purchaseOrderId: any;
@@ -37,7 +38,8 @@ interface Props {
     purchaseOrder?: PurchaseOrder,
     title?: string,
     info?: any,
-    onUpdateOrderStatus?: Function
+    onUpdateOrderStatus?: Function,
+    currentEnterprise?: Enterprise
 }
 
 const OrderInfoBlock: React.FC<Props> = ({title, info}) => {
@@ -487,7 +489,7 @@ const TrackingOrder: React.FC<Props> = ({purchaseOrder, onUpdateOrderStatus}) =>
     )
 }
 
-const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
+const EnterprisePurchaseOrderDetailPage: React.FC<Props> = ({currentEnterprise}) => {
 
     const params: RouteParams = useParams()
     const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder>();
@@ -499,6 +501,7 @@ const EnterprisePurchaseOrderDetailPage: React.FC<Props> = () => {
         console.log(params)
         getPurchaseOrderByCriteria({purchaseOrderId: params.purchaseOrderId})
             .then((resPurchaseOrders: PurchaseOrder[]) => {
+                document.title = currentEnterprise.enterpriseName + " - Order #" + params.purchaseOrderId;
                 setPurchaseOrder(resPurchaseOrders[0]);
                 setBreadCrumbItems([
                     {

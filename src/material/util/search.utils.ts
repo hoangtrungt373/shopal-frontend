@@ -1,6 +1,7 @@
 import {DEFAULT_SEARCH_LIMIT, DEFAULT_SEARCH_OFFSET} from "../config/constants";
 import {ProductSearchPath} from "../model/request/ProductSearchPath";
 import {ProductSearchCriteriaRequest} from "../model/request/ProductSearchCriteriaRequest";
+import {isNotNull} from "./object.util";
 
 export const createSearchQuery = (model: any) => {
     let searchPath = "";
@@ -64,7 +65,7 @@ export const splitStrAndReturnArr = (str: string | null, comma: string) => {
 export const productSearchPathToProductSearchCriteriaRequest = (productSearchPath: ProductSearchPath) => {
     let productCriterion: ProductSearchCriteriaRequest = {
         // @ts-ignore
-        catalogIdList: productSearchPath.catalog != null ? [productSearchPath.catalog] : [],
+        catalogIdList: isNotNull(productSearchPath.catalog) ? [productSearchPath.catalog] : isNotNull(productSearchPath.subCatalog) ? [productSearchPath.subCatalog] : [],
         ratingMin: productSearchPath.rating,
         // @ts-ignore
         enterpriseIdList: [...productSearchPath.enterprise || []],

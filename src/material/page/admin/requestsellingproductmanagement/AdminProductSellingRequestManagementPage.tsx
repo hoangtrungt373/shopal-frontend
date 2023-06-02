@@ -100,6 +100,7 @@ const AdminProductSellingRequestManagementPage: React.FC<Props> = ({}) => {
         }).finally(() => {
             setIsShow(true);
         })
+        document.title = "Admin - Product Selling Requests";
     }, []);
 
     const handleClickDetail = (requestId: number) => {
@@ -145,10 +146,17 @@ const AdminProductSellingRequestManagementPage: React.FC<Props> = ({}) => {
     if (isShow) {
         return (
             <Stack spacing={2}>
-                <PageHeader breadCrumbItems={breadCrumbItems} title={"Contract Change Request"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Product selling request"}/>
                 <Stack spacing={2}>
                     <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
                          className={"content-box"}>
+                        {
+                            showAlert.open && (
+                                <Grid item xs={12}>
+                                    <Alert severity={"success"}>{showAlert.content}</Alert>
+                                </Grid>
+                            )
+                        }
                         <Grid container spacing={2}>
                             {
                                 sellingRequests.map((sellingRequest, index) => (
@@ -231,13 +239,6 @@ const AdminProductSellingRequestManagementPage: React.FC<Props> = ({}) => {
                                                                 disabled={sellingRequest.enterpriseProductSellingRequestStatus == EnterpriseProductSellingRequestStatus.ACCEPT}
                                                         >Refuse</Button>
                                                     </Grid>
-                                                    {
-                                                        showAlert.open && (
-                                                            <Grid item xs={12}>
-                                                                <Alert severity={"success"}>{showAlert.content}</Alert>
-                                                            </Grid>
-                                                        )
-                                                    }
                                                 </Grid>
                                             </Box>
                                         </Stack>

@@ -1,0 +1,12 @@
+@import "src/theme";
+
+.customer-home-footer {
+  .footer-link {
+    font-size: 12px;
+    color: rgb(128, 128, 137);
+
+    &:hover {
+      color: $DayBreakBlueTheme6;
+    }
+  }
+}

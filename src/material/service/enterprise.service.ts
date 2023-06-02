@@ -5,6 +5,7 @@ import {CustomerMembership} from "../model/enterprise/CustomerMembership";
 import {Enterprise} from "../model/Enterprise";
 import {EnterpriseRegisterRequestAnn} from "../model/admin/EnterpriseRegisterRequestAnn";
 import {EnterpriseRegisterRequest} from "../model/enterprise/EnterpriseRegisterRequest";
+import {EnterpriseSearchCriteriaRequest} from "../model/request/EnterpriseSearchCriteriaRequest";
 
 export const getCustomerMembershipForCurrentEnterprise = async () => {
     try {
@@ -18,6 +19,15 @@ export const getCustomerMembershipForCurrentEnterprise = async () => {
 export const getAllEnterprise = async () => {
     try {
         const result: AxiosResponse = await axiosClient.get<Enterprise[]>(`/enterprise/all`);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const getEnterpriseByCriteria = async (criteria: EnterpriseSearchCriteriaRequest) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<Enterprise[]>(`/enterprise/get-by-criteria`, criteria);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

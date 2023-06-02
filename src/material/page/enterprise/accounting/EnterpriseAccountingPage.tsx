@@ -1,25 +1,109 @@
 import * as React from "react";
 import {useCallback, useEffect, useState} from "react";
-import {Box, Chip} from "@mui/material";
-import Typography from "@mui/material/Typography";
+import {Box, Chip, Grid, MenuItem, Stack} from "@mui/material";
 import PageSpinner from "../../common/share/PageSpinner";
-import {EnterpriseAccounting} from "../../../model/enterprise/EnterpriseAccounting";
+import {Accounting} from "../../../model/enterprise/Accounting";
 import {
     createNewUrlProcessPaymentAccountingForCurrentEnterprise,
-    getAllAccountingForCurrentEnterprise
+    getAccountingByCriteria
 } from "../../../service/accounting.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridRowId} from "@mui/x-data-grid-premium";
 import {formatVndMoney} from "../../../util/display.util";
 import {PaymentStatus} from "../../../model/enums/PaymentStatus";
+import {Enterprise} from "../../../model/Enterprise";
+import PageHeader from "../../common/share/PageHeader";
+import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
+import {useForm} from "react-hook-form";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import {AccountingSearchCriteriaRequest} from "../../../model/request/AccountingSearchCriteriaRequest";
+import {paymentStatusOptions} from "../../../util/filter.util";
 
 
 interface Props {
-    enterpriseAccountings: EnterpriseAccounting[],
-    onProcessPayment: Function
+    accountings?: Accounting[],
+    onProcessPayment?: Function,
+    currentEnterprise?: Enterprise,
+    onSearchAccounting?: Function
 }
 
-const EnterpriseAccountingList: React.FC<Props> = ({enterpriseAccountings, onProcessPayment}) => {
+
+const AccountingSearch: React.FC<Props> = ({onSearchAccounting, currentEnterprise}) => {
+
+    const {
+        register,
+        setValue,
+        reset,
+        handleSubmit,
+        formState: {errors}
+    } = useForm<AccountingSearchCriteriaRequest>();
+    const [selectedPaymentStatus, setSelectedPaymentStatus] = useState<PaymentStatus>(PaymentStatus.ALL);
+
+    const onSubmit = handleSubmit(data => {
+        let criteria: AccountingSearchCriteriaRequest = {
+            startDate: data.startDate,
+            endDate: data.endDate,
+            enterpriseId: currentEnterprise.id,
+            paymentStatus: selectedPaymentStatus
+        }
+        onSearchAccounting(criteria);
+    });
+
+    const handleClearFilter = () => {
+        reset();
+        setSelectedPaymentStatus(PaymentStatus.ALL);
+        let criteria: AccountingSearchCriteriaRequest = {}
+        onSearchAccounting(criteria);
+    }
+
+    return (
+        <Box sx={{display: "flex", gap: 2}}>
+            <form onSubmit={onSubmit} style={{width: "100%"}}>
+                <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                        <Typography gutterBottom>From date</Typography>
+                        <TextField {...register("startDate")} type={"date"} size={"small"} fullWidth
+                                   placeholder={"From date"}/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography gutterBottom>To date</Typography>
+                        <TextField {...register("endDate")} type={"date"} size={"small"} fullWidth
+                                   placeholder={"To date"}/>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom>Status</Typography>
+                        <TextField
+                            select
+                            defaultValue={PaymentStatus.ALL}
+                            value={selectedPaymentStatus}
+                            onChange={(e) => setSelectedPaymentStatus(e.target.value as PaymentStatus)}
+                            fullWidth size={"small"}
+                        >
+                            {paymentStatusOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom color={"#fff"}>empty</Typography>
+                        <Button type={"submit"} variant={"contained"} fullWidth>Search</Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Typography gutterBottom color={"#fff"}>empty</Typography>
+                        <Button variant={"text"} color={"error"} onClick={() => handleClearFilter()}>Clear
+                            filter</Button>
+                    </Grid>
+                </Grid>
+            </form>
+        </Box>
+    )
+}
+
+const AccountingList: React.FC<Props> = ({accountings, onProcessPayment}) => {
 
     const moveToPayment = useCallback(
         (accountingId: GridRowId) => () => {
@@ -118,50 +202,79 @@ const EnterpriseAccountingList: React.FC<Props> = ({enterpriseAccountings, onPro
     return (
         <Box sx={{width: '100%'}}>
             <DataGridPremium
-                rows={enterpriseAccountings}
+                rows={accountings}
                 columns={columns}
                 pageSizeOptions={[5]}
-                checkboxSelection
                 disableRowSelectionOnClick
             />
         </Box>
     )
 }
 
-const EnterpriseAccountingPage: React.FC<Props> = () => {
+const EnterpriseAccountingPage: React.FC<Props> = ({currentEnterprise}) => {
 
-    const [enterpriseAccountings, setEnterpriseAccountings] = useState<EnterpriseAccounting[]>([]);
+    const [accountings, setAccountings] = useState<Accounting[]>([]);
     const [isShow, setIsShow] = useState(false);
 
     useEffect(() => {
-        getAllAccountingForCurrentEnterprise()
-            .then((resEnterpriseAccountings: EnterpriseAccounting[]) => {
-                setEnterpriseAccountings(resEnterpriseAccountings);
+        getAccountingByCriteria({enterpriseId: currentEnterprise.id})
+            .then((resAccountings: Accounting[]) => {
+                console.log(resAccountings)
+                setAccountings(resAccountings);
             })
             .catch((err: ExceptionResponse) => {
                 console.log(err);
             })
             .finally(() => {
                 setIsShow(true);
-            })
+            });
+
+        document.title = currentEnterprise.enterpriseName + " - Accounting";
+
     }, []);
 
     const processPayment = (accountingId: number) => {
-        createNewUrlProcessPaymentAccountingForCurrentEnterprise(accountingId)
+        createNewUrlProcessPaymentAccountingForCurrentEnterprise(accountings.find(x => x.id == accountingId))
             .then((res: string) => {
-                console.log(res);
+                window.location.href = res;
             }).catch((err: ExceptionResponse) => {
             console.log(err);
         })
     }
 
+    const breadCrumbItems: BreadcrumbItem[] = [
+        {
+            title: "Accounting",
+            isLasted: true
+        }
+    ]
+
+    const handleSearchAccounting = (criteria: AccountingSearchCriteriaRequest) => {
+        if (criteria.paymentStatus == PaymentStatus.ALL) {
+            criteria.paymentStatus = null;
+        }
+        getAccountingByCriteria(criteria)
+            .then((resAccountings: Accounting[]) => {
+                setAccountings(resAccountings);
+            })
+            .catch((err: ExceptionResponse) => {
+                console.log(err);
+            })
+    }
+
     if (isShow) {
         return (
-            <Box sx={{display: "flex", flexDirection: "column", gap: 2, p: 2, backgroundColor: "#fff"}}>
-                <Typography variant={"h6"} fontWeight={"bold"}>Accounting</Typography>
-                <EnterpriseAccountingList enterpriseAccountings={enterpriseAccountings}
-                                          onProcessPayment={(accountingId: number) => processPayment(accountingId)}/>
-            </Box>
+            <Stack spacing={2}>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Accounting"}/>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <AccountingSearch currentEnterprise={currentEnterprise}
+                                      onSearchAccounting={(criteria: AccountingSearchCriteriaRequest) => handleSearchAccounting(criteria)}/>
+                </Box>
+                <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                    <AccountingList accountings={accountings}
+                                    onProcessPayment={(accountingId: number) => processPayment(accountingId)}/>
+                </Box>
+            </Stack>
         )
     } else {
         return (

@@ -181,8 +181,25 @@ const AdminEnterpriseRegisterRequestManagementPage: React.FC<Props> = ({}) => {
             console.log(err);
         }).finally(() => {
             setIsShow(true);
-        })
+        });
+        document.title = "Admin - Enterprise Request";
+
     }, []);
+
+    useEffect(() => {
+        const timeId = setTimeout(() => {
+            // After 3 seconds set the show value to false
+            setShowAlert(prevState4 => ({
+                ...prevState4,
+                open: false,
+            }));
+        }, 3000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+
+    }, [showAlert]);
 
     const handleClickDetail = (requestId: number) => {
         let newSelectedRequest = enterpriseRegisterRequests.find(x => x.id == requestId);

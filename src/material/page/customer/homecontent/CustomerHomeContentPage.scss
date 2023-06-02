@@ -1,0 +1,43 @@
+@import "src/theme";
+
+.customer-home-content-page {
+
+  .enterprise-item {
+    border: 1px solid $NeutralGrayTheme4;
+    border-radius: 8px;
+
+    &:hover {
+      filter: brightness(102%);
+      transition: 0.3s;
+    }
+  }
+
+  .slick-list {
+    margin: 0 -8px;
+  }
+
+  .slick-slide > div {
+    padding: 0 8px;
+  }
+
+  .slick-prev:before,
+  .slick-next:before {
+    font-size: 40px;
+    line-height: 1;
+    opacity: .75;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .slick-next {
+    right: 20px;
+    top: 45%;
+  }
+
+  .slick-prev {
+    left: 10px;
+    top: 45%;
+    z-index: 1000;
+  }
+}

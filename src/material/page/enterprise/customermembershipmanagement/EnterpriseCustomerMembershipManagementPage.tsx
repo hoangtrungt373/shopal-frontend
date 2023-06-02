@@ -236,7 +236,9 @@ const EnterpriseCustomerMembershipManagementPage: React.FC<Props> = ({currentEnt
                 console.log(err);
             }).finally(() => {
             setIsShow(true);
-        })
+        });
+
+        document.title = currentEnterprise.enterpriseName + " - Membership customer";
     }, []);
 
     const handleSearchCustomer = (criteria: CustomerSearchCriteriaRequest) => {
@@ -253,7 +255,7 @@ const EnterpriseCustomerMembershipManagementPage: React.FC<Props> = ({currentEnt
     if (isShow) {
         return (
             <Stack spacing={2}>
-                <PageHeader breadCrumbItems={breadCrumbItems} title={"Customer"}/>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Customer Membership"}/>
                 <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                     <CustomerSearch
                         onSearchCustomer={(criteria: CustomerSearchCriteriaRequest) => handleSearchCustomer(criteria)}/>

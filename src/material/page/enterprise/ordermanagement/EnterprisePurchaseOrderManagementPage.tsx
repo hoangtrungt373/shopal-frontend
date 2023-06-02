@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {getPurchaseOrderByCriteria} from "../../../service/order.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import PageSpinner from "../../common/share/PageSpinner";
-import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef} from "@mui/x-data-grid-premium";
+import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
 import Typography from "@mui/material/Typography";
 import {Customer} from "../../../model/Customer";
 import {OrderStatus} from "../../../model/enums/OrderStatus";
@@ -258,19 +258,41 @@ const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
             <DataGridPremium
                 rows={purchaseOrders}
                 columns={columns}
+                initialState={{
+                    columns: {
+                        columnVisibilityModel: {
+                            id: false,
+                        },
+                    },
+                    pagination: {
+                        paginationModel: {
+                            pageSize: 5,
+                        },
+                    },
+                }}
+                slots={{
+                    toolbar: GridToolbar,
+                }}
                 pageSizeOptions={[5]}
                 disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                sx={{
+                    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {py: '8px'},
+                    '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {py: '15px'},
+                    '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {py: '22px'},
+                }}
             />
         </Box>
     )
 }
 
-const AdminPurchaseOrderManagementPage: React.FC<Props> = ({currentEnterprise}) => {
+const EnterprisePurchaseOrderManagementPage: React.FC<Props> = ({currentEnterprise}) => {
 
     const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>();
     const [isShow, setIsShow] = useState<boolean>(false);
 
     useEffect(() => {
+        document.title = currentEnterprise.enterpriseName + " - Order";
         getPurchaseOrderByCriteria({enterpriseIds: [currentEnterprise.id]})
             .then((resPurchaseOrders: PurchaseOrder[]) => {
                 setPurchaseOrders(resPurchaseOrders);
@@ -317,4 +339,4 @@ const AdminPurchaseOrderManagementPage: React.FC<Props> = ({currentEnterprise}) 
 
 }
 
-export default AdminPurchaseOrderManagementPage;
+export default EnterprisePurchaseOrderManagementPage;

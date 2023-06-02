@@ -18,7 +18,6 @@ import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import {useForm} from "react-hook-form";
 import {CustomerNewMembershipRequest} from "../../../model/customer/CustomerNewMembershipRequest";
-import {ErrorText} from "../../common/share/ErrorText";
 import {Enterprise} from "../../../model/Enterprise";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import {getAllEnterprise} from "../../../service/enterprise.service";
@@ -119,7 +118,7 @@ const EnterpriseMembershipEmpty: React.FC<Props> = ({}) => {
             gap: 2
         }}>
             <img src={AssetPath.emptyEnterpriseImg} alt={"cart-empty"} width={"300px"}/>
-            <Typography>You dont' register as membership of any enterprise</Typography>
+            <Typography>Bạn chưa có thông tin thành viên của bất kì doanh nghiệp nào</Typography>
         </Box>
     )
 }
@@ -131,13 +130,15 @@ const EnterpriseMembershipRequest: React.FC<Props> = ({notRegisterEnterpriseOpti
         register,
         setValue,
         reset,
+        getValues,
         handleSubmit,
         formState: {errors}
     } = useForm<CustomerNewMembershipRequest>();
-    //
-    // useEffect(() => {
-    //     reset();
-    // }, [notRegisterEnterpriseOptions])
+
+    useEffect(() => {
+        setValue("registerEmail", null);
+        setValue("registerPhoneNumber", null);
+    }, [])
 
     const onSubmit = handleSubmit(data => {
         let request: CustomerNewMembershipRequest = {
@@ -155,27 +156,21 @@ const EnterpriseMembershipRequest: React.FC<Props> = ({notRegisterEnterpriseOpti
                     <form onSubmit={onSubmit} style={{width: "100%"}}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <Typography gutterBottom>Email register</Typography>
-                                <TextField {...register("registerEmail", {required: true})} fullWidth size={"small"}
-                                           type={"email"} placeholder={"Supplier register email"}
-                                           error={!!errors.registerEmail}/>
-                                {errors.registerEmail &&
-                                    <ErrorText text={"Register email is required"}/>}
+                                <Typography gutterBottom>Email đăng ký</Typography>
+                                <TextField {...register("registerEmail")} fullWidth size={"small"}
+                                           type={"email"} placeholder={"Email đăng ký thành viên tại doanh nghiệp"}/>
                             </Grid>
                             <Grid item xs={3}>
-                                <Typography gutterBottom>Phone number register</Typography>
-                                <TextField {...register("registerPhoneNumber", {required: true})} fullWidth
-                                           size={"small"} placeholder={"Supplier register phone number"}
-                                           type={"number"}
-                                           error={!!errors.registerPhoneNumber}/>
-                                {errors.registerPhoneNumber &&
-                                    <ErrorText text={"Register phone number is required"}/>}
+                                <Typography gutterBottom>Số điện thoại đăng ký</Typography>
+                                <TextField {...register("registerPhoneNumber")} fullWidth
+                                           size={"small"}
+                                           placeholder={"Số điện thoại đăng ký thành viên tại doanh nghiệp"}
+                                           type={"number"}/>
                             </Grid>
                             <Grid item xs={3}>
-                                <Typography gutterBottom>Supplier</Typography>
+                                <Typography gutterBottom>Doanh nghiệp</Typography>
                                 <TextField
                                     select
-                                    defaultValue={notRegisterEnterpriseOptions[0].value}
                                     {...register("enterpriseId")} size={"small"}
                                     sx={{width: "100%"}}
                                 >
@@ -189,12 +184,13 @@ const EnterpriseMembershipRequest: React.FC<Props> = ({notRegisterEnterpriseOpti
                             <Grid item xs={3}>
                                 <Typography gutterBottom style={{color: "transparent"}}>xxx</Typography>
                                 <Button variant={"contained"} type={"submit"}
-                                        style={{textTransform: "initial"}}>Find</Button>
+                                        style={{textTransform: "initial"}}>Tìm kiếm</Button>
                             </Grid>
                         </Grid>
                     </form>
                 ) : (
-                    <Typography>You already have all member accounts of all supplier. Can not add new one</Typography>
+                    <Typography>Bạn đã có tài khoản thành viên của tát cả các doanh nghiệp trong hệ thống, không thể
+                        thêm mới</Typography>
                 )
             }
         </Box>
@@ -208,7 +204,19 @@ const CustomerMembershipPage: React.FC<Props> = () => {
     const [isShow, setIsShow] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState({
         open: false,
-        title: null
+        title: "",
+        handleAccept: () => {
+            setShowAlert(prevState2 => ({
+                ...prevState2,
+                open: false
+            }));
+        },
+        handleDenied: () => {
+            setShowAlert(prevState2 => ({
+                ...prevState2,
+                open: false
+            }));
+        }
     });
 
     useEffect(() => {
@@ -222,7 +230,8 @@ const CustomerMembershipPage: React.FC<Props> = () => {
         if (showAlert.open) {
             return (
                 <AlertDialog
-                    isOpen={showAlert.open} title={showAlert.title}/>
+                    isOpen={showAlert.open} title={showAlert.title} handleDenied={showAlert.handleDenied}
+                    handleAccept={showAlert.handleAccept}/>
             )
         } else {
             return null;
@@ -232,17 +241,19 @@ const CustomerMembershipPage: React.FC<Props> = () => {
     const handleAddNewMembership = async (request: CustomerNewMembershipRequest) => {
         await handleRequestNewMembershipForCurrentCustomer(request)
             .then((res: string) => {
-                setShowAlert({
+                setShowAlert(prevState2 => ({
+                    ...prevState2,
                     open: true,
-                    title: "Request new membership successfully"
-                });
+                    title: "Cập nhật thông tin thành viên thành công"
+                }));
                 getEnterpriseMembershipForCurrentCustomerFunc()
             }).catch((err: ExceptionResponse) => {
                 if (err.status == 409) {
-                    setShowAlert({
+                    setShowAlert(prevState2 => ({
+                        ...prevState2,
                         open: true,
-                        title: err.errorMessage
-                    })
+                        title: "Không tìm thấy thông tin thành viên, vui lòng thử lại sau"
+                    }));
                 } else {
                     console.log(err);
                 }
@@ -276,7 +287,7 @@ const CustomerMembershipPage: React.FC<Props> = () => {
         return (
             <Box>
                 <DisplayAlert/>
-                <Typography variant={"h6"} mb={2}>Membership list</Typography>
+                <Typography variant={"h6"} mb={2}>Danh sách thành viên</Typography>
                 <Box
                     sx={{
                         backgroundColor: "#fff",
@@ -287,7 +298,8 @@ const CustomerMembershipPage: React.FC<Props> = () => {
                         gap: 2,
                         mb: 2
                     }}>
-                    <Typography fontSize={"16px"}>Don't find your register supplier? Request here</Typography>
+                    <Typography fontSize={"16px"}>Không tìm thấy thông tin thành viên mà bạn đã đăng ký? Yêu cầu tìm
+                        kiếm ngay đây</Typography>
                     <EnterpriseMembershipRequest notRegisterEnterpriseOptions={notRegisterEnterpriseOptions}
                                                  onAddNewMembership={(request: CustomerNewMembershipRequest) => handleAddNewMembership(request)}/>
                 </Box>
@@ -300,7 +312,7 @@ const CustomerMembershipPage: React.FC<Props> = () => {
                         flexDirection: "column",
                         gap: 2
                     }}>
-                    <Typography fontSize={"16px"}>List enterprise you have registered as membership</Typography>
+                    <Typography fontSize={"16px"}>Danh sách thông tin thành viên mà bạn đã đăng ký</Typography>
                     {
                         enterpriseMemberships.length > 0 ? (
                             <EnterpriseMembershipList enterpriseMemberships={enterpriseMemberships}/>

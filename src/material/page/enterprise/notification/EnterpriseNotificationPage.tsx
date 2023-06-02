@@ -311,6 +311,8 @@ const EnterpriseNotificationPage: React.FC<Props> = ({currentEnterprise}) => {
         }).finally(() => {
             setIsShow(true);
         })
+        document.title = currentEnterprise.enterpriseName + " - Notification";
+
     }, []);
 
     const handleChangeNotificationTab = (event: React.SyntheticEvent, newTab: number) => {

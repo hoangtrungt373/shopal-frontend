@@ -282,6 +282,21 @@ const AdminCooperationContractRequestManagementPage: React.FC<Props> = ({}) => {
     } = useForm<CreateOrUpdateContractRequestAnn>();
 
     useEffect(() => {
+        const timeId = setTimeout(() => {
+            // After 3 seconds set the show value to false
+            setShowAlert(prevState4 => ({
+                ...prevState4,
+                open: false,
+            }));
+        }, 3000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+
+    }, [showAlert]);
+
+    useEffect(() => {
         getAllCreateOrUpdateContractAnn()
             .then((resRequests: CreateOrUpdateContractRequestAnn[]) => {
                 setContractRequests(resRequests);
@@ -304,6 +319,7 @@ const AdminCooperationContractRequestManagementPage: React.FC<Props> = ({}) => {
         }).finally(() => {
             setIsShow(true);
         })
+        document.title = "Admin - Contract Change Requests";
     }, []);
 
     const handleClickDetail = (requestId: number) => {
@@ -361,153 +377,165 @@ const AdminCooperationContractRequestManagementPage: React.FC<Props> = ({}) => {
         return (
             <Stack spacing={2}>
                 <PageHeader breadCrumbItems={breadCrumbItems} title={"Contract Change Request"}/>
-                <Stack spacing={2}>
-                    <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
-                         className={"content-box"}>
-                        <RequestList requests={contractRequests}
-                                     onClickDetail={(id: number) => handleClickDetail(id)}/>
-                    </Box>
-                    <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
-                         className={"content-box"}>
-                        <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
-                            <Chip label={selectedRequest.contractChangeRequestStatus} size={"small"}
-                                  style={{
-                                      backgroundColor: getChipStyle(selectedRequest.contractChangeRequestStatus).chipBgColor,
-                                      color: getChipStyle(selectedRequest.contractChangeRequestStatus).chipTextColor
-                                  }}/>
-                            <Typography
-                                className={"page-sub-header"}>{selectedRequest.enterprise.enterpriseName}</Typography>
-                            <Chip style={{
-                                textAlign: "right",
-                                marginLeft: "auto"
-                            }} label={selectedRequest.isEdit ? "Update" : "Create"} color="primary" variant="outlined"/>
+                {
+                    contractRequests.length > 0 ? (
+                        <Stack spacing={2}>
+                            <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
+                                 className={"content-box"}>
+                                <RequestList requests={contractRequests}
+                                             onClickDetail={(id: number) => handleClickDetail(id)}/>
+                            </Box>
+                            <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
+                                 className={"content-box"}>
+                                <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
+                                    <Chip label={selectedRequest.contractChangeRequestStatus} size={"small"}
+                                          style={{
+                                              backgroundColor: getChipStyle(selectedRequest.contractChangeRequestStatus).chipBgColor,
+                                              color: getChipStyle(selectedRequest.contractChangeRequestStatus).chipTextColor
+                                          }}/>
+                                    <Typography
+                                        className={"page-sub-header"}>{selectedRequest.enterprise.enterpriseName}</Typography>
+                                    <Chip style={{
+                                        textAlign: "right",
+                                        marginLeft: "auto"
+                                    }} label={selectedRequest.isEdit ? "Update" : "Create"} color="primary"
+                                          variant="outlined"/>
+                                </Box>
+                                <Divider/>
+                                <form onSubmit={onSubmit}
+                                      style={{display: "flex", flexDirection: "column", gap: "16px"}}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={3}>
+                                            <Typography gutterBottom>Start Date </Typography>
+                                            <TextField
+                                                {...register("startDate")} disabled={true}
+                                                fullWidth
+                                                size={"small"}/>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography gutterBottom>End Date </Typography>
+                                            <TextField
+                                                {...register("endDate")} disabled={true}
+                                                fullWidth
+                                                size={"small"}/>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography gutterBottom>Commission Rate </Typography>
+                                            <TextField
+                                                {...register("commissionRate")} disabled={true}
+                                                fullWidth
+                                                size={"small"}/>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography gutterBottom>Cash Per Point </Typography>
+                                            <TextField
+                                                {...register("cashPerPoint")} disabled={true}
+                                                fullWidth
+                                                size={"small"}/>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography gutterBottom>Status</Typography>
+                                            <TextField
+                                                {...register("contractStatus")} disabled={true}
+                                                fullWidth
+                                                size={"small"}/>
+                                        </Grid>
+                                        {
+                                            (isNotNull(selectedRequest.updateEndDate) && selectedRequest.endDate != selectedRequest.updateEndDate) ? (
+                                                <Grid item xs={3}>
+                                                    <Typography gutterBottom>Change Request End Date </Typography>
+                                                    <TextField
+                                                        {...register("updateEndDate")} disabled={true}
+                                                        fullWidth
+                                                        size={"small"}/>
+                                                </Grid>
+                                            ) : (
+                                                <Grid item xs={3}>
+                                                </Grid>
+                                            )
+                                        }
+                                        {
+                                            (isNotNull(selectedRequest.updateCommissionRate) && selectedRequest.commissionRate != selectedRequest.updateCommissionRate) ? (
+                                                <Grid item xs={3}>
+                                                    <Typography gutterBottom>Change Request Commission
+                                                        Rate </Typography>
+                                                    <TextField
+                                                        {...register("updateCommissionRate")} disabled={true}
+                                                        fullWidth
+                                                        size={"small"}/>
+                                                </Grid>
+                                            ) : (
+                                                <Grid item xs={3}>
+                                                </Grid>
+                                            )
+                                        }
+                                        {
+                                            (isNotNull(selectedRequest.updateCashPerPoint) && selectedRequest.cashPerPoint != selectedRequest.updateCashPerPoint) ? (
+                                                <Grid item xs={3}>
+                                                    <Typography gutterBottom>Change Request Cash Per Point </Typography>
+                                                    <TextField
+                                                        {...register("updateCashPerPoint")} disabled={true}
+                                                        fullWidth
+                                                        size={"small"}/>
+                                                </Grid>
+                                            ) : (
+                                                <Grid item xs={3}>
+                                                </Grid>
+                                            )
+                                        }
+                                        <Grid item xs={3}>
+                                            {/*<Typography gutterBottom>Change Request Status</Typography>*/}
+                                            {/*<TextField*/}
+                                            {/*    {...register("updateContractStatus")} disabled={true}*/}
+                                            {/*    fullWidth*/}
+                                            {/*    size={"small"}/>*/}
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={2} justifyContent={"flex-end"}>
+                                        <Grid item xs={3}>
+                                            <Button type={"submit"} variant={"contained"}
+                                                    color={selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.RECEIVED ? "primary" : "success"}
+                                                    fullWidth
+                                                    disabled={selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.ACCEPT}
+                                            >{selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.RECEIVED ? "Accept" : "Accepted"}</Button>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Button variant={"outlined"} fullWidth
+                                                    disabled={selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.ACCEPT}
+                                            >Refuse</Button>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={2} justifyContent={"flex-end"}>
+                                        <Grid item xs={6}>
+                                            {
+                                                showAlert.open && (
+                                                    <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
+                                                )
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                </form>
+                            </Box>
+                            <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
+                                <Typography className={"page-sub-header"}>Products Selling</Typography>
+                                <Divider/>
+                                {
+                                    products && products.length > 0 && (
+                                        <ProductSellingList products={products}
+                                                            oldCashPerPoint={selectedRequest.cashPerPoint}
+                                                            updateCashPerPoint={selectedRequest.updateCashPerPoint}
+                                                            enterprise={selectedRequest.enterprise}/>
+                                    )
+                                }
+                            </Box>
+                        </Stack>
+                    ) : (
+                        <Box className={"content-box"}>
+                            <Alert severity={"warning"}>Contract request empty</Alert>
                         </Box>
-                        <Divider/>
-                        <form onSubmit={onSubmit} style={{display: "flex", flexDirection: "column", gap: "16px"}}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={3}>
-                                    <Typography gutterBottom>Start Date </Typography>
-                                    <TextField
-                                        {...register("startDate")} disabled={true}
-                                        fullWidth
-                                        size={"small"}/>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography gutterBottom>End Date </Typography>
-                                    <TextField
-                                        {...register("endDate")} disabled={true}
-                                        fullWidth
-                                        size={"small"}/>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography gutterBottom>Commission Rate </Typography>
-                                    <TextField
-                                        {...register("commissionRate")} disabled={true}
-                                        fullWidth
-                                        size={"small"}/>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography gutterBottom>Cash Per Point </Typography>
-                                    <TextField
-                                        {...register("cashPerPoint")} disabled={true}
-                                        fullWidth
-                                        size={"small"}/>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography gutterBottom>Status</Typography>
-                                    <TextField
-                                        {...register("contractStatus")} disabled={true}
-                                        fullWidth
-                                        size={"small"}/>
-                                </Grid>
-                                {
-                                    (isNotNull(selectedRequest.updateEndDate) && selectedRequest.endDate != selectedRequest.updateEndDate) ? (
-                                        <Grid item xs={3}>
-                                            <Typography gutterBottom>Change Request End Date </Typography>
-                                            <TextField
-                                                {...register("updateEndDate")} disabled={true}
-                                                fullWidth
-                                                size={"small"}/>
-                                        </Grid>
-                                    ) : (
-                                        <Grid item xs={3}>
-                                        </Grid>
-                                    )
-                                }
-                                {
-                                    (isNotNull(selectedRequest.updateCommissionRate) && selectedRequest.commissionRate != selectedRequest.updateCommissionRate) ? (
-                                        <Grid item xs={3}>
-                                            <Typography gutterBottom>Change Request Commission Rate </Typography>
-                                            <TextField
-                                                {...register("updateCommissionRate")} disabled={true}
-                                                fullWidth
-                                                size={"small"}/>
-                                        </Grid>
-                                    ) : (
-                                        <Grid item xs={3}>
-                                        </Grid>
-                                    )
-                                }
-                                {
-                                    (isNotNull(selectedRequest.updateCashPerPoint) && selectedRequest.cashPerPoint != selectedRequest.updateCashPerPoint) ? (
-                                        <Grid item xs={3}>
-                                            <Typography gutterBottom>Change Request Cash Per Point </Typography>
-                                            <TextField
-                                                {...register("updateCashPerPoint")} disabled={true}
-                                                fullWidth
-                                                size={"small"}/>
-                                        </Grid>
-                                    ) : (
-                                        <Grid item xs={3}>
-                                        </Grid>
-                                    )
-                                }
-                                <Grid item xs={3}>
-                                    {/*<Typography gutterBottom>Change Request Status</Typography>*/}
-                                    {/*<TextField*/}
-                                    {/*    {...register("updateContractStatus")} disabled={true}*/}
-                                    {/*    fullWidth*/}
-                                    {/*    size={"small"}/>*/}
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={2} justifyContent={"flex-end"}>
-                                <Grid item xs={3}>
-                                    <Button type={"submit"} variant={"contained"}
-                                            color={selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.RECEIVED ? "primary" : "success"}
-                                            fullWidth
-                                            disabled={selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.ACCEPT}
-                                    >{selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.RECEIVED ? "Accept" : "Accepted"}</Button>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Button variant={"outlined"} fullWidth
-                                            disabled={selectedRequest.contractChangeRequestStatus == ContractChangeRequestStatus.ACCEPT}
-                                    >Refuse</Button>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={2} justifyContent={"flex-end"}>
-                                <Grid item xs={6}>
-                                    {
-                                        showAlert.open && (
-                                            <Alert severity={showAlert.severity}>{showAlert.content}</Alert>
-                                        )
-                                    }
-                                </Grid>
-                            </Grid>
-                        </form>
-                    </Box>
-                    <Box className={"content-box"} sx={{display: "flex", gap: 2, flexDirection: "column"}}>
-                        <Typography className={"page-sub-header"}>Products Selling</Typography>
-                        <Divider/>
-                        {
-                            products && products.length > 0 && (
-                                <ProductSellingList products={products}
-                                                    oldCashPerPoint={selectedRequest.cashPerPoint}
-                                                    updateCashPerPoint={selectedRequest.updateCashPerPoint}
-                                                    enterprise={selectedRequest.enterprise}/>
-                            )
-                        }
-                    </Box>
-                </Stack>
+                    )
+                }
+
             </Stack>
         )
     } else {

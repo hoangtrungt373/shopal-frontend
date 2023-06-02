@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {getPurchaseOrderByCriteria} from "../../../service/order.service";
 import {ExceptionResponse} from "../../../model/exception/ExceptionResponse";
 import PageSpinner from "../../common/share/PageSpinner";
-import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef} from "@mui/x-data-grid-premium";
+import {DataGridPremium, GridActionsCellItem, GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid-premium";
 import Typography from "@mui/material/Typography";
 import {Customer} from "../../../model/Customer";
 import {OrderStatus} from "../../../model/enums/OrderStatus";
@@ -13,7 +13,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router-dom";
 import {AdminRouter, AssetPath} from "../../../config/router";
-import {createSeoLink, formatVndMoney} from "../../../util/display.util";
+import {createSeoLink, formatVndMoney, removeExtensionEmail} from "../../../util/display.util";
 import Avatar from "@mui/material/Avatar";
 import PageHeader from "../../common/share/PageHeader";
 import {BreadcrumbItem} from "../../../model/common/BreadcrumbItem";
@@ -271,7 +271,7 @@ const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
                 <GridActionsCellItem
                     label="Detail"
                     showInMenu
-                    onClick={() => history.push(AdminRouter.purchaseOrderDetailPage + "/" + createSeoLink(params.row.customer.fullName + "-" + params.row.customer.contactEmail) + "." + params.id)}
+                    onClick={() => history.push(AdminRouter.purchaseOrderDetailPage + "/" + createSeoLink(removeExtensionEmail(params.row.customer.contactEmail)) + "." + params.id)}
                 />,
             ],
         },
@@ -282,8 +282,29 @@ const PurchaseOrderList: React.FC<Props> = ({purchaseOrders}) => {
             <DataGridPremium
                 rows={purchaseOrders}
                 columns={columns}
+                initialState={{
+                    columns: {
+                        columnVisibilityModel: {
+                            id: false,
+                        },
+                    },
+                    pagination: {
+                        paginationModel: {
+                            pageSize: 5,
+                        },
+                    },
+                }}
+                slots={{
+                    toolbar: GridToolbar,
+                }}
                 pageSizeOptions={[5]}
                 disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                sx={{
+                    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {py: '8px'},
+                    '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {py: '15px'},
+                    '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {py: '22px'},
+                }}
             />
         </Box>
     )
@@ -295,6 +316,7 @@ const AdminPurchaseOrderManagementPage: React.FC<Props> = ({}) => {
     const [isShow, setIsShow] = useState<boolean>(false);
 
     useEffect(() => {
+        document.title = "Admin - Orders";
         getPurchaseOrderByCriteria({})
             .then((resPurchaseOrders: PurchaseOrder[]) => {
                 setPurchaseOrders(resPurchaseOrders);

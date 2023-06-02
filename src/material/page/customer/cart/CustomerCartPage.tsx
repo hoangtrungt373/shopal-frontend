@@ -39,11 +39,74 @@ interface Props {
     onToggleCheckAllProductCart?: Function;
     onRemoveProductCartMany?: Function;
     productCartGroupByEnterprises?: ProductCartGroupByEnterprise[],
-    isShowActive?: boolean
+    isShowActive?: boolean,
+    enterpriseMemberships?: EnterpriseMembership[]
 }
 
 
+const OrderPointTotal: React.FC<Props> = ({productCartGroupByEnterprises}) => {
+
+    if (productCartGroupByEnterprises.length > 0) {
+        return (
+            <Box sx={{backgroundColor: "#fff", borderRadius: 2}}>
+                {
+                    productCartGroupByEnterprises
+                        .sort(function (a, b) {
+                            return a.enterprise.id - b.enterprise.id
+                        })
+                        .map((productCartGroupByEnterprise, index) => (
+                            <Box key={index}>
+                                <Box sx={{display: "flex", flexDirection: "column", gap: 2, p: 2}}>
+                                    <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                                        <Avatar alt="img"
+                                                src={AssetPath.enterpriseLogoUrl + productCartGroupByEnterprise.enterprise.logoUrl}
+                                                sx={{width: 50, height: 50}}/>
+                                        <Box sx={{display: "flex", flexDirection: "column"}}>
+                                            <Typography>{productCartGroupByEnterprise.enterprise.enterpriseName}</Typography>
+                                            <Typography> {"(" + productCartGroupByEnterprise.amountTotal + " items)"}</Typography>
+                                        </Box>
+                                    </Box>
+                                    <Divider/>
+                                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                                        <Typography>Merchandise Subtotal:</Typography>
+                                        <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
+                                            <Typography>{productCartGroupByEnterprise.orderTotal + " "}</Typography>
+                                            <EnterpriseLogo
+                                                title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                height={20} width={20}/>
+                                        </Box>
+                                    </Box>
+                                    <Divider/>
+                                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                                        <Typography fontWeight={"bold"}>Total Payment:</Typography>
+                                        <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
+                                            <Typography fontWeight={"bold"} color={"#FF424E"}
+                                                        variant={"h6"}>{productCartGroupByEnterprise.orderTotal}</Typography>
+                                            <EnterpriseLogo
+                                                title={productCartGroupByEnterprise.enterprise.enterpriseName}
+                                                logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
+                                                height={20} width={20}/>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Divider/>
+                            </Box>
+                        ))
+                }
+            </Box>
+        );
+    } else {
+        return (
+            <Box sx={{backgroundColor: "#fff", p: 2, borderRadius: 2}}>
+                <Typography>Hãy chọn sản phẩm bạn muốn mua</Typography>
+            </Box>
+        )
+    }
+}
+
 const ProductCartList: React.FC<Props> = ({
+                                              enterpriseMemberships,
                                               isShowActive,
                                               productCarts,
                                               onUpdateProductCart,
@@ -88,8 +151,10 @@ const ProductCartList: React.FC<Props> = ({
         }
     };
 
-    function isDuplicatePointSelected(exchangeAbleProductPointId, productCartId) {
-        return productCarts.findIndex(x => x.pointSelected.id == exchangeAbleProductPointId && x.id != productCartId) != -1;
+    function isPointInValid(exchangeAbleProductPointId, productCartId, enterpriseId) {
+        // return productCarts.filter(x => x.active).findIndex(x => x.pointSelected.id == exchangeAbleProductPointId && x.id != productCartId) != -1;
+        // || enterpriseMemberships.findIndex(x => x.enterprise.id == enterpriseId) != -1
+        return enterpriseMemberships.findIndex(x => x.enterprise.id == enterpriseId) == -1;
     }
 
     const validateAmountSelect = (selectProductCart: ProductCart, newAmount: number, productQuantityInStock) => {
@@ -173,6 +238,8 @@ const ProductCartList: React.FC<Props> = ({
                                                     {
                                                         productCart.productStatus == ProductStatus.INACTIVE ? (
                                                             <Chip label={productCart.productStatus} size={"small"}/>
+                                                        ) : productCart.quantityInStock == 0 ? (
+                                                            <Chip label={"Đã bán hết"} size={"small"}/>
                                                         ) : (
                                                             <Chip label={"Hết hiệu lực"} size={"small"}/>
                                                         )
@@ -206,9 +273,9 @@ const ProductCartList: React.FC<Props> = ({
                                             onChange={(event) => onUpdateProductCart(productCart.id, event.target.value, productCart.amountSelected)}
                                         >
                                             {
-                                                productCart.exchangeAblePoints.map((point, index) => (
+                                                productCart.exchangeAblePoints.filter(x => x.active).map((point, index) => (
                                                     <MenuItem value={point.id}
-                                                              className={isDuplicatePointSelected(point.id, productCart.id) ? "disable-item" : ""}
+                                                              className={isPointInValid(point.id, productCart.id, point.enterprise.id) ? "disable-item" : ""}
                                                               key={index}>{point.enterprise.enterpriseName}</MenuItem>
                                                 ))
                                             }
@@ -323,67 +390,6 @@ const ProductCartList: React.FC<Props> = ({
     );
 }
 
-const OrderPointTotal: React.FC<Props> = ({productCartGroupByEnterprises}) => {
-
-    if (productCartGroupByEnterprises.length > 0) {
-        return (
-            <Box sx={{backgroundColor: "#fff", borderRadius: 2}}>
-                {
-                    productCartGroupByEnterprises
-                        .sort(function (a, b) {
-                            return a.enterprise.id - b.enterprise.id
-                        })
-                        .map((productCartGroupByEnterprise, index) => (
-                            <Box key={index}>
-                                <Box sx={{display: "flex", flexDirection: "column", gap: 2, p: 2}}>
-                                    <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                                        <Avatar alt="img"
-                                                src={AssetPath.enterpriseLogoUrl + productCartGroupByEnterprise.enterprise.logoUrl}
-                                                sx={{width: 50, height: 50}}/>
-                                        <Box sx={{display: "flex", flexDirection: "column"}}>
-                                            <Typography>{productCartGroupByEnterprise.enterprise.enterpriseName}</Typography>
-                                            <Typography> {"(" + productCartGroupByEnterprise.amountTotal + " items)"}</Typography>
-                                        </Box>
-                                    </Box>
-                                    <Divider/>
-                                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                                        <Typography>Merchandise Subtotal:</Typography>
-                                        <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
-                                            <Typography>{productCartGroupByEnterprise.orderTotal + " "}</Typography>
-                                            <EnterpriseLogo
-                                                title={productCartGroupByEnterprise.enterprise.enterpriseName}
-                                                logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
-                                                height={20} width={20}/>
-                                        </Box>
-                                    </Box>
-                                    <Divider/>
-                                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                                        <Typography fontWeight={"bold"}>Total Payment:</Typography>
-                                        <Box sx={{display: "flex", gap: 0.5, alignItems: "center"}}>
-                                            <Typography fontWeight={"bold"} color={"#FF424E"}
-                                                        variant={"h6"}>{productCartGroupByEnterprise.orderTotal}</Typography>
-                                            <EnterpriseLogo
-                                                title={productCartGroupByEnterprise.enterprise.enterpriseName}
-                                                logoUrl={productCartGroupByEnterprise.enterprise.logoUrl}
-                                                height={20} width={20}/>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                                <Divider/>
-                            </Box>
-                        ))
-                }
-            </Box>
-        );
-    } else {
-        return (
-            <Box sx={{backgroundColor: "#fff", p: 2, borderRadius: 2}}>
-                <Typography>Hãy chọn sản phẩm bạn muốn mua</Typography>
-            </Box>
-        )
-    }
-}
-
 const CustomerCartPage: React.FC<Props> = ({}) => {
 
 
@@ -422,11 +428,11 @@ const CustomerCartPage: React.FC<Props> = ({}) => {
 
     const getActiveProductCart = (cart: Cart) => {
         console.log(cart)
-        return cart.productCarts.filter(x => x.pointSelected.active && x.productStatus == ProductStatus.ACTIVE);
+        return cart.productCarts.filter(x => x.pointSelected.active && x.productStatus == ProductStatus.ACTIVE && x.quantityInStock > 0);
     }
 
     const getNonActiveProductCart = (cart: Cart) => {
-        return cart.productCarts.filter(x => !x.pointSelected.active || x.productStatus == ProductStatus.INACTIVE);
+        return cart.productCarts.filter(x => !x.pointSelected.active || x.productStatus == ProductStatus.INACTIVE || x.quantityInStock == 0);
     }
 
     const toggleCheckAllProductCart = (checked: boolean) => {
@@ -679,57 +685,66 @@ const CustomerCartPage: React.FC<Props> = ({}) => {
         }
     ]
 
-    return (
-        <Box>
-            <PageHeader breadCrumbItems={breadCrumbItems} title={"Giỏ Hàng"}/>
-            <DisplayAlertError/>
-            <DisplayAlertDelete/>
-            {
-                isShow ? (
-                    <Box>
-                        {
-                            activeProductCarts.length > 0 ? (
-                                <Grid container spacing={2}>
-                                    <Grid item xs={9}>
-                                        <Box sx={{display: "flex", gap: 4, flexDirection: "column"}}>
-                                            <ProductCartList productCarts={activeProductCarts} isShowActive={true}
-                                                             onUpdateProductCart={(productCartId: number, newProductPointId: number, newAmount: number, checked: boolean) =>
-                                                                 updateProductCart(productCartId, newProductPointId, newAmount, checked)}
-                                                             onRemoveProductCartMany={() => removeProductCartMany()}
-                                                             onToggleCheckAllProductCart={(checdked: boolean) => toggleCheckAllProductCart(checdked)}/>
-                                            {
-                                                nonActiveProductCarts.length > 0 && (
-                                                    <ProductCartList productCarts={nonActiveProductCarts}
-                                                                     onUpdateProductCart={(productCartId: number, newProductPointId: number, newAmount: number, checked: boolean) =>
-                                                                         updateProductCart(productCartId, newProductPointId, newAmount, checked)}
-                                                                     isShowActive={false}/>
-                                                )
-                                            }
-                                        </Box>
+    if (isShow && enterpriseMemberships) {
+        return (
+            <Box>
+                <PageHeader breadCrumbItems={breadCrumbItems} title={"Giỏ Hàng"}/>
+                <DisplayAlertError/>
+                <DisplayAlertDelete/>
+                {
+                    isShow ? (
+                        <Box>
+                            {
+                                activeProductCarts.length > 0 || nonActiveProductCarts.length > 0 ? (
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={9}>
+                                            <Box sx={{display: "flex", gap: 4, flexDirection: "column"}}>
+                                                <ProductCartList productCarts={activeProductCarts} isShowActive={true}
+                                                                 enterpriseMemberships={enterpriseMemberships}
+                                                                 onUpdateProductCart={(productCartId: number, newProductPointId: number, newAmount: number, checked: boolean) =>
+                                                                     updateProductCart(productCartId, newProductPointId, newAmount, checked)}
+                                                                 onRemoveProductCartMany={() => removeProductCartMany()}
+                                                                 onToggleCheckAllProductCart={(checdked: boolean) => toggleCheckAllProductCart(checdked)}/>
+                                                {
+                                                    nonActiveProductCarts.length > 0 && (
+                                                        <ProductCartList productCarts={nonActiveProductCarts}
+                                                                         enterpriseMemberships={enterpriseMemberships}
+                                                                         onUpdateProductCart={(productCartId: number, newProductPointId: number, newAmount: number, checked: boolean) =>
+                                                                             updateProductCart(productCartId, newProductPointId, newAmount, checked)}
+                                                                         isShowActive={false}/>
+                                                    )
+                                                }
+                                            </Box>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
+                                                 className={"sticky-sidebar"}>
+                                                <OrderPointTotal
+                                                    productCartGroupByEnterprises={groupProductCartsByEnterprise(activeProductCarts.filter(pc => pc.checked))}/>
+                                                <Button variant={"contained"} size={"large"} fullWidth
+                                                        disabled={activeProductCarts.filter(x => x.checked).length == 0}
+                                                        color={"error"}
+                                                        onClick={() => moveToCheckout()}>Mua Hàng ({totalItem})</Button>
+                                            </Box>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={3}>
-                                        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}
-                                             className={"sticky-sidebar"}>
-                                            <OrderPointTotal
-                                                productCartGroupByEnterprises={groupProductCartsByEnterprise(activeProductCarts.filter(pc => pc.checked))}/>
-                                            <Button variant={"contained"} size={"large"} fullWidth
-                                                    disabled={activeProductCarts.filter(x => x.checked).length == 0}
-                                                    color={"error"}
-                                                    onClick={() => moveToCheckout()}>Mua Hàng ({totalItem})</Button>
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            ) : (
-                                <CartEmpty/>
-                            )
-                        }
-                    </Box>
-                ) : (
-                    <PageSpinner/>
-                )
-            }
-        </Box>
-    );
+                                ) : (
+                                    <CartEmpty/>
+                                )
+                            }
+                        </Box>
+                    ) : (
+                        <PageSpinner/>
+                    )
+                }
+            </Box>
+        );
+    } else {
+        return (
+            <PageSpinner/>
+        )
+    }
+
 }
 
 export default CustomerCartPage;

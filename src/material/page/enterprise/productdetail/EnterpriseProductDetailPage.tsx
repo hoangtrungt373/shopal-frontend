@@ -266,11 +266,10 @@ const ProductInfo: React.FC<Props> = ({
     )
 }
 
-const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
+const EnterpriseProductDetailPage: React.FC<Props> = ({currentEnterprise}) => {
 
     const params: RouteParams = useParams()
     const [productDetail, setProductDetail] = useState<ProductDetail>();
-    const [currentEnterprise, setCurrentEnterprise] = useState<Enterprise>()
     const [breadCrumbItems, setBreadCrumbItems] = useState<BreadcrumbItem[]>([]);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState({
@@ -281,13 +280,28 @@ const EnterpriseProductDetailPage: React.FC<Props> = ({}) => {
     const history = useHistory();
 
     useEffect(() => {
+        const timeId = setTimeout(() => {
+            // After 3 seconds set the show value to false
+            setShowAlert(prevState4 => ({
+                ...prevState4,
+                open: false,
+            }));
+        }, 3000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+
+    }, [showAlert]);
+
+    useEffect(() => {
         getProductDetail(params.productId)
             .then((productDetailRes: ProductDetail) => {
+                document.title = currentEnterprise.enterpriseName + " - Product #" + params.productId;
                 setProductDetail(productDetailRes);
                 getCurrentEnterpriseInfo()
                     .then((resEnterprise: Enterprise) => {
                         console.log(resEnterprise)
-                        setCurrentEnterprise(resEnterprise);
                         setBreadCrumbItems([
                             {
                                 url: EnterpriseRouter.productCollectionPage,

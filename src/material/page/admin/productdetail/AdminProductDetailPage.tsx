@@ -406,6 +406,7 @@ const AdminProductDetailPage: React.FC<Props> = ({}) => {
     const [breadCrumbItems, setBreadCrumbItems] = useState<BreadcrumbItem[]>([]);
 
     useEffect(() => {
+        document.title = "Admin - Product #" + params.productId;
         getProductDetail(params.productId)
             .then((productDetailRes: ProductDetail) => {
                 setProductDetail(productDetailRes);

@@ -3,16 +3,16 @@ import {useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PageSpinner from "../../common/share/PageSpinner";
-import {EnterpriseAccounting} from "../../../model/enterprise/EnterpriseAccounting";
+import {Accounting} from "../../../model/enterprise/Accounting";
 
 
 interface Props {
-    enterpriseAccounting: EnterpriseAccounting
+    enterpriseAccounting: Accounting
 }
 
 const EnterpriseAccountingDetailPage: React.FC<Props> = () => {
 
-    const [enterpriseAccounting, setEnterpriseAccounting] = useState<EnterpriseAccounting>();
+    const [enterpriseAccounting, setEnterpriseAccounting] = useState<Accounting>();
     const [isShow, setIsShow] = useState(false);
 
     useEffect(() => {

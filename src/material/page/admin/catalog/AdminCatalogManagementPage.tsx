@@ -233,6 +233,7 @@ const AdminCatalogManagementPage: React.FC<Props> = ({}) => {
             }).catch((err: ExceptionResponse) => {
             console.log(err);
         })
+        document.title = "Admin - Main Categories";
     }, []);
 
     const onSubmit = handleSubmit(data => {

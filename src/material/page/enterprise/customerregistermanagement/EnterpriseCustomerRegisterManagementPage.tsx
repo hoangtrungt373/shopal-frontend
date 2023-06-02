@@ -55,7 +55,8 @@ const EnterpriseCustomerRegisterManagementPage: React.FC<Props> = ({currentEnter
     });
 
     useEffect(() => {
-        setIsShow(true)
+        setIsShow(true);
+        document.title = currentEnterprise.enterpriseName + " - Register customer";
     }, []);
 
 

@@ -58,6 +58,7 @@ const AdminCustomerDetailPage: React.FC<Props> = ({}) => {
             }).finally(() => {
             setIsShow(true);
         })
+        document.title = "Admin - Customer #" + params.customerId;
     }, [params.customerId]);
 
     /*TODO: show customer order history, customer's review*/

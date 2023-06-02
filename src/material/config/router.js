@@ -10,6 +10,7 @@ export const AssetPath = {
     emptyEnterpriseImg: process.env.PUBLIC_URL + "/img/web/empty_enterprise.png",
     noReviewImg: process.env.PUBLIC_URL + "/img/web/no-reviews.png",
     orderSuccessImg: process.env.PUBLIC_URL + "/img/web/order-success.png",
+    paymentTypeImg: process.env.PUBLIC_URL + "/img/web/payment-type.png",
 
     productImgUrl: process.env.PUBLIC_URL + "/img/product/",
     productContentUrl: process.env.PUBLIC_URL + "/content/product/",
@@ -51,6 +52,7 @@ export const EnterpriseRouter = {
     cooperationContractManagement: "/enterprise/dashboard/contract",
     accounting: "/enterprise/dashboard/accounting",
     notificationPage: "/enterprise/dashboard/notification",
+    paymentSuccessPage: "/vnpay-payment",
 }
 
 export const AdminRouter = {
@@ -68,6 +70,8 @@ export const AdminRouter = {
     newProductPage: "/admin/dashboard/products/new",
     // try to optimize to products/edit
     editProductPage: "/admin/dashboard/products-edit",
+    accountingPage: "/admin/dashboard/accounting",
     cooperationContractRequestManagement: "/admin/dashboard/contract/request",
+    cooperationContractManagement: "/admin/dashboard/contracts",
     requestSellingProductManagement: "/admin/dashboard/product-request-selling",
 }

@@ -2,10 +2,20 @@ import {AxiosResponse} from "axios";
 import axiosClient from "../config/axiosClient";
 import {ExceptionResponse} from "../model/exception/ExceptionResponse";
 import {Catalog} from "../model/Catalog";
+import {CatalogSearchCriteriaRequest} from "../model/request/CatalogSearchCriteriaRequest";
 
 export const getAllMainCatalog = async () => {
     try {
         const result: AxiosResponse = await axiosClient.get<Catalog[]>(`/catalog/main/all`);
+        return result.data;
+    } catch (err: ExceptionResponse | any) {
+        throw new Object(err.response.data);
+    }
+}
+
+export const getCatalogByCriteria = async (criteria: CatalogSearchCriteriaRequest) => {
+    try {
+        const result: AxiosResponse = await axiosClient.post<Catalog[]>(`/catalog/get-by-criteria`, criteria);
         return result.data;
     } catch (err: ExceptionResponse | any) {
         throw new Object(err.response.data);

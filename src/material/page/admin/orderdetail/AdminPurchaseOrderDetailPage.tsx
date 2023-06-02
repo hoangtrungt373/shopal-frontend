@@ -498,6 +498,7 @@ const AdminPurchaseOrderDetailPage: React.FC<Props> = () => {
 
     /*TODO: add not found */
     useEffect(() => {
+        document.title = "Admin - Order #" + params.purchaseOrderId;
         console.log(params)
         getPurchaseOrderByCriteria({purchaseOrderId: params.purchaseOrderId})
             .then((resPurchaseOrders: PurchaseOrder[]) => {
